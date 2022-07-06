@@ -108,38 +108,10 @@
 
     </TextView>
 
-<<<<<<< HEAD
     <Button
         android:id="@+id/button_login_pwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-=======
-    <TextView
-        android:id="@+id/text_upload"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textColor="@color/design_default_color_error"
-        android:textSize="10dp"
-        android:layout_marginLeft="40dp"
-        android:text="进入数据录入系统"
-        android:layout_toRightOf="@id/text_label2"
-        android:layout_alignBaseline="@id/text_label2"
-        >
-
-    </TextView>
-
-    <TextView
-        android:id="@+id/text_label2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textColor="#706A6A"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="130dp"
-        android:textSize="20dp"
-        android:text="使用密码登录"
->>>>>>> b51e0eeddf7bec43ec5be08daa998364c8b6ec48
         android:layout_below="@id/text_label"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="130dp"
@@ -147,6 +119,21 @@
         android:textColor="@color/gray"
         android:textSize="20dp"
         android:background="@color/light"/>
+
+    <TextView
+        android:id="@+id/text_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/button_login_pwd"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/button_login_pwd"
+        android:text="进入数据录入系统"
+        android:textColor="@color/design_default_color_error"
+        android:textSize="10dp"
+        android:textStyle="bold">
+    </TextView>
+
+
 
 
 </RelativeLayout>
