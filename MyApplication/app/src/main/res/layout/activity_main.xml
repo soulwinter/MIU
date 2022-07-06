@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/lable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="Hello,\n准备觅游！"
+        android:textSize="50dp"
+        android:textColor="@color/white"
+        android:background="#7155DD"
+        android:paddingLeft="20dp"
+        android:paddingBottom="30dp"
+        android:paddingTop="20dp"
+        >
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/text_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:text="邮箱"
+        android:textSize="20dp"
+        android:layout_marginTop="40dp"
+        android:paddingLeft="20dp"
+        android:layout_below="@id/lable"
+        >
+
+    </TextView>
+
+    <EditText
+        android:id="@+id/email_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_email"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:textSize="20dp"
+        android:layout_marginRight="20dp"
+        >
+
+    </EditText>
+
+    <TextView
+        android:id="@+id/text_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:text="验证码"
+        android:textSize="20dp"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="20dp"
+        android:layout_marginRight="200dp"
+        android:layout_below="@id/email_edit"
+        >
+
+    </TextView>
+
+    <EditText
+        android:id="@+id/code_edit"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_code"
+        android:layout_marginTop="40dp"
+        android:textSize="20dp"
+        android:layout_marginLeft="20dp"
+        >
+    </EditText>
+
+    <Button
+        android:id="@+id/button_code"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:text="获取"
+        android:textSize="20dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/code_edit"
+        android:layout_alignBottom="@id/code_edit"
+        />
+
+
+    <Button
+        android:id="@+id/button_start"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginLeft="20dp"
+        android:textSize="25dp"
+        android:background="@drawable/btn_shape"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="60dp"
+        android:text="开始觅游"
+        android:layout_below="@id/code_edit"
+        />
+
+    <TextView
+        android:id="@+id/text_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="#706A6A"
+        android:textSize="13dp"
+        android:layout_marginTop="10dp"
+        android:text="未注册的号码将自动注册"
+        android:paddingLeft="210dp"
+        android:layout_below="@id/button_start"
+        >
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/text_label2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="#706A6A"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="130dp"
+        android:textSize="20dp"
+        android:text="使用密码登录"
+        android:layout_below="@id/text_label"
+        >
+
+    </TextView>
+
+
+</RelativeLayout>
