@@ -10,9 +10,7 @@
         android:id="@+id/button_add_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="addArea"
-        >
-    </Button>
+        android:text="addArea"></Button>
 
     <Button
         android:id="@+id/button_add_ap"

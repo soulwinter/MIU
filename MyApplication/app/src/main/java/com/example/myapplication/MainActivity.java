@@ -63,8 +63,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String email = ((EditText)findViewById(R.id.email_edit)).getText().toString();
-                if (email.length()==0){
-                    // TODO 这里还需要做一些邮箱判断，比如是不是符合邮箱的格式
+                if (check_email(email)){
                     Toast.makeText(MainActivity.this, "请输入正确的邮箱！", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -104,8 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
                 String email = ((EditText)findViewById(R.id.email_edit)).getText().toString();
                 String code = ((EditText)findViewById(R.id.code_edit)).getText().toString();
-                if (email.length()==0){
-                    // TODO 这里还需要做一些邮箱判断，比如是不是符合邮箱的格式
+                if (!check_email(email)){
                     Toast.makeText(MainActivity.this, "请输入正确的邮箱！", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -178,6 +176,25 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public boolean check_email(String email){
+
+        // 邮箱不能为空
+        if(email.length()==0) return false;
+        // 必须包含@和.
+        if(!email.contains("@") || email.contains(".")) return false;
+        // @不能在开头
+        if(email.indexOf("@") == 0 ) return false;
+        // @只能有一个
+        if(email.indexOf('@') == email.lastIndexOf('@') ) return false;
+        // @不能在结尾
+        if(email.indexOf('@') < email.length()-1) return false;
+        // 必须以com、org、cn、net结尾
+        if(!email.endsWith("com") && !email.endsWith("org") &&
+                !email.endsWith("cn") && !email.endsWith("net")) return false;
+
+        return true;
     }
 
 }
