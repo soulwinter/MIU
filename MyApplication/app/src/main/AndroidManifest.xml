@@ -29,6 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Welcome" />
+        <activity android:name=".Register" />
+        <activity android:name=".Login_pwd" />
     </application>
 
 </manifest>

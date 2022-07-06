@@ -3,6 +3,7 @@ package com.example.myapplication;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button startButton;
     private OkHttpClient okHttpClient = new OkHttpClient();
-    private Button getCodeButton;
+    private Button getCodeButton, loginPwdButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private void initButton(){
         getCodeButton = (Button)findViewById(R.id.button_code);
         startButton = (Button)findViewById(R.id.button_start);
+        loginPwdButton = (Button)findViewById(R.id.button_login_pwd);
 
         //按钮点击事件设置
         //1.请求验证码的Button
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = ((EditText)findViewById(R.id.email_edit)).getText().toString();
                 if (email.length()==0){
-                    //这里还需要做一些邮箱判断，比如是不是符合邮箱的格式
+                    // TODO 这里还需要做一些邮箱判断，比如是不是符合邮箱的格式
                     Toast.makeText(MainActivity.this, "请输入正确的邮箱！", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -90,19 +92,20 @@ public class MainActivity extends AppCompatActivity {
                 }).start();
             }
         });
+
         //2.登录的Button
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String email = ((EditText)findViewById(R.id.email_edit)).getText().toString();
                 String code = ((EditText)findViewById(R.id.code_edit)).getText().toString();
                 if (email.length()==0){
-                    //这里还需要做一些邮箱判断，比如是不是符合邮箱的格式
+                    // TODO 这里还需要做一些邮箱判断，比如是不是符合邮箱的格式
                     Toast.makeText(MainActivity.this, "请输入正确的邮箱！", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (code.length()==0){
-                    //这里还需要做一些邮箱判断，比如是不是符合邮箱的格式
                     Toast.makeText(MainActivity.this, "验证码不能为空！", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -131,9 +134,15 @@ public class MainActivity extends AppCompatActivity {
                                 //登陆成功
                                 User user = jsonObject.getObject("data", User.class);
                                 System.out.println(user.getEmail());
-                                //调整到主页，可以把变量user传过去
+                                //跳转到app主页，TODO 把变量user传过去
+                                Intent intent = new Intent();
+                                intent.setClass(MainActivity.this,Welcome.class);
+                                startActivity(intent);
                             }else{
                                 //进入注册页面
+                                Intent intent = new Intent();
+                                intent.setClass(MainActivity.this,Register.class);
+                                startActivity(intent);
                             }
 
                         } catch (IOException e) {
@@ -141,6 +150,17 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }).start();
+            }
+        });
+
+        //3.使用密码登录的Button
+        loginPwdButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 跳转到密码登录界面
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, Login_pwd.class);
+                startActivity(intent);
             }
         });
     }

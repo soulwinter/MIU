@@ -12,7 +12,7 @@
         android:paddingLeft="20dp"
         android:paddingTop="20dp"
         android:paddingBottom="30dp"
-        android:text="Hello,\n准备觅游！"
+        android:text="觅游，\n只差一步！"
         android:textColor="@color/white"
         android:textSize="50dp"
         android:textStyle="bold">
@@ -20,13 +20,13 @@
     </TextView>
 
     <TextView
-        android:id="@+id/text_email"
+        android:id="@+id/text_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/lable"
         android:layout_marginTop="40dp"
         android:paddingLeft="20dp"
-        android:text="邮箱"
+        android:text="设置用户名"
         android:textColor="@color/black"
         android:textSize="20dp"
         android:textStyle="bold">
@@ -34,26 +34,26 @@
     </TextView>
 
     <EditText
-        android:id="@+id/email_edit"
+        android:id="@+id/name_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_email"
+        android:layout_below="@id/text_name"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:textSize="20dp">
 
     </EditText>
 
     <TextView
-        android:id="@+id/text_code"
+        android:id="@+id/text_pwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/email_edit"
+        android:layout_below="@id/name_edit"
         android:layout_marginTop="30dp"
         android:layout_marginRight="200dp"
         android:paddingLeft="20dp"
-        android:text="验证码"
+        android:text="设置密码"
         android:textColor="@color/black"
         android:textSize="20dp"
         android:textStyle="bold">
@@ -61,64 +61,52 @@
     </TextView>
 
     <EditText
-        android:id="@+id/code_edit"
-        android:layout_width="220dp"
+        android:id="@+id/pwd_edit"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_code"
+        android:layout_below="@id/text_pwd"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
         android:textSize="20dp"></EditText>
 
-    <Button
-        android:id="@+id/button_code"
-        android:layout_width="wrap_content"
-        android:layout_height="70dp"
-        android:layout_alignBottom="@id/code_edit"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@id/code_edit"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        android:text="获取"
-        android:textSize="20dp" />
+    <TextView
+        android:id="@+id/text_pwd2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pwd_edit"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="200dp"
+        android:paddingLeft="20dp"
+        android:text="重复密码"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <EditText
+        android:id="@+id/pwd_edit2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_pwd2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:textSize="20dp"></EditText>
 
 
     <Button
         android:id="@+id/button_start"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_below="@id/code_edit"
+        android:layout_below="@id/pwd_edit2"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="60dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/btn_shape"
         android:text="开始觅游"
         android:textSize="25dp" />
-
-    <TextView
-        android:id="@+id/text_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/button_start"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="210dp"
-        android:text="未注册的号码将自动注册"
-        android:textColor="#706A6A"
-        android:textSize="13dp"
-        android:textStyle="bold">
-
-    </TextView>
-
-    <Button
-        android:id="@+id/button_login_pwd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/text_label"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="130dp"
-        android:text="使用密码登录"
-        android:textColor="@color/gray"
-        android:textSize="20dp"
-        android:background="@color/light"/>
 
 
 </RelativeLayout>

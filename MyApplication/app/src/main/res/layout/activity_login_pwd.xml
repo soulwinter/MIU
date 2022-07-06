@@ -53,7 +53,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginRight="200dp"
         android:paddingLeft="20dp"
-        android:text="验证码"
+        android:text="密码"
         android:textColor="@color/black"
         android:textSize="20dp"
         android:textStyle="bold">
@@ -62,24 +62,13 @@
 
     <EditText
         android:id="@+id/code_edit"
-        android:layout_width="220dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
         android:layout_below="@id/text_code"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="40dp"
         android:textSize="20dp"></EditText>
-
-    <Button
-        android:id="@+id/button_code"
-        android:layout_width="wrap_content"
-        android:layout_height="70dp"
-        android:layout_alignBottom="@id/code_edit"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@id/code_edit"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        android:text="获取"
-        android:textSize="20dp" />
 
 
     <Button
@@ -94,31 +83,18 @@
         android:text="开始觅游"
         android:textSize="25dp" />
 
-    <TextView
-        android:id="@+id/text_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/button_start"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="210dp"
-        android:text="未注册的号码将自动注册"
-        android:textColor="#706A6A"
-        android:textSize="13dp"
-        android:textStyle="bold">
-
-    </TextView>
 
     <Button
-        android:id="@+id/button_login_pwd"
+        android:id="@+id/button_login_veri"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_label"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="130dp"
-        android:text="使用密码登录"
+        android:layout_below="@id/button_start"
+        android:layout_marginLeft="110dp"
+        android:layout_marginTop="50dp"
+        android:background="@color/light"
+        android:text="使用验证码登录"
         android:textColor="@color/gray"
-        android:textSize="20dp"
-        android:background="@color/light"/>
+        android:textSize="20dp" />
 
 
 </RelativeLayout>
