@@ -1,0 +1,197 @@
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
+import android.os.Bundle;
+
+import android.os.Looper;
+import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+
+import com.alibaba.fastjson.JSONObject;
+import com.example.myapplication.entity.Ap;
+import com.example.myapplication.entity.Area;
+import com.example.myapplication.entity.Tag;
+import com.example.myapplication.entity.User;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+
+public class AddAp extends AppCompatActivity {
+
+    private Button submitButton;
+    private Spinner apSpinner = null;
+    private ArrayAdapter<CharSequence> adapterAp = null;
+    private Spinner areaSpinner = null;
+    private ArrayAdapter<CharSequence> adapterArea = null;
+
+    private OkHttpClient okHttpClient = new OkHttpClient();
+
+    private List<Ap> apList = new ArrayList<>();
+    private List<Area> areaList = new ArrayList<>();
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_ap);
+
+        //初始化提交按钮
+        initButton();
+
+        //初始化ap下拉框
+        apSpinner =  (Spinner)findViewById(R.id.ap_spinner);
+        //如果没有权限，进行动态分配
+        if (ActivityCompat.checkSelfPermission(AddAp.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(AddAp.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
+
+        }
+
+        WifiManager wifiManager = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
+        wifiManager.setWifiEnabled(true);
+        wifiManager.startScan();
+
+        List<ScanResult> scanResults = wifiManager.getScanResults();
+        List<String> apStrlist = new ArrayList<>();
+
+        int i = 0;
+        for (ScanResult scanResult : scanResults) {
+            Ap ap = new Ap();
+            ap.setSsid(scanResult.SSID);
+            ap.setBssid(scanResult.BSSID);
+            apList.add(ap);
+            apStrlist.add("ssid："+scanResult.SSID + "  num:" + i);
+            i++;
+        }
+        this.adapterAp = new ArrayAdapter<CharSequence>(this,
+                android.R.layout.simple_spinner_dropdown_item,apStrlist.toArray(new String[0]));
+        apSpinner.setAdapter(adapterAp);
+
+        System.out.println("xzxa111");
+
+
+        //初始化area下拉框
+        areaSpinner =  (Spinner)findViewById(R.id.area_spinner);
+
+
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                try {
+                    //2、获取到请求的对象
+                    Request request = new Request.Builder().url("http://114.116.234.63:8080/area/listArea").get().build();
+                    //3、获取到回调的对象
+                    Call call = okHttpClient.newCall(request);
+                    System.out.println("xzx");
+                    //4、执行同步请求,获取到响应对象
+                    Response response = call.execute();
+                    System.out.println("xzx23123");
+
+                    //获取json字符串
+                    String json = response.body().string();
+                    System.out.println(json);
+                    JSONObject jsonObject = JSONObject.parseObject(json);
+                    String arrayStr = jsonObject.getString("data");
+
+                    areaList = JSONObject.parseArray(arrayStr, Area.class);
+
+                    List<String> areaStrlist = new ArrayList<>();
+                    for (Area area : areaList) {
+                        areaStrlist.add("name:"+area.getName()+"  id:"+area.getId());
+                    }
+                    adapterArea = new ArrayAdapter<CharSequence>(AddAp.this,
+                            android.R.layout.simple_spinner_dropdown_item,areaStrlist.toArray(new String[0]));
+
+                    //不能在子线程操作ui
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            areaSpinner.setAdapter(adapterArea);
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+    }
+
+
+    private void initButton(){
+        submitButton = (Button) findViewById(R.id.submit_button);
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                int apIndex = (int)apSpinner.getSelectedItemId();
+                int areaIndex = (int)areaSpinner.getSelectedItemId();
+
+                Ap ap = apList.get(apIndex);
+
+                new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        try {
+                            //1、封装请求体数据
+                            FormBody formBody = new FormBody.Builder().add("bssid",ap.getBssid()).add("ssid",ap.getSsid()).add("areaId",areaList.get(areaIndex).getId().toString()).build();
+                            //2、获取到请求的对象
+                            Request request = new Request.Builder().url("http://114.116.234.63:8080/ap/addAp").post(formBody).build();
+                            //3、获取到回调的对象
+                            Call call = okHttpClient.newCall(request);
+                            //4、执行同步请求,获取到响应对象
+                            Response response = call.execute();
+
+                            //获取json字符串
+                            String json = response.body().string();
+                            JSONObject jsonObject = JSONObject.parseObject(json);
+                            Integer code = jsonObject.getInteger("code");
+                            if (code == 200){
+                                Looper.prepare();
+                                Toast.makeText(AddAp.this, "添加成功！", Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+                            }else{
+                                Looper.prepare();
+                                Toast.makeText(AddAp.this, "添加失败！", Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+                            }
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
+    }
+}

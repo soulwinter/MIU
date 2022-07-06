@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private void init(){
         //初始化button
         initButton();
+
+        //初始化TextView
+        initTextView();
     }
 
     //初始化button
@@ -160,6 +164,17 @@ public class MainActivity extends AppCompatActivity {
                 // 跳转到密码登录界面
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, Login_pwd.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void initTextView(){
+        TextView textView = (TextView) findViewById(R.id.text_upload);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,testA.class);
                 startActivity(intent);
             }
         });
