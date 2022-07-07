@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.entity.User;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -71,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-//                            //1、封装请求体数据
-//                            FormBody formBody = new FormBody.Builder().add("description","xzx").add("photoPath","d").add("name","xzx的家").build();
+//                          //1、封装请求体数据
+//                          FormBody formBody = new FormBody.Builder().add("description","xzx").add("photoPath","d").add("name","xzx的家").build();
                             //2、获取到请求的对象
                             Request request = new Request.Builder().url("http://114.116.234.63:8080/code/sendCode?email="+email+"&type=1").get().build();
                             //3、获取到回调的对象
@@ -136,13 +137,15 @@ public class MainActivity extends AppCompatActivity {
                                 //登陆成功
                                 User user = jsonObject.getObject("data", User.class);
                                 System.out.println(user.getEmail());
-                                //跳转到app主页，TODO 把变量user传过去
+                                //跳转到app主页，把登录的邮箱传过去
                                 Intent intent = new Intent();
+                                intent.putExtra("user_email", email);
                                 intent.setClass(MainActivity.this,Welcome.class);
                                 startActivity(intent);
                             }else{
                                 //进入注册页面
                                 Intent intent = new Intent();
+                                intent.putExtra("user_email", email);
                                 intent.setClass(MainActivity.this,Register.class);
                                 startActivity(intent);
                             }
@@ -180,21 +183,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean check_email(String email){
 
-        // 邮箱不能为空
-        if(email.length()==0) return false;
-//        // 必须包含@和.
-//        if(!email.contains("@") || !email.contains(".")) return false;
-//        // @不能在开头
-//        if(email.indexOf("@") == 0 ) return false;
-//        // @只能有一个
-//        if(email.indexOf('@') != email.lastIndexOf('@') ) return false;
-//        // @不能在结尾
-//        if(email.indexOf('@') == email.length()-1) return false;
-//        // 必须以com、org、cn、net结尾
-//        if(!email.endsWith("com") && !email.endsWith("org") &&
-//                !email.endsWith("cn") && !email.endsWith("net")) return false;
+        if (email == null || email.length() < 1 || email.length() > 256) {
+            return false;
+        }
+        Pattern pattern = Pattern.compile("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");
+        return pattern.matcher(email).matches();
 
-        return true;
     }
 
 }

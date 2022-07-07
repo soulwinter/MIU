@@ -18,12 +18,15 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class Register extends AppCompatActivity {
 
     private Button startButton;
+    private OkHttpClient okHttpClient = new OkHttpClient();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,8 @@ public class Register extends AppCompatActivity {
                 String name = ((EditText)findViewById(R.id.name_edit)).getText().toString();
                 String pwd = ((EditText)findViewById(R.id.pwd_edit)).getText().toString();
                 String pwd2 = ((EditText)findViewById(R.id.pwd_edit2)).getText().toString();
+                Intent get_intent = getIntent();
+                String email = get_intent.getStringExtra("user_email");
 
                 if (name.length()==0){
                     Toast.makeText(Register.this, "请输入正确的用户名！", Toast.LENGTH_SHORT).show();
@@ -72,11 +77,49 @@ public class Register extends AppCompatActivity {
                     return;
                 }
 
-                // TODO , 向服务器传入用户名和密码信息---用户名和邮箱应该不是同一个东西吧？
-                //跳转到app主页，TODO 把变量user传过去
-                Intent intent = new Intent();
-                intent.setClass(Register.this,Welcome.class);
-                startActivity(intent);
+
+                // TODO , 向服务器传入用户名和密码信息
+                new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        try {
+
+                            //1、封装请求体数据
+                            FormBody formBody = new FormBody.Builder().add("email",email).add("username",name).add("password",pwd).build();
+                            //2、获取到请求的对象
+                            Request request = new Request.Builder().url("http://114.116.234.63:8080/user/register").post(formBody).build();
+                            //3、获取到回调的对象
+                            Call call = okHttpClient.newCall(request);
+                            //4、执行同步请求,获取到响应对象
+                            Response response = call.execute();
+
+                            //获取json字符串
+                            String json = response.body().string();
+                            JSONObject jsonObject = JSONObject.parseObject(json);
+                            Integer code = jsonObject.getInteger("code");
+                            if (code == 200){
+                                //注册成功
+//                                User user = jsonObject.getObject("data", User.class);
+//                                System.out.println(user.getEmail());
+                                Looper.prepare();
+                                Toast.makeText(Register.this, "注册成功！", Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+                                //跳转到app主页，把登录的邮箱传过去
+                                Intent intent = new Intent();
+                                intent.putExtra("user_email", email);
+                                intent.setClass(Register.this,Welcome.class);
+                                startActivity(intent);
+                            }else{
+                                Looper.prepare();
+                                Toast.makeText(Register.this, "注册失败！", Toast.LENGTH_SHORT).show();
+                                Looper.loop();                            }
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
             }
         });
     }
