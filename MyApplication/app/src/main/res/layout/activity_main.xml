@@ -130,8 +130,7 @@
         android:text="进入数据录入系统"
         android:textColor="@color/design_default_color_error"
         android:textSize="10dp"
-        android:textStyle="bold">
-    </TextView>
+        android:textStyle="bold"></TextView>
 
 
 
