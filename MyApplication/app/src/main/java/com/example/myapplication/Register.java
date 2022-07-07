@@ -101,7 +101,7 @@ public class Register extends AppCompatActivity {
                                 //注册成功
 //                                User user = jsonObject.getObject("data", User.class);
 //                                System.out.println(user.getEmail());
-                                
+
                                 //跳转到app主页，把登录的邮箱传过去
                                 Intent intent = new Intent();
                                 intent.putExtra("user_email", email);

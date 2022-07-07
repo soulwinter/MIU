@@ -38,5 +38,21 @@ public class testA extends AppCompatActivity {
             }
         });
 
+        button_wifiRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(testA.this,AddWifiRecord.class);
+                startActivity(intent);
+            }
+        });
+
+        button_area.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(testA.this,AddArea.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
