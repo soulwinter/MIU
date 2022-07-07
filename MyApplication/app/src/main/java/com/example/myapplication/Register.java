@@ -101,14 +101,17 @@ public class Register extends AppCompatActivity {
                                 //注册成功
 //                                User user = jsonObject.getObject("data", User.class);
 //                                System.out.println(user.getEmail());
-                                Looper.prepare();
-                                Toast.makeText(Register.this, "注册成功！", Toast.LENGTH_SHORT).show();
-                                Looper.loop();
+                                
                                 //跳转到app主页，把登录的邮箱传过去
                                 Intent intent = new Intent();
                                 intent.putExtra("user_email", email);
                                 intent.setClass(Register.this,Welcome.class);
                                 startActivity(intent);
+
+                                Looper.prepare();
+                                Toast.makeText(Register.this, "注册成功！", Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+
                             }else{
                                 Looper.prepare();
                                 Toast.makeText(Register.this, "注册失败！", Toast.LENGTH_SHORT).show();

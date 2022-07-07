@@ -10,12 +10,10 @@
         android:id="@+id/ap_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textColor="@color/black"
         android:text="以下ap将全部被提交:"
+        android:textColor="@color/black"
         android:textSize="20dp"
-        >
-    </TextView>
+        android:textStyle="bold"></TextView>
 
     <Spinner android:id="@+id/ap_spinner"
         android:layout_width="match_parent"

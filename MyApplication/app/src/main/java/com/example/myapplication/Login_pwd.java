@@ -70,7 +70,7 @@ public class Login_pwd extends AppCompatActivity {
                     public void run() {
                         try {
                             //1、封装请求体数据
-                            FormBody formBody = new FormBody.Builder().add("email",email).add("codeValue",code).build();
+                            FormBody formBody = new FormBody.Builder().add("email",email).add("password",code).build();
                             //2、获取到请求的对象
                             Request request = new Request.Builder().url("http://114.116.234.63:8080/user/loginByPassword").post(formBody).build();
                             //3、获取到回调的对象

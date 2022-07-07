@@ -60,6 +60,7 @@ public class AddAp extends AppCompatActivity {
 
         //初始化ap下拉框
         apSpinner =  (Spinner)findViewById(R.id.ap_spinner);
+
         //如果没有权限，进行动态分配
         if (ActivityCompat.checkSelfPermission(AddAp.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
