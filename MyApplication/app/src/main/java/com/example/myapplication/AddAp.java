@@ -95,7 +95,6 @@ public class AddAp extends AppCompatActivity {
                 android.R.layout.simple_spinner_dropdown_item,apStrlist.toArray(new String[0]));
         apSpinner.setAdapter(adapterAp);
 
-        System.out.println("xzxa111");
 
 
         //初始化area下拉框
@@ -110,10 +109,10 @@ public class AddAp extends AppCompatActivity {
                     Request request = new Request.Builder().url("http://114.116.234.63:8080/area/listArea").get().build();
                     //3、获取到回调的对象
                     Call call = okHttpClient.newCall(request);
-                    System.out.println("xzx");
+
                     //4、执行同步请求,获取到响应对象
                     Response response = call.execute();
-                    System.out.println("xzx23123");
+
 
                     //获取json字符串
                     String json = response.body().string();
@@ -154,17 +153,16 @@ public class AddAp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                int apIndex = (int)apSpinner.getSelectedItemId();
                 int areaIndex = (int)areaSpinner.getSelectedItemId();
 
-                Ap ap = apList.get(apIndex);
+                String aps = JSONObject.toJSONString(apList);
 
                 new Thread(new Runnable(){
                     @Override
                     public void run() {
                         try {
                             //1、封装请求体数据
-                            FormBody formBody = new FormBody.Builder().add("bssid",ap.getBssid()).add("ssid",ap.getSsid()).add("areaId",areaList.get(areaIndex).getId().toString()).build();
+                            FormBody formBody = new FormBody.Builder().add("aps",aps).add("areaId",areaList.get(areaIndex).getId().toString()).build();
                             //2、获取到请求的对象
                             Request request = new Request.Builder().url("http://114.116.234.63:8080/ap/addAp").post(formBody).build();
                             //3、获取到回调的对象

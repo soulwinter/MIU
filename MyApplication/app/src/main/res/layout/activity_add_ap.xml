@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textColor="@color/black"
-        android:text="请选择ap:"
+        android:text="以下ap将全部被提交:"
         android:textSize="20dp"
         >
     </TextView>
