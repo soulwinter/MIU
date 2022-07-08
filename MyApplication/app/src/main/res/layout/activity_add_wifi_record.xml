@@ -108,24 +108,6 @@
         app:layout_constraintTop_toBottomOf="@+id/pointY" />
 
     <TextView
-        android:id="@+id/aps_text2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="36dp"
-        android:text="注：\n如果更新了区域id，\n则一定要先点击检测ap，再点击上传啊！！"
-        android:textColor="@color/black"
-
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintHorizontal_weight="0.3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/submit_button" />
-
-    <TextView
         android:id="@+id/aps_show"
         android:layout_width="330dp"
         android:layout_height="128dp"
@@ -172,5 +154,38 @@
         app:layout_constraintTop_toBottomOf="@+id/aps_show">
 
     </Button>
+
+    <TextView
+        android:id="@+id/ap_test_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="检测ap结果："
+
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_weight="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detect_button" />
+
+    <TextView
+        android:id="@+id/aps_test"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"
+        android:layout_marginStart="16dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_weight="0.3"
+        app:layout_constraintTop_toBottomOf="@+id/ap_test_text"
+        app:layout_constraintVertical_bias="0.282" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

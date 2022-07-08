@@ -45,7 +45,8 @@ public class AddWifiRecord extends AppCompatActivity {
     private OkHttpClient okHttpClient = new OkHttpClient();
     private ArrayAdapter<CharSequence> adapterArea = null;
     private Button detectButton, uploadButton;
-    private TextView aps_show;
+    private TextView aps_show, aps_test;
+    private boolean scanSuccess;
     String apStr, strengthStr, x, y, area; // 上传wifi指纹的信息
 
 
@@ -159,7 +160,15 @@ public class AddWifiRecord extends AppCompatActivity {
 
         WifiManager wifiManager = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
-        wifiManager.startScan();
+        scanSuccess = wifiManager.startScan();
+
+        aps_test = (TextView) findViewById(R.id.aps_test);
+        if (!scanSuccess){
+            aps_test.setText("扫描过于频繁，检测ap失败！");
+            return;
+        }
+
+        aps_test.setText("ap检测成功！");
 
         List<Integer> strengthList = new ArrayList<>();  //记录最终要上传的strength
         List<Integer> apIdList = new ArrayList<>();   // 最终要上传的ap；总是(1,2,3,...,ap_num)，但我还是写上了
