@@ -20,6 +20,7 @@
         <item name="android:layout_marginRight">16dp</item>
         <item name="android:background">@drawable/border_input_box</item>
         <item name="android:orientation">horizontal</item>
+        <item name="android:layout_height">40dp</item>
     </style>
 
 </resources>

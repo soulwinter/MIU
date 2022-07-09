@@ -24,9 +24,8 @@
         android:id="@+id/head_image"
         android:layout_width="140dp"
         android:layout_height="140dp"
-        android:background="#DAD6D6"
         android:layout_marginTop="80dp"
-        >
+        android:background="#DAD6D6">
 
     </ImageView>
 
@@ -62,14 +61,13 @@
         android:id="@+id/changeInfoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="修改信息"
-        android:padding="10dp"
-        android:textSize="18dp"
         android:layout_below="@id/top_view"
         android:layout_alignRight="@id/top_view"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        >
+        android:layout_marginRight="10dp"
+        android:padding="10dp"
+        android:text="修改信息"
+        android:textSize="18dp">
 
     </Button>
 

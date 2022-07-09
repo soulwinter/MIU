@@ -144,6 +144,8 @@ public class ModifyMyInfo extends AppCompatActivity {
     }
 
     private void bindClick(){
+
+        // 点击头像图片
         imageView = (ImageView) findViewById(R.id.head_image);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +154,7 @@ public class ModifyMyInfo extends AppCompatActivity {
             }
         });
 
+        // 提交按钮
         Button submit = (Button) findViewById(R.id.submit_info_button);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,13 +285,9 @@ public class ModifyMyInfo extends AppCompatActivity {
 
         this.imagePath = imagePath;
 
-
-
-
-
     }
 
-    public  void httpMethod(String url, Map<String, Object> paramsMap) {
+    public void httpMethod(String url, Map<String, Object> paramsMap) {
         // 创建client对象 创建调用的工厂类 具备了访问http的能力
         OkHttpClient client = new OkHttpClient()
                 .newBuilder()
