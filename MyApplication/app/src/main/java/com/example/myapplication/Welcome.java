@@ -7,6 +7,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+//import androidx.fragment.app.Fragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -14,9 +18,11 @@ import android.os.Bundle;
 import com.example.myapplication.entity.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+
 public class Welcome extends AppCompatActivity {
 
     private User user;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,6 @@ public class Welcome extends AppCompatActivity {
         // 启动
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
 
     }
 }

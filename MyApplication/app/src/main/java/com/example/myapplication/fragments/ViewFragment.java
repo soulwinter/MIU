@@ -19,19 +19,24 @@ public class ViewFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_view, container, false);
 
+        // 标记地图的坐标点x y
         float x = 3;
         float y = 5;
 
         // 添加标记的button
         // 临时button，测试add_tag界面用
-        Button button_add_tag = getActivity().findViewById(R.id.button_add_tag);
+        Button button_add_tag = root.findViewById(R.id.button_add_tag);
+
         button_add_tag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(getActivity(), AddTag.class);
                 intent.putExtra("pointX",x);
                 intent.putExtra("pointY",y);
+
                 startActivity(intent);
+
             }
         });
 
