@@ -120,17 +120,6 @@
         android:textColor="@color/gray"
         android:textSize="20dp" />
 
-    <TextView
-        android:id="@+id/text_upload"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/button_login_pwd"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/button_login_pwd"
-        android:text="进入数据录入系统"
-        android:textColor="@color/design_default_color_error"
-        android:textSize="10dp"
-        android:textStyle="bold"></TextView>
 
 
 

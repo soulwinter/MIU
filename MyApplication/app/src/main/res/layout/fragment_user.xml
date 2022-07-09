@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="这里是个性签名这里是个性"
-        android:textColor="@color/white"
+        android:textColor="#6BE3F3"
         android:layout_below="@id/username"
         android:layout_alignLeft="@id/username"
         android:paddingTop="10dp"

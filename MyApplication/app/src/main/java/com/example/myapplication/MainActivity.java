@@ -171,14 +171,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initTextView(){
-        TextView textView = (TextView) findViewById(R.id.text_upload);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,testA.class);
-                startActivity(intent);
-            }
-        });
+
     }
 
     public static boolean check_email(String email){
