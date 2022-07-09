@@ -49,6 +49,7 @@
         <activity android:name=".Welcome" />
         <activity android:name=".Register" />
         <activity android:name=".Login_pwd" />
+        <activity android:name=".AddTag" />
     </application>
 
 </manifest>
