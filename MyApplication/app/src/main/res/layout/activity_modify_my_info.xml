@@ -96,29 +96,24 @@
 
 
     <RadioGroup
-        android:id="@+id/radiogroup_text"
+        android:id="@+id/gender_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="150dp"
+        android:layout_marginLeft="170dp"
         android:layout_toRightOf="@id/gender_label"
         android:layout_alignTop="@id/gender_label"
         >
+
 
         <RadioButton
             android:id="@+id/rb_option1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="不公开" />
-
-        <RadioButton
-            android:id="@+id/rb_option2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="男" />
 
         <RadioButton
-            android:id="@+id/rb_option3"
+            android:id="@+id/rb_option2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="女" />
@@ -145,6 +140,19 @@
         android:layout_alignBottom="@id/ifShare_label"
         android:layout_toRightOf="@id/ifShare_label"
         />
+
+    <Button
+        android:id="@+id/submit_info_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="提交修改"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/ifShare_label"
+        android:layout_centerHorizontal="true"
+        >
+
+    </Button>
 
 
 
