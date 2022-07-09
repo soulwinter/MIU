@@ -306,8 +306,10 @@ public class ModifyMyInfo extends AppCompatActivity {
             // 追加表单信息
             Object object = paramsMap.get(key);
             if (key.equals("image")) {
-                File file = (File) object;
-                builder.addFormDataPart(key, file.getName(), RequestBody.create(file, null));
+                if (object != null){
+                    File file = (File) object;
+                    builder.addFormDataPart(key, file.getName(), RequestBody.create(file, null));
+                }
             } else {
                 builder.addFormDataPart(key, object.toString());
             }
