@@ -84,11 +84,11 @@ public class Login_pwd extends AppCompatActivity {
                             Integer code = jsonObject.getInteger("code");
                             if (code == 200){
                                 //登陆成功
-//                                User user = jsonObject.getObject("data", User.class);
+                                User user = jsonObject.getObject("data", User.class);
 //                                System.out.println(user.getEmail());
-                                //跳转到app主页，并传递用户邮箱值
+                                //跳转到app主页，并传递user对象
                                 Intent intent = new Intent();
-                                intent.putExtra("user_email", email);
+                                intent.putExtra("user", user);
                                 intent.setClass(Login_pwd.this,Welcome.class);
                                 startActivity(intent);
                             }else{

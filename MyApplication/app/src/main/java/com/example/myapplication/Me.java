@@ -1,43 +1,35 @@
-package com.example.myapplication.fragments;
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import androidx.annotation.NonNull;
-
-import androidx.fragment.app.Fragment;
-
-import com.example.myapplication.R;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class UserFragment extends Fragment {
+public class Me extends AppCompatActivity {
 
     private String str;
     private MyHandler handler1;
-    private View root;
-
     class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
-            ImageView imageView = (ImageView)root.findViewById(R.id.head_image);
+            ImageView imageView = (ImageView)findViewById(R.id.head_image);
             imageView.setImageBitmap((Bitmap)msg.obj);
         }
     }
 
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_user, container, false);
-        this.root = root;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_me);
 
         handler1 = new MyHandler();
         new Thread(new Runnable() {
@@ -67,13 +59,13 @@ public class UserFragment extends Fragment {
                         Message msg = new Message();
                         msg.obj = bm;
                         handler1.sendMessage(msg);
+                        handler1.sendMessage(msg);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }).start();
-
-        return root;
     }
+
 }

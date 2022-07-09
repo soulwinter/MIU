@@ -24,6 +24,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ModifyMyInfo"
+            android:exported="false" />
+        <activity
+            android:name=".Me"
+            android:exported="false" />
+        <activity
             android:name=".AddAp"
             android:exported="false" />
         <activity
@@ -34,9 +40,7 @@
             android:exported="false" />
         <activity
             android:name=".testA"
-            android:exported="false">
-
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
