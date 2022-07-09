@@ -1,22 +1,36 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
 
+
+import com.example.myapplication.entity.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Welcome extends AppCompatActivity {
+
+    private User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //隐藏title
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        //初始化user
+        Intent intent = getIntent();
+        user = (User)intent.getSerializableExtra("user");
 
         // 获取页面上的底部导航栏控件
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -26,6 +40,7 @@ public class Welcome extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home,R.id.navigation_edit,R.id.navigation_view,R.id.navigation_user)
                 .build();
+
         // 建立fragment容器的控制器，这个容器就是页面的上的fragment容器
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
