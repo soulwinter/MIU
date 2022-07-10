@@ -11,21 +11,43 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.myapplication.entity.User;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class AddTag extends AppCompatActivity {
 
     private float pointX, pointY;
-    private int areaId;
+    private int areaId, userId;
     private AddTag.MyHandler handler1;
     public static int ALBUM_RESULT_CODE = 0x999 ;
     private String imagePath;
@@ -50,8 +72,10 @@ public class AddTag extends AppCompatActivity {
         // 初始化：获取传过来的x和y(和area)
         Intent get_intent = getIntent();
         pointX = get_intent.getFloatExtra("pointX", pointX);
-        pointX = get_intent.getFloatExtra("pointY", pointY);
-        areaId = 0;
+        pointY = get_intent.getFloatExtra("pointY", pointY);
+        userId = get_intent.getIntExtra("userId", userId);
+        areaId = get_intent.getIntExtra("areaId", areaId);
+        System.out.println("初始化：x="+pointX+" y="+pointY+" area="+areaId+" user="+userId);
 
         //隐藏title
         ActionBar actionBar = getSupportActionBar();
@@ -63,7 +87,7 @@ public class AddTag extends AppCompatActivity {
             ActivityCompat.requestPermissions(AddTag.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
 
-        // 更新标记点描述图片 TODO 上传到服务器
+        // 更新标记点描述图片,并记录新图片的path
         add_image = (ImageView) findViewById(R.id.add_image);
         add_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +95,49 @@ public class AddTag extends AppCompatActivity {
                 openSysAlbum();
             }
         });
-        
+
+        // 提交按钮:向服务器上传tag的名字、描述信息、图片
+        Button submit = (Button) findViewById(R.id.button_submit);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String tag_name = "";
+                        String tag_description = "";
+
+                        EditText edit_tag_name = (EditText) findViewById(R.id.edit_tag_name);
+                        tag_name = edit_tag_name.getText().toString();
+
+                        EditText edit_tag_description = (EditText) findViewById(R.id.edit_description);
+                        tag_description = edit_tag_description.getText().toString();
+
+                        System.out.println("onClick: tag_name="+tag_name+" describ="+tag_description);
+
+                        File image_file = null;
+
+                        if (imagePath != null)
+                            image_file = new File(imagePath);
+
+                        System.out.println("imagepath="+image_file);
+
+                        Map<String, Object> paramsMap = new HashMap<String, Object>();
+                        paramsMap.put("x", pointX);
+                        paramsMap.put("y", pointY);
+                        paramsMap.put("userId", userId);
+                        paramsMap.put("areaId", userId);
+                        paramsMap.put("image", image_file);
+                        paramsMap.put("tag_name", tag_name);
+                        paramsMap.put("tagDescription", tag_description);
+                        httpMethod("http://114.116.234.63:8080/tag/addTag", paramsMap);
+
+                    }
+                }).start();
+
+            }
+        });
     }
 
     /**
@@ -141,11 +207,63 @@ public class AddTag extends AppCompatActivity {
     private void displayImageInView(String imagePath) {
 
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-        // TODO 把获取的相册照片放在view中
         add_image.setImageBitmap(bitmap);
 
         this.imagePath = imagePath;
 
+    }
+
+
+    public void httpMethod(String url, Map<String, Object> paramsMap) {
+        // 创建client对象 创建调用的工厂类 具备了访问http的能力
+        OkHttpClient client = new OkHttpClient()
+                .newBuilder()
+                .connectTimeout(60, TimeUnit.SECONDS) // 设置超时时间
+                .readTimeout(60, TimeUnit.SECONDS) // 设置读取超时时间
+                .writeTimeout(60, TimeUnit.SECONDS) // 设置写入超时时间
+                .build();
+
+        // 添加请求类型
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+//        builder.setType(MediaType.parse("multipart/form-data"));
+        builder.setType(Objects.requireNonNull(MediaType.parse("multipart/form-data")));
+
+        //  创建请求的请求体
+        for (String key : paramsMap.keySet()) {
+            // 追加表单信息
+            Object object = paramsMap.get(key);
+            if (key.equals("image")) {
+                if (object != null){
+                    File file = (File) object;
+                    builder.addFormDataPart(key, file.getName(), RequestBody.create(file, null));
+                }
+            } else {
+                builder.addFormDataPart(key, object.toString());
+            }
+        }
+        RequestBody body = builder.build();
+
+        // 创建request, 表单提交
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+
+        // 创建一个通信请求
+        try (Response response = client.newCall(request).execute()) {
+            // 尝试将返回值转换成字符串并返回
+            if (response.code() == 200){
+                Looper.prepare();
+                Toast.makeText(AddTag.this, "添加标记成功！", Toast.LENGTH_SHORT).show();
+                Looper.loop();
+            }else{
+                Looper.prepare();
+                Toast.makeText(AddTag.this, "添加标记失败！", Toast.LENGTH_SHORT).show();
+                Looper.loop();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
