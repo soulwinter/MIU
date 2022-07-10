@@ -87,51 +87,29 @@
 
     </TextView>
 
-    <HorizontalScrollView
-        android:id="@+id/view_picture"
+    <ImageView
+        android:id="@+id/add_image"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        app:layout_constraintTop_toBottomOf="@id/text_add_picture"
-        >
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
-
-       <ImageView
-           android:id="@+id/add_image"
-           android:layout_width="50dp"
-           android:layout_height="50dp"
-           android:layout_marginLeft="10dp"
-           android:layout_gravity="center"
-           android:src="@drawable/add_button" />
-
-   </LinearLayout>
-    </HorizontalScrollView>
-
+        android:layout_height="270dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/add_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_add_picture" />
 
     <Button
         android:id="@+id/button_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
         android:text="提交"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_picture" />
-
-    <ImageView
-        android:layout_width="300dp"
-        android:layout_height="180dp"
-        android:src="@drawable/area_1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_submit"
-        app:layout_constraintVertical_bias="0.515" />
+        app:layout_constraintTop_toBottomOf="@+id/add_image" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
