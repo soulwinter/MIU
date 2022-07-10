@@ -1,5 +1,18 @@
 package com.example.myapplication;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
+import android.widget.Toast;
+import android.widget.Toolbar;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -7,22 +20,19 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-//import androidx.fragment.app.Fragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.os.Bundle;
-
-
 import com.example.myapplication.entity.User;
+import com.example.myapplication.fragments.EditFragment;
+import com.example.myapplication.fragments.HomeFragment;
+import com.example.myapplication.fragments.UserFragment;
+import com.example.myapplication.fragments.ViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 
 public class Welcome extends AppCompatActivity {
 
     private User user;
-    private FragmentManager fragmentManager;
+
+
+//    protected Toolbar mToobar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,5 +64,12 @@ public class Welcome extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+
+
+
+
+
     }
+
+
 }

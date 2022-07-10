@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+
     </style>
 
     <style name="InputBoxStyle">
@@ -21,6 +23,8 @@
         <item name="android:background">@drawable/border_input_box</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_height">40dp</item>
+
+
     </style>
 
 </resources>

@@ -6,6 +6,9 @@
     android:layout_height="match_parent"
     >
 
+
+
+
     <!-- 底部导航栏 -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
