@@ -51,7 +51,8 @@ public class AddTag extends AppCompatActivity {
     private AddTag.MyHandler handler1;
     public static int ALBUM_RESULT_CODE = 0x999 ;
     private String imagePath;
-    private int image_num = 0;  // 记录应该在第几个image添加图像
+    private int tag_num = 0; //记录tag总数，并根据数量生成默认tag名称
+
 
     ImageView add_image;
 
@@ -96,6 +97,7 @@ public class AddTag extends AppCompatActivity {
             }
         });
 
+        handler1 = new MyHandler();
         // 提交按钮:向服务器上传tag的名字、描述信息、图片
         Button submit = (Button) findViewById(R.id.button_submit);
         submit.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +107,8 @@ public class AddTag extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        String tag_name = "";
+                        String tag_name = "tag_"+tag_num;
+                        tag_num++;
                         String tag_description = "";
 
                         EditText edit_tag_name = (EditText) findViewById(R.id.edit_tag_name);
@@ -129,7 +132,7 @@ public class AddTag extends AppCompatActivity {
                         paramsMap.put("userId", userId);
                         paramsMap.put("areaId", userId);
                         paramsMap.put("image", image_file);
-                        paramsMap.put("tag_name", tag_name);
+                        paramsMap.put("tagName", tag_name);
                         paramsMap.put("tagDescription", tag_description);
                         httpMethod("http://114.116.234.63:8080/tag/addTag", paramsMap);
 

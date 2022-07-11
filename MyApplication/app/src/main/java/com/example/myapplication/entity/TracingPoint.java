@@ -5,7 +5,7 @@ import java.util.Date;
 public class TracingPoint {
     private Integer id;
 
-    private String point;
+    private String point;  // (x,y,order)
 
     private Integer tagId;
 
