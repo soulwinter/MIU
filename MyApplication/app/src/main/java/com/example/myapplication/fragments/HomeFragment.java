@@ -59,31 +59,7 @@ public class HomeFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
-
-//    private MenuInflater getMenuInflater() {
-//        return MenuInflater;
-//    }
-
-//    @Override//普通菜单
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.toolbar_menu_list, menu);
-//        //返回true代表普通菜单显示
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.menu_my:
-//                Toast.makeText(this, "我的", Toast.LENGTH_SHORT).show();
-//                break;
-//                .....
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
 
     @SuppressLint("ResourceType")
@@ -91,19 +67,10 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         mLvMsgList = root.findViewById(R.id.id_lv_msgList);
-//        mDatas = netgetArea();
-//        mAdapter = new msgadapter(inflater, mDatas);
-//        mLvMsgList.setAdapter(mAdapter);
-
-
-
-
-
-
         handler1 = new MyHandler();
 
 
-        // TODO 从服务器获取区域信息
+        //  从服务器获取区域信息
         new Thread(new Runnable(){
             @Override
             public void run() {
@@ -128,13 +95,6 @@ public class HomeFragment extends Fragment {
 
 
                     mAdapter = new msgadapter(inflater, mDatas);
-                    //不能在子线程操作ui
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            mLvMsgList.setAdapter(mAdapter);
-//                        }
-//                    });
 
                     Message msg = new Message();
 
@@ -146,55 +106,14 @@ public class HomeFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
             }
         }).start();
 
 
         return root;
     }
-//
-//    public  List<Area> netgetArea (){
-////        mLvMsgList = findViewById(R.id.id_lv_msgList);
-//        // TODO 从服务器获取区域信息
-//        new Thread(new Runnable(){
-//            @Override
-//            public void run() {
-//                try {
-//                    //2、获取到请求的对象
-//                    Request request = new Request.Builder().url("http://114.116.234.63:8080/area/listArea").get().build();
-//                    //3、获取到回调的对象
-//                    Call call = okHttpClient.newCall(request);
-//
-//                    //4、执行同步请求,获取到响应对象
-//                    Response response = call.execute();
-//
-//
-//                    //获取json字符串
-//                    String json = response.body().string();
-//                    System.out.println(json);
-//                    JSONObject jsonObject = JSONObject.parseObject(json);
-//                    String arrayStr = jsonObject.getString("data");
-//
-//
-//                    mDatas = JSONObject.parseArray(arrayStr, Area.class);
-//
-//
-////                    mAdapter = new msgadapter(inflater, mDatas);
-//                    //不能在子线程操作ui
-////                    runOnUiThread(new Runnable() {
-////                        @Override
-////                        public void run() {
-////                            mLvMsgList.setAdapter(mAdapter);
-////                        }
-////                    });
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//        return mDatas;
-//    }
+
 }
 
 
