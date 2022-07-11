@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -43,6 +44,17 @@ public class Login_pwd extends AppCompatActivity {
     private void init(){
         //初始化button
         initButton();
+
+        TextView view = (TextView)findViewById(R.id.forget_password);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 跳转到密码登录界面
+                Intent intent = new Intent();
+                intent.setClass(Login_pwd.this, FindPassword.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initButton(){
