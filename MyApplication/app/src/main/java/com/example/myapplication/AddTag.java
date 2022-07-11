@@ -112,7 +112,8 @@ public class AddTag extends AppCompatActivity {
                         String tag_description = "";
 
                         EditText edit_tag_name = (EditText) findViewById(R.id.edit_tag_name);
-                        tag_name = edit_tag_name.getText().toString();
+                        String temp_tag_name = edit_tag_name.getText().toString();
+                        if(temp_tag_name!="") tag_name = temp_tag_name;
 
                         EditText edit_tag_description = (EditText) findViewById(R.id.edit_description);
                         tag_description = edit_tag_description.getText().toString();
