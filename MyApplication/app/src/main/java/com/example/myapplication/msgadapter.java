@@ -1,6 +1,9 @@
 package com.example.myapplication;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,16 @@ public class msgadapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<Area> mDatas;
     private String str;
+    private Bitmap bm = null;
+    private Bitmap bm2 = null;
+    private static final int COMPLETED = 0;
+    private ViewHolder viewHolder = null;
+
+    private Handler handler = new Handler();
+    private Handler handler1 = new Handler();
+
+
+
 
     public msgadapter(LayoutInflater context, List<Area> datas) {
 //        mContext = context;
@@ -55,7 +68,7 @@ public class msgadapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ViewHolder viewHolder = null;
+        viewHolder = null;
 
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_msg, parent, false);
@@ -78,12 +91,10 @@ public class msgadapter extends BaseAdapter {
 
 
 
-        //从服务器加载小图（实地照片）
-        ViewHolder finalViewHolder = viewHolder;
-        new Thread(new Runnable() {
+
+        Thread thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
-                Bitmap bm = null;
                 try {
                     String path = "http://114.116.234.63:8080/image/"+msg.getImagePath();//小图
                     //2:把网址封装为一个URL对象
@@ -105,7 +116,16 @@ public class msgadapter extends BaseAdapter {
                         InputStream is = conn.getInputStream();
                         //读取流里的数据，构建成bitmap位图
                         bm = BitmapFactory.decodeStream(is);
-                        finalViewHolder.smallImg.setImageBitmap(bm);
+//                        Message msg = new Message();
+//                        msg.what = COMPLETED;
+//                        msg.obj = bm;
+//                        handler.sendMessage(msg);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                viewHolder.smallImg.setImageBitmap(bm);
+                            }
+                        });
 
                     }
 
@@ -113,14 +133,20 @@ public class msgadapter extends BaseAdapter {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
+        thread1.start();
+        try {
+            thread1.join();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
         //从服务器加载小图（平面图）
-        new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Bitmap bm2 = null;
                 try {
                     String path = "http://114.116.234.63:8080/image/"+msg.getPhotoPath();//大图：平面图
                     //2:把网址封装为一个URL对象
@@ -142,13 +168,25 @@ public class msgadapter extends BaseAdapter {
                         InputStream is = conn.getInputStream();
                         //读取流里的数据，构建成bitmap位图
                         bm2 = BitmapFactory.decodeStream(is);
-                        finalViewHolder.mIvImg.setImageBitmap(bm2);
+//                        Message msg = new Message();
+//                        msg.what = COMPLETED;
+//                        msg.obj = bm2;
+//                        handler1.sendMessage(msg);
+                        handler1.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                viewHolder.mIvImg.setImageBitmap(bm2);
+                            }
+                        });
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
+        thread.start();
+
 
         return convertView;
     }
