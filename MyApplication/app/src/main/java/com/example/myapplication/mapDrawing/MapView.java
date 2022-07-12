@@ -74,7 +74,7 @@ public class MapView extends View {
         Paint paint = new Paint();
         paint.setColor(Color.RED);
         canvas.drawBitmap(bitmap,0,0,null);
-        canvas.drawCircle(nowX + 100,  nowY + 100 , 15, paint);
+        canvas.drawCircle(nowX,  nowY, 15, paint);
         paint.setColor(Color.BLACK);
 
         for (Tag tag : tagList) {
