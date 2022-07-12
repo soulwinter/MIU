@@ -3,17 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="../../../../../../../layout/custom_preview.xml" value="0.12320143884892086" />
-        <entry key="..\:/Users/Administrator/Desktop/git/MIU/MyApplication/app/src/main/res/layout/fragment_home.xml" value="0.25" />
-        <entry key="..\:/Users/Administrator/Desktop/git/MIU/MyApplication/app/src/main/res/layout/msgadapter.xml" value="0.1" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/drawable/border_input_box.xml" value="0.1" />
+        <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/drawable/btn_normal.xml" value="0.1" />
+        <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/drawable/btn_shape.xml" value="0.1" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_add_ap.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_add_area.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_add_tag.xml" value="0.16019900497512438" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_add_wifi_record.xml" value="0.22" />
+        <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_area_detail.xml" value="0.19947916666666668" />
+        <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_find_password.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_login_pwd.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_map.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_me.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_modify_my_info.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_register.xml" value="0.19947916666666668" />
@@ -23,6 +25,7 @@
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/fragment_home.xml" value="0.22" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/fragment_user.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/fragment_view.xml" value="0.19947916666666668" />
+        <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/item_msg.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/tab_view.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/menu/bottom_nav_menu.xml" value="0.19947916666666668" />
       </map>

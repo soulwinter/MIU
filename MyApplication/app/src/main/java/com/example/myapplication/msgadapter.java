@@ -43,6 +43,9 @@ public class msgadapter extends BaseAdapter {
     }
 
 
+    
+
+
     @Override
     public int getCount() {
         return mDatas.size();
@@ -83,8 +86,6 @@ public class msgadapter extends BaseAdapter {
         viewHolder.mTvContent.setText(msg.getLongDescription());
         Glide.with(viewHolder.smallImg) .load("http://114.116.234.63:8080/image/"+msg.getImagePath()) .into(viewHolder.smallImg);
         Glide.with(viewHolder.mIvImg) .load("http://114.116.234.63:8080/image/"+msg.getPhotoPath()) .into(viewHolder.mIvImg);
-
-
 
         return convertView;
     }

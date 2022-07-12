@@ -1,6 +1,7 @@
 package com.example.myapplication.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +10,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.myapplication.AreaDetail;
 import com.example.myapplication.msgadapter;
 import com.example.myapplication.R;
 
 import android.content.SharedPreferences;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -110,6 +113,20 @@ public class HomeFragment extends Fragment {
             }
         }).start();
 
+        mLvMsgList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                ListView listView = (ListView) adapterView;
+                Area area = (Area) listView.getItemAtPosition(position);
+                int area_id = area.getId();
+
+                Intent intent = new Intent(getActivity(), AreaDetail.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("area_id", area_id);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
 
         return root;
     }
