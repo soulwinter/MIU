@@ -29,13 +29,13 @@ public class User implements Serializable {
     private Float y;
     private Date date = new Date();
 
-    public Date getDate() {
-        return date;
-    }
+//    public Date getDate() {
+//        return date;
+//    }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+//    public void setDate(Date date) {
+//        this.date = date;
+//    }
 
     public Integer getNowArea() {
         return nowArea;
