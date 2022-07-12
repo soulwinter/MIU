@@ -1,8 +1,6 @@
 package com.example.myapplication.entity;
 
-import java.io.Serializable;
-
-public class Trace implements Serializable {
+public class Trace {
     private Integer id;
 
     private String traceName;
@@ -10,6 +8,10 @@ public class Trace implements Serializable {
     private Integer userId;
 
     private String description;
+
+    private Integer areaId;
+
+    private String imagePath;
 
     public Integer getId() {
         return id;
@@ -41,5 +43,21 @@ public class Trace implements Serializable {
 
     public void setDescription(String description) {
         this.description = description == null ? null : description.trim();
+    }
+
+    public Integer getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(Integer areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath == null ? null : imagePath.trim();
     }
 }
