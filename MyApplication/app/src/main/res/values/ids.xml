@@ -5,4 +5,5 @@
 <!--    <item name="imageView" type="id">imageView</item>-->
 <!--    <item name="id_iv_img" type="id">id_iv_img</item>-->
 <!--    <item name="id_tv_content" type="id">id_tv_content</item>-->
+    <item name="id_lv_msgList" type="id" />
 </resources>

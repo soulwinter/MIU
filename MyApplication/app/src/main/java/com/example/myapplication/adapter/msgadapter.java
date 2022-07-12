@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.R;
 import com.example.myapplication.entity.Area;
 import com.example.myapplication.fragments.HomeFragment;
 
@@ -36,9 +37,9 @@ public class msgadapter extends BaseAdapter {
 
 
 
-    public msgadapter(LayoutInflater context, List<Area> datas) {
+    public msgadapter(LayoutInflater Inflater, List<Area> datas) {
 
-        mInflater = context;
+        mInflater = Inflater;
         mDatas = datas;
     }
 
@@ -83,8 +84,6 @@ public class msgadapter extends BaseAdapter {
         viewHolder.mTvContent.setText(msg.getLongDescription());
         Glide.with(viewHolder.smallImg) .load("http://114.116.234.63:8080/image/"+msg.getImagePath()) .into(viewHolder.smallImg);
         Glide.with(viewHolder.mIvImg) .load("http://114.116.234.63:8080/image/"+msg.getPhotoPath()) .into(viewHolder.mIvImg);
-
-
 
         return convertView;
     }

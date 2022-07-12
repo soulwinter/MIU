@@ -3,8 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Administrator/Desktop/git/MIU/MyApplication/app/src/main/res/layout/activity_welcome.xml" value="0.18385416666666668" />
+        <entry key="..\:/Users/Administrator/Desktop/git/MIU/MyApplication/app/src/main/res/layout/fragment_edit.xml" value="0.18385416666666668" />
         <entry key="..\:/Users/Administrator/Desktop/git/MIU/MyApplication/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/Users/Administrator/Desktop/git/MIU/MyApplication/app/src/main/res/layout/item_msg.xml" value="0.182518115942029" />
         <entry key="..\:/Users/Administrator/Desktop/git/MIU/MyApplication/app/src/main/res/layout/msgadapter.xml" value="0.1" />
+        <entry key="..\:/Users/Administrator/Desktop/git/MIU/MyApplication/app/src/main/res/layout/tags_item.xml" value="0.75" />
+        <entry key="..\:/Users/Administrator/Desktop/git/MIU/MyApplication/app/src/main/res/layout/tags_list.xml" value="0.182518115942029" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/drawable/border_input_box.xml" value="0.1" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_add_ap.xml" value="0.19947916666666668" />

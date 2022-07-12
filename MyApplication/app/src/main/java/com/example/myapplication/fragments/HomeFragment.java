@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.msgadapter;
+import com.example.myapplication.adapter.msgadapter;
 import com.example.myapplication.R;
 
 import android.content.SharedPreferences;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -53,7 +56,7 @@ public class HomeFragment extends Fragment {
     class MyHandler extends Handler{
         @Override
         public void handleMessage(Message msg) {
-            mLvMsgList.setAdapter(mAdapter);
+            mLvMsgList.setAdapter( mAdapter);
         }
     }
 
