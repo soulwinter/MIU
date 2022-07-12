@@ -396,26 +396,26 @@ public class AreaDetail extends AppCompatActivity {
         WifiManager wifiManager = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
         successScanWifi = wifiManager.startScan();
-        if (successScanWifi) {
-            runOnUiThread(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                           // Toast.makeText(AreaDetail.this, "扫描成功", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-            );
-        } else {
-            runOnUiThread(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(AreaDetail.this, "扫描失败", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-            );
-        }
+//        if (successScanWifi) {
+//            runOnUiThread(
+//                    new Runnable() {
+//                        @Override
+//                        public void run() {
+//                           // Toast.makeText(AreaDetail.this, "扫描成功", Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                    }
+//            );
+//        } else {
+//            runOnUiThread(
+//                    new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(AreaDetail.this, "扫描失败", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//            );
+//        }
         // 获取扫描结果
         List<Integer> strengthList = new ArrayList<>();  //记录最终要上传的strength
         List<Integer> apIdList = new ArrayList<>();   // 最终要上传的ap；总是(1,2,3,...,ap_num)，但我还是写上了
