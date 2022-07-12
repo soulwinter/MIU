@@ -1,5 +1,7 @@
 package com.example.myapplication.entity;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,6 +23,8 @@ public class Tag implements Serializable {
     private String tagName;
 
     private Date addTime = new Date();
+
+    private Bitmap bitmap = null;
 
     public Integer getId() {
         return id;
@@ -92,5 +96,13 @@ public class Tag implements Serializable {
 
     public void setAddTime(Date addTime) {
         this.addTime = addTime;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }

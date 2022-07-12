@@ -2,14 +2,22 @@ package com.example.myapplication.mapDrawing;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
+
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
+
 import android.view.View;
+
+import com.example.myapplication.R;
+import com.example.myapplication.entity.Tag;
+import com.example.myapplication.entity.Trace;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // 绘制地图 View
 public class MapView extends View {
@@ -21,7 +29,11 @@ public class MapView extends View {
     public int WIDTH, HEIGHT;
     public boolean isOKToDraw = false;
 
+    public int widthRectNumber, heightRectNumber;
+
     private Bitmap bitmap = null; //平面图
+    private List<Tag> tagList = new ArrayList<>(); //标记点
+    private List<Trace> traceList = new ArrayList<>(); //轨迹点
 
     public void setBitmap(Bitmap bitmap) {
 
@@ -33,7 +45,6 @@ public class MapView extends View {
         this.bitmap = bitmap;
     }
 
-    public int widthRectNumber, heightRectNumber;
 
     public MapView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -61,12 +72,14 @@ public class MapView extends View {
         Paint paint = new Paint();
         paint.setColor(Color.RED);
         canvas.drawBitmap(bitmap,0,0,null);
-        canvas.drawCircle(nowX + 100,  nowY + 100 , 10, paint);
-
+        canvas.drawCircle(nowX + 100,  nowY + 100 , 15, paint);
         paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(10);
-        canvas.drawCircle(nowX + 100, nowY + 100 , 10, paint);
+
+        for (Tag tag : tagList) {
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tag);
+            canvas.drawBitmap(bitmap,tag.getX(),tag.getY(),null);
+        }
+
 
         eachMove();
         postInvalidateDelayed(eachStep);
@@ -88,4 +101,19 @@ public class MapView extends View {
     }
 
 
+    public List<Tag> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<Tag> tagList) {
+        this.tagList = tagList;
+    }
+
+    public List<Trace> getTraceList() {
+        return traceList;
+    }
+
+    public void setTraceList(List<Trace> traceList) {
+        this.traceList = traceList;
+    }
 }

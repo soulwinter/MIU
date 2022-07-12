@@ -35,11 +35,12 @@
         android:layout_below="@+id/biaojigailan"
         >
         <LinearLayout
+            android:id="@+id/linearlayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/add_image"
+                android:id="@+id/add_tag_image"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/add_button"
@@ -77,7 +78,7 @@
             >
 
             <ImageView
-                android:id="@+id/add_image2"
+                android:id="@+id/add_trace_image"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/add_button"

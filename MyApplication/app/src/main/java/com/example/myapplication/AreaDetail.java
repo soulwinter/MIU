@@ -1,13 +1,20 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -16,12 +23,16 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.entity.Ap;
 import com.example.myapplication.entity.Area;
+import com.example.myapplication.entity.Tag;
+import com.example.myapplication.entity.Trace;
 import com.example.myapplication.mapDrawing.MapView;
 
 import java.io.IOException;
@@ -51,8 +62,12 @@ public class AreaDetail extends AppCompatActivity {
     private int nowTime = 0; // 当前距离上次刷新的间隔
     public int xPosition, yPosition;
     public MapView mapView;
-    private Bitmap bitmap = null;
 
+
+    private Bitmap bitmap = null; //平面图
+    private List<Tag> tagList = new ArrayList<>(); //标记点
+    private List<View> tagViews = new ArrayList<>(); //记录标记图片控件，用于动态更新
+    private List<Trace> traceList = new ArrayList<>(); //轨迹点
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +75,23 @@ public class AreaDetail extends AppCompatActivity {
         Intent intent = getIntent();
         areaObj = (Area)intent.getSerializableExtra("area");
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(areaObj.getName());
+
 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area_detail);
 
         mapView = (MapView) findViewById(R.id.area_map);
+        ImageView addtagView = (ImageView) findViewById(R.id.add_tag_image);
+
+        addtagView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //添加标记方法请写在此处
+            }
+        });
 
         //请求区域信息
         getAreaInfo();
@@ -73,17 +99,6 @@ public class AreaDetail extends AppCompatActivity {
 
         // 首先要用定位功能
         getWifiLocation();
-
-//        Button renewLocation = (Button) findViewById(R.id.get_location);
-//        renewLocation.setOnClickListener(
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        getWifiLocation();
-//                    }
-//                }
-//        );
-
 
 
         // 每renewNeedTime秒自动刷新一次
@@ -102,6 +117,7 @@ public class AreaDetail extends AppCompatActivity {
                                 nowTime++;
                             } else {
                                 getWifiLocation();
+                                getTagList();
                                 while (!succeedRenewLocation) {
 
                                 }
@@ -160,12 +176,103 @@ public class AreaDetail extends AppCompatActivity {
             }
         });
         thread.start();
+
+        getTagList();
+
         try {
             thread.join();
             mapView.setBitmap(bitmap);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void getTagList(){
+        //获取区域所有tag
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //2、获取到请求的对象
+                    Request request = new Request.Builder().url("http://114.116.234.63:8080/tag/listTagByAreaId?areaId="+areaObj.getId()).get().build();
+                    //3、获取到回调的对象
+                    Call call = okHttpClient.newCall(request);
+                    //4、执行同步请求,获取到响应对象
+                    Response response = call.execute();
+                    //获取json字符串
+                    String json = response.body().string();
+
+                    JSONObject jsonObject = JSONObject.parseObject(json);
+                    String arrayStr = jsonObject.getString("data");
+                    tagList = JSONObject.parseArray(arrayStr, Tag.class);  //该area的所有tag
+
+                    //请求tag对应的图片
+                    ImageUtil imageUtil = new ImageUtil();
+                    for (Tag tag : tagList) {
+                        try {
+                            String path = "http://114.116.234.63:8080/image" + tag.getPicturePath();
+                            //2:把网址封装为一个URL对象
+                            URL url = new URL(path);
+                            //3:获取客户端和服务器的连接对象，此时还没有建立连接
+                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                            //4:初始化连接对象
+                            conn.setRequestMethod("GET");
+                            //设置连接超时
+                            conn.setConnectTimeout(8000);
+                            //设置读取超时
+                            conn.setReadTimeout(8000);
+                            //5:发生请求，与服务器建立连接
+                            conn.connect();
+                            //如果响应码为200，说明请求成功
+                            if (conn.getResponseCode() == 200) {
+                                //获取服务器响应头中的流
+                                InputStream is = conn.getInputStream();
+                                //读取流里的数据，构建成bitmap位图
+                                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                                bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
+                                bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,tag.getTagName());
+                                tag.setBitmap(bitmap);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    //把tag传给mapView用于显示
+                    mapView.setTagList(tagList);
+
+                    //显示一个个的tag
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            LinearLayout linearLayoutTag = (LinearLayout) findViewById(R.id.linearlayout1);
+                            //首先清空原有控件
+                            for (View tagView : tagViews) {
+                                linearLayoutTag.removeView(tagView);
+                            }
+                            tagViews.clear();
+                            for (Tag tag : tagList) {
+                                ImageView imageView = new ImageView(AreaDetail.this);
+                                //给每个ImageView绑定事件请写在此处
+                                imageView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        //开启一个Activity并把tag传进去
+                                    }
+                                });
+                                imageView.setPadding(30,50,0,0);
+                                imageView.setImageBitmap(tag.getBitmap());
+                                linearLayoutTag.addView(imageView);
+                                tagViews.add(imageView);
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread1.start();
+
 
     }
 
@@ -342,5 +449,33 @@ public class AreaDetail extends AppCompatActivity {
 //        System.out.println("转化的ap和strength："+ s);
         return s.toString();
     }
+
+    class ImageUtil {
+
+        //gResId:图片id，gContext系统资源，
+        public  Bitmap drawTextToBitmap(Context gContext, Bitmap bitmap,
+                                              String gText) {
+            String text = String.valueOf(gText);
+
+            Resources resources = gContext.getResources();
+            float scale = resources.getDisplayMetrics().density;
+            // resource bitmaps are imutable,
+            // so we need to convert it to mutable one
+            bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+            Canvas canvas = new Canvas(bitmap);
+            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paint.setColor(Color.WHITE);
+            paint.setTextSize((int) (12 * scale));
+            paint.setShadowLayer(1f, 0f, 1f, Color.DKGRAY);
+            Rect bounds = new Rect();
+            paint.getTextBounds(text, 0, text.length(), bounds);
+            int x = (bitmap.getWidth() - bounds.width()) / 6;
+            int y = (bitmap.getHeight() - bounds.height()) / 5;
+            canvas.drawText(text ,x*scale, y*scale, paint);
+            return bitmap;
+        }
+    }
+
 
 }
