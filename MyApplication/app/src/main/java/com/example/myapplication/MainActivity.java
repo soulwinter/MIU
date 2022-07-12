@@ -142,10 +142,9 @@ public class MainActivity extends AppCompatActivity {
                             }else if (code == 200){
                                 //登陆成功
                                 User user = jsonObject.getObject("data", User.class);
-                                System.out.println(user.getEmail());
                                 //跳转到app主页，把登录的邮箱传过去
                                 Intent intent = new Intent();
-                                intent.putExtra("user_email", email);
+                                intent.putExtra("user", user);
                                 intent.setClass(MainActivity.this,Welcome.class);
                                 startActivity(intent);
                             }else{
