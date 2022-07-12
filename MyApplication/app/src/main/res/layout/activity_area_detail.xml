@@ -64,6 +64,17 @@
         android:layout_marginBottom="10dp"
         >
     </TextView>
+
+    <Button
+        android:id="@+id/start_record_trace_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="重新开始记录轨迹"
+        android:layout_toRightOf="@id/luxianfenxiang"
+        android:layout_alignBaseline="@id/luxianfenxiang"
+        android:layout_marginLeft="90dp"
+        />
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView2"
         android:layout_width="match_parent"

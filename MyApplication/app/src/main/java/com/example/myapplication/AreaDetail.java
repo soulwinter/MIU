@@ -33,6 +33,7 @@ import com.example.myapplication.entity.Ap;
 import com.example.myapplication.entity.Area;
 import com.example.myapplication.entity.Tag;
 import com.example.myapplication.entity.Trace;
+import com.example.myapplication.entity.TracingPoint;
 import com.example.myapplication.mapDrawing.MapView;
 
 import java.io.IOException;
@@ -66,8 +67,12 @@ public class AreaDetail extends AppCompatActivity {
 
     private Bitmap bitmap = null; //平面图
     private List<Tag> tagList = new ArrayList<>(); //标记点
+    private int tagListSize = -1;
     private List<View> tagViews = new ArrayList<>(); //记录标记图片控件，用于动态更新
-    private List<Trace> traceList = new ArrayList<>(); //轨迹点
+    private List<Trace> traceList = new ArrayList<>(); //轨迹集合
+
+
+    private List<TracingPoint> tracingPointList = new ArrayList<>();//用来记录用户的轨迹
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +90,7 @@ public class AreaDetail extends AppCompatActivity {
 
         mapView = (MapView) findViewById(R.id.area_map);
         ImageView addtagView = (ImageView) findViewById(R.id.add_tag_image);
+        ImageView addtraceView = (ImageView) findViewById(R.id.add_trace_image);
 
         addtagView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,13 +99,34 @@ public class AreaDetail extends AppCompatActivity {
             }
         });
 
+        addtraceView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("xzx");
+                //添加轨迹方法请写在此处
+                synchronized (tracingPointList){
+                    System.out.println(tracingPointList);
+                }
+            }
+        });
+
+        //重新记录轨迹按钮事件绑定
+        Button button = (Button) findViewById(R.id.start_record_trace_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                synchronized (tracingPointList){
+                    //清空已经记录的轨迹
+                    tracingPointList.clear();
+                }
+            }
+        });
+
         //请求区域信息
         getAreaInfo();
 
-
         // 首先要用定位功能
         getWifiLocation();
-
 
         // 每renewNeedTime秒自动刷新一次
         new Thread(
@@ -116,10 +143,34 @@ public class AreaDetail extends AppCompatActivity {
                             if (renewNeedTime > nowTime) {
                                 nowTime++;
                             } else {
-                                getWifiLocation();
                                 getTagList();
-                                while (!succeedRenewLocation) {
+                                getWifiLocation();
+                                //记录用户的轨迹
+                                synchronized (tracingPointList){
 
+                                    if (!tracingPointList.isEmpty()){
+                                        //同一个点不记录
+                                        TracingPoint lastPoint = tracingPointList.get(tracingPointList.size()-1);
+                                        if (lastPoint.getX() == xPosition && lastPoint.getY()==yPosition)
+                                            return;
+                                    }
+                                    TracingPoint tracingPoint = new TracingPoint();
+                                    String point = "(" + xPosition + "," + yPosition +","+ tracingPointList.size() +")";
+                                    tracingPoint.setPoint(point);
+                                    tracingPoint.setX(xPosition);
+                                    tracingPoint.setY(yPosition);
+                                    boolean flag = true;
+                                    synchronized (tagList){
+                                        for (Tag tag : tagList) {
+                                            if (tag.getX() == xPosition && tag.getY() == yPosition){
+                                                tracingPoint.setTagId(tag.getId());
+                                                flag = false;
+                                            }
+                                        }
+                                    }
+                                    if (flag)
+                                        tracingPoint.setTagId(-1);
+                                    tracingPointList.add(tracingPoint);
                                 }
                                 runOnUiThread(
                                         new Runnable() {
@@ -128,7 +179,7 @@ public class AreaDetail extends AppCompatActivity {
                                                 mapView.directionX = xPosition;
                                                 mapView.directionY = yPosition;
 //                                                mapView.postInvalidate();
-                                                Toast.makeText(AreaDetail.this, "X: " + String.valueOf(xPosition) + ", Y: " + String.valueOf(yPosition), Toast.LENGTH_SHORT).show();
+//                                                Toast.makeText(AreaDetail.this, "X: " + String.valueOf(xPosition) + ", Y: " + String.valueOf(yPosition), Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                 );
@@ -192,83 +243,90 @@ public class AreaDetail extends AppCompatActivity {
         Thread thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    //2、获取到请求的对象
-                    Request request = new Request.Builder().url("http://114.116.234.63:8080/tag/listTagByAreaId?areaId="+areaObj.getId()).get().build();
-                    //3、获取到回调的对象
-                    Call call = okHttpClient.newCall(request);
-                    //4、执行同步请求,获取到响应对象
-                    Response response = call.execute();
-                    //获取json字符串
-                    String json = response.body().string();
+                    try {
+                        //2、获取到请求的对象
+                        Request request = new Request.Builder().url("http://114.116.234.63:8080/tag/listTagByAreaId?areaId="+areaObj.getId()).get().build();
+                        //3、获取到回调的对象
+                        Call call = okHttpClient.newCall(request);
+                        //4、执行同步请求,获取到响应对象
+                        Response response = call.execute();
+                        //获取json字符串
+                        String json = response.body().string();
 
-                    JSONObject jsonObject = JSONObject.parseObject(json);
-                    String arrayStr = jsonObject.getString("data");
-                    tagList = JSONObject.parseArray(arrayStr, Tag.class);  //该area的所有tag
-
-                    //请求tag对应的图片
-                    ImageUtil imageUtil = new ImageUtil();
-                    for (Tag tag : tagList) {
-                        try {
-                            String path = "http://114.116.234.63:8080/image" + tag.getPicturePath();
-                            //2:把网址封装为一个URL对象
-                            URL url = new URL(path);
-                            //3:获取客户端和服务器的连接对象，此时还没有建立连接
-                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                            //4:初始化连接对象
-                            conn.setRequestMethod("GET");
-                            //设置连接超时
-                            conn.setConnectTimeout(8000);
-                            //设置读取超时
-                            conn.setReadTimeout(8000);
-                            //5:发生请求，与服务器建立连接
-                            conn.connect();
-                            //如果响应码为200，说明请求成功
-                            if (conn.getResponseCode() == 200) {
-                                //获取服务器响应头中的流
-                                InputStream is = conn.getInputStream();
-                                //读取流里的数据，构建成bitmap位图
-                                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                                bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
-                                bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,tag.getTagName());
-                                tag.setBitmap(bitmap);
+                        JSONObject jsonObject = JSONObject.parseObject(json);
+                        String arrayStr = jsonObject.getString("data");
+                        synchronized (tagList){
+                            tagList = JSONObject.parseArray(arrayStr, Tag.class);  //该area的所有tag
+                            if (tagList.size() == tagListSize){
+                                return;
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    //把tag传给mapView用于显示
-                    mapView.setTagList(tagList);
-
-                    //显示一个个的tag
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            LinearLayout linearLayoutTag = (LinearLayout) findViewById(R.id.linearlayout1);
-                            //首先清空原有控件
-                            for (View tagView : tagViews) {
-                                linearLayoutTag.removeView(tagView);
-                            }
-                            tagViews.clear();
+                            tagListSize = tagList.size();
+                            //请求tag对应的图片
+                            ImageUtil imageUtil = new ImageUtil();
                             for (Tag tag : tagList) {
-                                ImageView imageView = new ImageView(AreaDetail.this);
-                                //给每个ImageView绑定事件请写在此处
-                                imageView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        //开启一个Activity并把tag传进去
+                                try {
+                                    String path = "http://114.116.234.63:8080/image" + tag.getPicturePath();
+                                    //2:把网址封装为一个URL对象
+                                    URL url = new URL(path);
+                                    //3:获取客户端和服务器的连接对象，此时还没有建立连接
+                                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                                    //4:初始化连接对象
+                                    conn.setRequestMethod("GET");
+                                    //设置连接超时
+                                    conn.setConnectTimeout(8000);
+                                    //设置读取超时
+                                    conn.setReadTimeout(8000);
+                                    //5:发生请求，与服务器建立连接
+                                    conn.connect();
+                                    //如果响应码为200，说明请求成功
+                                    if (conn.getResponseCode() == 200) {
+                                        //获取服务器响应头中的流
+                                        InputStream is = conn.getInputStream();
+                                        //读取流里的数据，构建成bitmap位图
+                                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                                        bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
+                                        bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,tag.getTagName());
+                                        tag.setBitmap(bitmap);
                                     }
-                                });
-                                imageView.setPadding(30,50,0,0);
-                                imageView.setImageBitmap(tag.getBitmap());
-                                linearLayoutTag.addView(imageView);
-                                tagViews.add(imageView);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
+                            //把tag传给mapView用于显示
+                            mapView.setTagList(tagList);
                         }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                        //显示一个个的tag
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                LinearLayout linearLayoutTag = (LinearLayout) findViewById(R.id.linearlayout1);
+                                //首先清空原有控件
+                                for (View tagView : tagViews) {
+                                    linearLayoutTag.removeView(tagView);
+                                }
+                                tagViews.clear();
+                                synchronized (tagList){
+                                    for (Tag tag : tagList) {
+                                        ImageView imageView = new ImageView(AreaDetail.this);
+                                        //给每个ImageView绑定事件请写在此处
+                                        imageView.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                //开启一个Activity并把tag传进去
+                                            }
+                                        });
+                                        imageView.setPadding(30,50,0,0);
+                                        imageView.setImageBitmap(tag.getBitmap());
+                                        linearLayoutTag.addView(imageView);
+                                        tagViews.add(imageView);
+                                    }
+                                }
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
             }
         });
         thread1.start();
