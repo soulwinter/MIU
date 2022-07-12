@@ -1,6 +1,9 @@
 package com.example.myapplication.entity;
 
-public class Trace {
+import java.io.Serializable;
+import java.util.*;
+
+public class Trace implements Serializable {
     private Integer id;
 
     private String traceName;
@@ -12,6 +15,9 @@ public class Trace {
     private Integer areaId;
 
     private String imagePath;
+
+    //非数据库字段
+    private List<TracingPoint> pointList;
 
     public Integer getId() {
         return id;
@@ -59,5 +65,13 @@ public class Trace {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath == null ? null : imagePath.trim();
+    }
+
+    public List<TracingPoint> getPointList() {
+        return pointList;
+    }
+
+    public void setPointList(List<TracingPoint> pointList) {
+        this.pointList = pointList;
     }
 }
