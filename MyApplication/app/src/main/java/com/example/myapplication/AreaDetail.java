@@ -253,67 +253,45 @@ public class AreaDetail extends AppCompatActivity {
 
                         JSONObject jsonObject = JSONObject.parseObject(json);
                         String arrayStr = jsonObject.getString("data");
-                            tagList = JSONObject.parseArray(arrayStr, Tag.class);  //该area的所有tag
-                            //请求tag对应的图片
-                            ImageUtil imageUtil = new ImageUtil();
-                            for (Tag tag : tagList) {
-                                try {
-                                    String path = "http://114.116.234.63:8080/image" + tag.getPicturePath();
-                                    //2:把网址封装为一个URL对象
-                                    URL url = new URL(path);
-                                    //3:获取客户端和服务器的连接对象，此时还没有建立连接
-                                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                    //4:初始化连接对象
-                                    conn.setRequestMethod("GET");
-                                    //设置连接超时
-                                    conn.setConnectTimeout(8000);
-                                    //设置读取超时
-                                    conn.setReadTimeout(8000);
-                                    //5:发生请求，与服务器建立连接
-                                    conn.connect();
-                                    //如果响应码为200，说明请求成功
-                                    if (conn.getResponseCode() == 200) {
-                                        //获取服务器响应头中的流
-                                        InputStream is = conn.getInputStream();
-                                        //读取流里的数据，构建成bitmap位图
-                                        Bitmap bitmap = BitmapFactory.decodeStream(is);
-                                        bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
-                                        bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,tag.getTagName());
-                                        tag.setBitmap(bitmap);
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            //把tag传给mapView用于显示
-                            mapView.setTagList(tagList);
+                        tagList = JSONObject.parseArray(arrayStr, Tag.class);  //该area的所有tag
 
-                        //显示一个个的tag
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                LinearLayout linearLayoutTag = (LinearLayout) findViewById(R.id.linearlayout1);
-                                //首先清空原有控件
-                                for (View tagView : tagViews) {
-                                    linearLayoutTag.removeView(tagView);
+                        //把tag传给mapView用于显示
+                        mapView.setTagList(tagList);
+                        //请求tag对应的图片
+                        ImageUtil imageUtil = new ImageUtil();
+                        for (Tag tag : tagList) {
+                            try {
+                                String path = "http://114.116.234.63:8080/image" + tag.getPicturePath();
+                                //2:把网址封装为一个URL对象
+                                URL url = new URL(path);
+                                //3:获取客户端和服务器的连接对象，此时还没有建立连接
+                                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                                //4:初始化连接对象
+                                conn.setRequestMethod("GET");
+                                //设置连接超时
+                                conn.setConnectTimeout(8000);
+                                //设置读取超时
+                                conn.setReadTimeout(8000);
+                                //5:发生请求，与服务器建立连接
+                                conn.connect();
+                                //如果响应码为200，说明请求成功
+                                if (conn.getResponseCode() == 200) {
+                                    //获取服务器响应头中的流
+                                    InputStream is = conn.getInputStream();
+                                    //读取流里的数据，构建成bitmap位图
+                                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                                    bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
+                                    bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,tag.getTagName());
+                                    tag.setBitmap(bitmap);
+                                    showTag(tag);
                                 }
-                                tagViews.clear();
-                                    for (Tag tag : tagList) {
-                                        ImageView imageView = new ImageView(AreaDetail.this);
-                                        //给每个ImageView绑定事件请写在此处
-                                        imageView.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                //开启一个Activity并把tag传进去
-                                            }
-                                        });
-                                        imageView.setPadding(30,50,0,0);
-                                        imageView.setImageBitmap(tag.getBitmap());
-                                        linearLayoutTag.addView(imageView);
-                                        tagViews.add(imageView);
-                                    }
-                                }
-                        });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -322,6 +300,29 @@ public class AreaDetail extends AppCompatActivity {
         thread1.start();
 
 
+    }
+
+    private void showTag(Tag tag){
+        //显示一个个的tag
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                LinearLayout linearLayoutTag = (LinearLayout) findViewById(R.id.linearlayout1);
+                ImageView imageView = new ImageView(AreaDetail.this);
+                //给每个ImageView绑定事件请写在此处
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //开启一个Activity并把tag传进去
+                    }
+                });
+                imageView.setPadding(30,50,0,0);
+                imageView.setImageBitmap(tag.getBitmap());
+                linearLayoutTag.addView(imageView);
+                tagViews.add(imageView);
+
+            }
+        });
     }
 
     private void getTraceList(){
