@@ -10,7 +10,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,8 +20,6 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.entity.Ap;
 import com.example.myapplication.entity.Area;
-import com.example.myapplication.entity.Tag;
-import com.example.myapplication.entity.User;
 
 import java.io.IOException;
 import java.util.ArrayList;

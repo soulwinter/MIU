@@ -1,12 +1,10 @@
 package com.example.myapplication.fragments;
 
-import android.content.ContentProviderOperation;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,24 +12,27 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.myapplication.Login_pwd;
 import com.example.myapplication.ModifyMyInfo;
 import com.example.myapplication.R;
-import com.example.myapplication.Welcome;
+import com.example.myapplication.adapter.UserTagsAdapter;
+import com.example.myapplication.adapter.UserTracesAdapter;
+import com.example.myapplication.entity.Tag;
+import com.example.myapplication.entity.Trace;
 import com.example.myapplication.entity.User;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -45,6 +46,8 @@ public class UserFragment extends Fragment {
     private MyHandler handler1;
     private View root;
     private User user;
+
+    private RecyclerView clvTags, clvTrace;
 
     class MyHandler extends Handler {
         @Override
@@ -64,6 +67,9 @@ public class UserFragment extends Fragment {
 
         TextView description = (TextView) root.findViewById(R.id.description);
         description.setText(user.getDescription());
+
+        clvTags = root.findViewById(R.id.clv_tags);
+        clvTrace = root.findViewById(R.id.clv_traces);
 
         handler1 = new MyHandler();
         new Thread(new Runnable() {
@@ -130,10 +136,11 @@ public class UserFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        getUserTag();
+        getUserTrace();
         //重新开启此页面需要更新user
         String email = user.getEmail();
         String password = user.getPassword();
-
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -172,5 +179,80 @@ public class UserFragment extends Fragment {
         }
         flushInfo();
 
+    }
+
+
+    private void getUserTag() {
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //2、获取到请求的对象
+                    Request request = new Request.Builder().url("http://114.116.234.63:8080/tag/listTagByUserId?userId="
+                            +user.getId()).get().build();
+                    //3、获取到回调的对象
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    Call call = okHttpClient.newCall(request);
+                    //4、执行同步请求,获取到响应对象
+                    Response response = call.execute();
+                    //获取json字符串
+                    String json = response.body().string();
+
+                    JSONObject jsonObject = JSONObject.parseObject(json);
+                    String arrayStr = jsonObject.getString("data");
+                    final List<Tag> tagList = new ArrayList<>();
+                    synchronized (tagList){
+                        tagList.addAll(JSONObject.parseArray(arrayStr, Tag.class));
+                        clvTags.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                clvTags.setAdapter(new UserTagsAdapter(tagList));
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        thread1.start();
+    }
+
+    private void getUserTrace() {
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //2、获取到请求的对象
+                    Request request = new Request.Builder().url("http://114.116.234.63:8080/trace/listTraceByUserId?userId="
+                            +user.getId()).get().build();
+                    //3、获取到回调的对象
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    Call call = okHttpClient.newCall(request);
+                    //4、执行同步请求,获取到响应对象
+                    Response response = call.execute();
+                    //获取json字符串
+                    String json = response.body().string();
+
+                    JSONObject jsonObject = JSONObject.parseObject(json);
+                    String arrayStr = jsonObject.getString("data");
+                    final List<Trace> traceList = new ArrayList<>();
+                    synchronized (traceList){
+                        traceList.addAll(JSONObject.parseArray(arrayStr, Trace.class));
+                        clvTrace.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                clvTrace.setAdapter(new UserTracesAdapter(traceList));
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        thread1.start();
     }
 }

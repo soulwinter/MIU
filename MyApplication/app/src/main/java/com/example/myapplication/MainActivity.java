@@ -9,7 +9,6 @@ import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
@@ -38,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        // FIXME: 直接跳转到地区
+//        Intent intent = new Intent();
+//        intent.setClass(MainActivity.this, AreaDetail.class);
+//        startActivity(intent);
+
 
         init();
     }
@@ -136,10 +141,9 @@ public class MainActivity extends AppCompatActivity {
                             }else if (code == 200){
                                 //登陆成功
                                 User user = jsonObject.getObject("data", User.class);
-                                System.out.println(user.getEmail());
                                 //跳转到app主页，把登录的邮箱传过去
                                 Intent intent = new Intent();
-                                intent.putExtra("user_email", email);
+                                intent.putExtra("user", user);
                                 intent.setClass(MainActivity.this,Welcome.class);
                                 startActivity(intent);
                             }else{

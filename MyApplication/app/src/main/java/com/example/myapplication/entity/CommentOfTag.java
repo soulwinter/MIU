@@ -1,6 +1,8 @@
 package com.example.myapplication.entity;
 
-public class CommentOfTag {
+import java.io.Serializable;
+
+public class CommentOfTag implements Serializable {
     private Integer userId;
 
     private Integer tagId;
@@ -10,6 +12,8 @@ public class CommentOfTag {
     private Integer recommentWho;
 
     private String photoPath;
+
+    private String username;
 
     public Integer getUserId() {
         return userId;
@@ -49,5 +53,13 @@ public class CommentOfTag {
 
     public void setPhotoPath(String photoPath) {
         this.photoPath = photoPath == null ? null : photoPath.trim();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

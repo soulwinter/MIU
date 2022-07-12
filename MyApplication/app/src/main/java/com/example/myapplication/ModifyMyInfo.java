@@ -30,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.entity.User;
-import com.example.myapplication.fragments.UserFragment;
 
 import java.io.File;
 import java.io.IOException;

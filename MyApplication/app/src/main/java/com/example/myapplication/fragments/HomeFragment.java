@@ -1,6 +1,7 @@
 package com.example.myapplication.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +13,18 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.adapter.msgadapter;
+import com.example.myapplication.AreaDetail;
+import com.example.myapplication.entity.Area;
+import com.example.myapplication.msgadapter;
 import com.example.myapplication.R;
 
 import android.content.SharedPreferences;
 import android.widget.ListAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.myapplication.entity.Area;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -113,6 +117,20 @@ public class HomeFragment extends Fragment {
             }
         }).start();
 
+        mLvMsgList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                ListView listView = (ListView) adapterView;
+                Area area = (Area) listView.getItemAtPosition(position);
+
+                Intent intent = new Intent(getActivity(), AreaDetail.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("area", area);
+                bundle.putSerializable("user", getActivity().getIntent().getSerializableExtra("user"));
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
 
         return root;
     }

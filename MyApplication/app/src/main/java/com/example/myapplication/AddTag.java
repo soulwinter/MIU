@@ -17,18 +17,14 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
-import com.example.myapplication.entity.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +42,7 @@ import okhttp3.Response;
 
 public class AddTag extends AppCompatActivity {
 
-    private float pointX, pointY;
+    private int pointX, pointY;
     private int areaId, userId;
     private AddTag.MyHandler handler1;
     public static int ALBUM_RESULT_CODE = 0x999 ;
@@ -72,11 +68,10 @@ public class AddTag extends AppCompatActivity {
 
         // 初始化：获取传过来的x和y(和area)
         Intent get_intent = getIntent();
-        pointX = get_intent.getFloatExtra("pointX", pointX);
-        pointY = get_intent.getFloatExtra("pointY", pointY);
+        pointX = get_intent.getIntExtra("pointX", pointX);
+        pointY = get_intent.getIntExtra("pointY", pointY);
         userId = get_intent.getIntExtra("userId", userId);
         areaId = get_intent.getIntExtra("areaId", areaId);
-        System.out.println("初始化：x="+pointX+" y="+pointY+" area="+areaId+" user="+userId);
 
         //隐藏title
         ActionBar actionBar = getSupportActionBar();
@@ -131,7 +126,7 @@ public class AddTag extends AppCompatActivity {
                         paramsMap.put("x", pointX);
                         paramsMap.put("y", pointY);
                         paramsMap.put("userId", userId);
-                        paramsMap.put("areaId", userId);
+                        paramsMap.put("areaId", areaId);
                         paramsMap.put("image", image_file);
                         paramsMap.put("tagName", tag_name);
                         paramsMap.put("tagDescription", tag_description);

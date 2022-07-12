@@ -1,6 +1,8 @@
 package com.example.myapplication.entity;
 
-public class Area {
+import java.io.Serializable;
+
+public class Area implements Serializable {
     private Integer id;
 
     private String name;

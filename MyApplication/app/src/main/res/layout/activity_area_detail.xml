@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E8E6E6"
+    tools:context=".AreaDetail">
+
+    <com.example.myapplication.mapDrawing.MapView
+        android:id="@+id/area_map"
+        android:layout_width="fill_parent"
+        android:layout_height="350dp"
+        />
+
+    <TextView
+        android:id="@+id/biaojigailan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:paddingLeft="10dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_below="@+id/area_map"
+        android:text="标记概览"
+        android:layout_marginBottom="10dp"
+        >
+    </TextView>
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:background="#E8E6E6"
+        android:layout_below="@+id/biaojigailan"
+        >
+        <LinearLayout
+            android:id="@+id/linearlayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/add_tag_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/add_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_add_picture" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/luxianfenxiang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_below="@+id/horizontalScrollView1"
+        android:text="路线分享"
+        android:layout_marginBottom="10dp"
+        >
+    </TextView>
+
+    <Button
+        android:id="@+id/start_record_trace_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="重新开始记录轨迹"
+        android:layout_toRightOf="@id/luxianfenxiang"
+        android:layout_alignBaseline="@id/luxianfenxiang"
+        android:layout_marginLeft="90dp"
+        />
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E8E6E6"
+        android:layout_below="@+id/luxianfenxiang"
+        >
+        <LinearLayout
+            android:id="@+id/linearlayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            >
+
+            <ImageView
+                android:id="@+id/add_trace_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/add_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_add_picture" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+
+
+</RelativeLayout>
