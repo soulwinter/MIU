@@ -9,17 +9,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.adapter.msgadapter;
+import com.example.myapplication.adapter.area_adapter;
 import com.example.myapplication.AreaDetail;
 import com.example.myapplication.entity.Area;
-import com.example.myapplication.msgadapter;
+
 import com.example.myapplication.R;
 
 import android.content.SharedPreferences;
-import android.widget.ListAdapter;
+
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,24 +41,21 @@ import android.os.Message;
 
 public class HomeFragment extends Fragment {
 
-    SharedPreferences sp;
-    TextView showhello;
 
-    private ListView mLvMsgList;
-    private List<Area> mDatas = new ArrayList<>();
-    private msgadapter mAdapter;
+    private ListView mAreaListView;
+    private List<Area> arealist = new ArrayList<>();
+    private area_adapter mAdapter;
     private OkHttpClient okHttpClient = new OkHttpClient();
 
-    private ListView listView;
 
     private MyHandler  handler1;
 
-    LayoutInflater inflater1 ;
+
 
     class MyHandler extends Handler{
         @Override
         public void handleMessage(Message msg) {
-            mLvMsgList.setAdapter( mAdapter);
+            mAreaListView.setAdapter( mAdapter);
         }
     }
 
@@ -73,7 +68,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mLvMsgList = root.findViewById(R.id.id_lv_msgList);
+        mAreaListView = root.findViewById(R.id.id_lv_msgList);
         handler1 = new MyHandler();
 
 
@@ -98,10 +93,10 @@ public class HomeFragment extends Fragment {
                     String arrayStr = jsonObject.getString("data");
 
 
-                    mDatas = JSONObject.parseArray(arrayStr, Area.class);
+                    arealist = JSONObject.parseArray(arrayStr, Area.class);
 
 
-                    mAdapter = new msgadapter(inflater, mDatas);
+                    mAdapter = new area_adapter(inflater, arealist);
 
                     Message msg = new Message();
 
@@ -117,7 +112,7 @@ public class HomeFragment extends Fragment {
             }
         }).start();
 
-        mLvMsgList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAreaListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 ListView listView = (ListView) adapterView;

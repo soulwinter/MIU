@@ -8,7 +8,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    app:cardCornerRadius="4dp">
+    app:cardCornerRadius="4dp"
+    android:foreground="?attr/selectableItemBackground">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +17,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/fruit_image"
+                android:id="@+id/tag_image"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:scaleType="centerCrop"
@@ -29,7 +30,7 @@
                 tools:ignore="MissingConstraints" />
 
             <TextView
-                android:id="@+id/fruit_name"
+                android:id="@+id/tag_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -55,9 +56,9 @@
                 android:maxEms="5"
                 android:singleLine="true"
                 android:textColor="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="@+id/fruit_image"
-                app:layout_constraintStart_toStartOf="@+id/fruit_name"
-                app:layout_constraintTop_toBottomOf="@+id/fruit_name" />
+                app:layout_constraintBottom_toBottomOf="@+id/tag_image"
+                app:layout_constraintStart_toStartOf="@+id/tag_name"
+                app:layout_constraintTop_toBottomOf="@+id/tag_name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!--        下面这条被注释的的代码会让图片保持原有比例填满ImageView,超出的部分将被裁切掉-->

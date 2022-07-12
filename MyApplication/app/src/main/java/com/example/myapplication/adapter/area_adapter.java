@@ -15,10 +15,10 @@ import java.util.List;
 import android.graphics.Bitmap;
 
 
-public class msgadapter extends BaseAdapter {
+public class area_adapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
-    private List<Area> mDatas;
+    private List<Area> arealist;
     private Bitmap bm = null;
     private Bitmap bm2 = null;
     private static final int COMPLETED = 0;
@@ -27,10 +27,10 @@ public class msgadapter extends BaseAdapter {
 
 
 
-    public msgadapter(LayoutInflater Inflater, List<Area> datas) {
+    public area_adapter(LayoutInflater Inflater, List<Area> datas) {
 
         mInflater = Inflater;
-        mDatas = datas;
+        arealist = datas;
     }
 
 
@@ -39,12 +39,12 @@ public class msgadapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mDatas.size();
+        return arealist.size();
     }
 
     @Override
     public Area getItem(int position) {
-        return mDatas.get(position);
+        return arealist.get(position);
     }
 
     @Override
@@ -58,35 +58,35 @@ public class msgadapter extends BaseAdapter {
         viewHolder = null;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.item_msg, parent, false);
+            convertView = mInflater.inflate(R.layout.item_area, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.mIvImg = convertView.findViewById(R.id.id_iv_img);
-            viewHolder.mTvTitle = convertView.findViewById(R.id.id_tv_title);
-            viewHolder.mTvContent = convertView.findViewById(R.id.id_tv_content);
-            viewHolder.shortContent = convertView.findViewById(R.id.id_tv_content2);
-            viewHolder.smallImg = convertView.findViewById(R.id.imageView);
+            viewHolder.bigImg = convertView.findViewById(R.id.id_area_bigImage);
+            viewHolder.areaName = convertView.findViewById(R.id.id_area_name);
+            viewHolder.longContent = convertView.findViewById(R.id.id_area_longText);
+            viewHolder.shortContent = convertView.findViewById(R.id.id_area_shortText);
+            viewHolder.smallImg = convertView.findViewById(R.id.id_area_smallImage);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Area msg = mDatas.get(position);
+        Area msg = arealist.get(position);
 
-        viewHolder.mTvTitle.setText(msg.getName());
+        viewHolder.areaName.setText(msg.getName());
         viewHolder.shortContent.setText(msg.getShortDescription());
-        viewHolder.mTvContent.setText(msg.getLongDescription());
+        viewHolder.longContent.setText(msg.getLongDescription());
         Glide.with(viewHolder.smallImg) .load("http://114.116.234.63:8080/image/"+msg.getImagePath()) .into(viewHolder.smallImg);
-        Glide.with(viewHolder.mIvImg) .load("http://114.116.234.63:8080/image/"+msg.getPhotoPath()) .into(viewHolder.mIvImg);
+        Glide.with(viewHolder.bigImg) .load("http://114.116.234.63:8080/image/"+msg.getPhotoPath()) .into(viewHolder.bigImg);
 
         return convertView;
     }
 
     public static class ViewHolder {
         ImageView smallImg;
-        TextView mTvTitle;
+        TextView areaName;
         TextView shortContent;
-        ImageView mIvImg;
-        TextView mTvContent;
+        ImageView bigImg;
+        TextView longContent;
     }
 
 }

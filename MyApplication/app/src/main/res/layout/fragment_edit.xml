@@ -23,7 +23,7 @@
         android:id="@+id/tags_list_test"
         android:layout_width="0dp"
         android:layout_height="63dp"
-        android:text="用于tag详情页测试"
+        android:text="用于tag列表页测试"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="154dp"

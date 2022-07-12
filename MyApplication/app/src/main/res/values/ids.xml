@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <item name="id_tv_content2" type="id">id_tv_content2</item>-->
-<!--    <item name="id_tv_title" type="id">id_tv_title</item>-->
-<!--    <item name="imageView" type="id">imageView</item>-->
-<!--    <item name="id_iv_img" type="id">id_iv_img</item>-->
-<!--    <item name="id_tv_content" type="id">id_tv_content</item>-->
+<!--    <item name="id_area_shortText" type="id">id_area_shortText</item>-->
+<!--    <item name="id_area_name" type="id">id_area_name</item>-->
+<!--    <item name="id_area_smallImage" type="id">id_area_smallImage</item>-->
+<!--    <item name="id_area_bigImage" type="id">id_area_bigImage</item>-->
+<!--    <item name="id_area_longText" type="id">id_area_longText</item>-->
     <item name="id_lv_msgList" type="id" />
 </resources>
