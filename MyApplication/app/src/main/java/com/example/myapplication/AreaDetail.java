@@ -16,10 +16,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.entity.Ap;
-import com.example.myapplication.entity.User;
 import com.example.myapplication.mapDrawing.MapView;
 
 import java.io.IOException;

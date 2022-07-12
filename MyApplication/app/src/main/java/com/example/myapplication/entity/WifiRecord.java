@@ -1,6 +1,8 @@
 package com.example.myapplication.entity;
 
-public class WifiRecord {
+import java.io.Serializable;
+
+public class WifiRecord implements Serializable {
     private Integer id;
 
     private Integer areaId;
@@ -12,6 +14,12 @@ public class WifiRecord {
     private String aps;
 
     private String strength;
+
+    public WifiRecord(Integer areaId, Float x, Float y) {
+        this.areaId = areaId;
+        this.x = x;
+        this.y = y;
+    }
 
     public Integer getId() {
         return id;

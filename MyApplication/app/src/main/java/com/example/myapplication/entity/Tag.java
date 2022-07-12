@@ -1,8 +1,9 @@
 package com.example.myapplication.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Tag {
+public class Tag implements Serializable {
     private Integer id;
 
     private String tagDescription;
@@ -19,7 +20,7 @@ public class Tag {
 
     private String tagName;
 
-    private Date addTime;
+    private Date addTime = new Date();
 
     public Integer getId() {
         return id;

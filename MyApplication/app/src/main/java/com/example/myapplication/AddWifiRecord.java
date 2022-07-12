@@ -22,8 +22,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.entity.Ap;
 import com.example.myapplication.entity.Area;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

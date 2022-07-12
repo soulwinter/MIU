@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.AreaDetail;
+import com.example.myapplication.entity.Area;
 import com.example.myapplication.msgadapter;
 import com.example.myapplication.R;
 
@@ -20,7 +21,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.myapplication.entity.Area;
 
 import java.io.IOException;
 import java.util.ArrayList;

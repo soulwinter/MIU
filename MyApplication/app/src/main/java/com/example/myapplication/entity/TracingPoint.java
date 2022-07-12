@@ -1,17 +1,18 @@
 package com.example.myapplication.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TracingPoint {
+public class TracingPoint implements Serializable {
     private Integer id;
 
-    private String point;  // (x,y,order)
+    private String point;
 
     private Integer tagId;
 
-    private Integer userId;
-
     private Date addTime;
+
+    private Integer traceId;
 
     public Integer getId() {
         return id;
@@ -37,19 +38,19 @@ public class TracingPoint {
         this.tagId = tagId;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
     public Date getAddTime() {
         return addTime;
     }
 
     public void setAddTime(Date addTime) {
         this.addTime = addTime;
+    }
+
+    public Integer getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(Integer traceId) {
+        this.traceId = traceId;
     }
 }
