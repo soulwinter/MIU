@@ -34,6 +34,7 @@ import com.example.myapplication.entity.Area;
 import com.example.myapplication.entity.Tag;
 import com.example.myapplication.entity.Trace;
 import com.example.myapplication.entity.TracingPoint;
+import com.example.myapplication.entity.User;
 import com.example.myapplication.mapDrawing.MapView;
 
 import java.io.IOException;
@@ -64,6 +65,8 @@ public class AreaDetail extends AppCompatActivity {
     public int xPosition, yPosition;
     public MapView mapView;
 
+    private User user = null;
+
 
     private Bitmap bitmap = null; //平面图
     private List<Tag> tagList = new ArrayList<>(); //标记点
@@ -79,6 +82,7 @@ public class AreaDetail extends AppCompatActivity {
 
         Intent intent = getIntent();
         areaObj = (Area)intent.getSerializableExtra("area");
+        user = (User)intent.getSerializableExtra("user");
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(areaObj.getName());
@@ -96,17 +100,21 @@ public class AreaDetail extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //添加标记方法请写在此处
+                Intent intent1 =new Intent();
+                intent1.putExtra("pointX", xPosition);
+                intent1.putExtra("pointY", yPosition);
+                intent1.putExtra("userId", user.getId());
+                intent1.putExtra("areaId", areaObj.getId());
+                intent1.setClass(AreaDetail.this,AddTag.class);
+                startActivity(intent1);
             }
         });
 
         addtraceView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("xzx");
                 //添加轨迹方法请写在此处
-                synchronized (tracingPointList){
-                    System.out.println(tracingPointList);
-                }
+
             }
         });
 
@@ -140,53 +148,42 @@ public class AreaDetail extends AppCompatActivity {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
-                            if (renewNeedTime > nowTime) {
-                                nowTime++;
-                            } else {
-                                getTagList();
-                                getWifiLocation();
-                                //记录用户的轨迹
-                                synchronized (tracingPointList){
 
-                                    if (!tracingPointList.isEmpty()){
-                                        //同一个点不记录
-                                        TracingPoint lastPoint = tracingPointList.get(tracingPointList.size()-1);
-                                        if (lastPoint.getX() == xPosition && lastPoint.getY()==yPosition)
-                                            return;
-                                    }
-                                    TracingPoint tracingPoint = new TracingPoint();
-                                    String point = "(" + xPosition + "," + yPosition +","+ tracingPointList.size() +")";
-                                    tracingPoint.setPoint(point);
-                                    tracingPoint.setX(xPosition);
-                                    tracingPoint.setY(yPosition);
-                                    boolean flag = true;
-                                    synchronized (tagList){
-                                        for (Tag tag : tagList) {
-                                            if (tag.getX() == xPosition && tag.getY() == yPosition){
-                                                tracingPoint.setTagId(tag.getId());
-                                                flag = false;
-                                            }
-                                        }
-                                    }
-                                    if (flag)
-                                        tracingPoint.setTagId(-1);
-                                    tracingPointList.add(tracingPoint);
+//                            getTagList();
+                            getWifiLocation();
+                            //记录用户的轨迹
+                            synchronized (tracingPointList){
+
+                                if (!tracingPointList.isEmpty()){
+                                    //同一个点不记录
+                                    TracingPoint lastPoint = tracingPointList.get(tracingPointList.size()-1);
+                                    if (lastPoint.getX() == xPosition && lastPoint.getY()==yPosition)
+                                        continue;
                                 }
-                                runOnUiThread(
-                                        new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                mapView.directionX = xPosition;
-                                                mapView.directionY = yPosition;
-//                                                mapView.postInvalidate();
-//                                                Toast.makeText(AreaDetail.this, "X: " + String.valueOf(xPosition) + ", Y: " + String.valueOf(yPosition), Toast.LENGTH_SHORT).show();
-                                            }
+                                TracingPoint tracingPoint = new TracingPoint();
+                                String point = "(" + xPosition + "," + yPosition +","+ tracingPointList.size() +")";
+                                tracingPoint.setPoint(point);
+                                tracingPoint.setX(xPosition);
+                                tracingPoint.setY(yPosition);
+                                boolean flag = true;
+                                synchronized (tagList){
+                                    for (Tag tag : tagList) {
+                                        if (tag.getX() == xPosition && tag.getY() == yPosition){
+                                            tracingPoint.setTagId(tag.getId());
+                                            flag = false;
                                         }
-                                );
-                                succeedRenewLocation = false;
-                                nowTime = 0;
-
+                                    }
+                                }
+                                if (flag)
+                                    tracingPoint.setTagId(-1);
+                                tracingPointList.add(tracingPoint);
                             }
+                            mapView.directionX = xPosition;
+                            mapView.directionY = yPosition;
+                            succeedRenewLocation = false;
+                            nowTime = 0;
+
+
                         }
 
                     }
@@ -257,10 +254,10 @@ public class AreaDetail extends AppCompatActivity {
                         String arrayStr = jsonObject.getString("data");
                         synchronized (tagList){
                             tagList = JSONObject.parseArray(arrayStr, Tag.class);  //该area的所有tag
-                            if (tagList.size() == tagListSize){
-                                return;
-                            }
-                            tagListSize = tagList.size();
+//                            if (tagList.size() == tagListSize){
+//                                return;
+//                            }
+//                            tagListSize = tagList.size();
                             //请求tag对应的图片
                             ImageUtil imageUtil = new ImageUtil();
                             for (Tag tag : tagList) {

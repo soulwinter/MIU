@@ -58,4 +58,11 @@ public class Welcome extends AppCompatActivity {
     }
 
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

@@ -122,6 +122,7 @@ public class HomeFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), AreaDetail.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("area", area);
+                bundle.putSerializable("user", getActivity().getIntent().getSerializableExtra("user"));
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
