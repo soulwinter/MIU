@@ -225,6 +225,7 @@ public class AreaDetail extends AppCompatActivity {
         });
         thread.start();
 
+        getTraceList();
         getTagList();
 
         try {
@@ -252,12 +253,7 @@ public class AreaDetail extends AppCompatActivity {
 
                         JSONObject jsonObject = JSONObject.parseObject(json);
                         String arrayStr = jsonObject.getString("data");
-                        synchronized (tagList){
                             tagList = JSONObject.parseArray(arrayStr, Tag.class);  //该area的所有tag
-//                            if (tagList.size() == tagListSize){
-//                                return;
-//                            }
-//                            tagListSize = tagList.size();
                             //请求tag对应的图片
                             ImageUtil imageUtil = new ImageUtil();
                             for (Tag tag : tagList) {
@@ -291,7 +287,6 @@ public class AreaDetail extends AppCompatActivity {
                             }
                             //把tag传给mapView用于显示
                             mapView.setTagList(tagList);
-                        }
 
                         //显示一个个的tag
                         runOnUiThread(new Runnable() {
@@ -303,7 +298,6 @@ public class AreaDetail extends AppCompatActivity {
                                     linearLayoutTag.removeView(tagView);
                                 }
                                 tagViews.clear();
-                                synchronized (tagList){
                                     for (Tag tag : tagList) {
                                         ImageView imageView = new ImageView(AreaDetail.this);
                                         //给每个ImageView绑定事件请写在此处
@@ -319,11 +313,67 @@ public class AreaDetail extends AppCompatActivity {
                                         tagViews.add(imageView);
                                     }
                                 }
-                            }
                         });
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+            }
+        });
+        thread1.start();
+
+
+    }
+
+    private void getTraceList(){
+        //获取区域所有tag
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //2、获取到请求的对象
+                    Request request = new Request.Builder().url("http://114.116.234.63:8080/trace/listTraceByAreaId?areaId="+areaObj.getId()).get().build();
+                    //3、获取到回调的对象
+                    Call call = okHttpClient.newCall(request);
+                    //4、执行同步请求,获取到响应对象
+                    Response response = call.execute();
+                    //获取json字符串
+                    String json = response.body().string();
+
+                    JSONObject jsonObject = JSONObject.parseObject(json);
+                    String arrayStr = jsonObject.getString("data");
+                    traceList = JSONObject.parseArray(arrayStr, Trace.class);  //该area的所有tag
+
+                    //把trace传给mapView用于显示
+                    mapView.setTraceList(traceList);
+
+                    //显示一个个的trace
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            LinearLayout linearLayoutTrace = (LinearLayout) findViewById(R.id.linearlayout2);
+
+                            ImageUtil imageUtil = new ImageUtil();
+                            for (Trace trace : traceList) {
+                                ImageView imageView = new ImageView(AreaDetail.this);
+                                //给每个ImageView绑定事件请写在此处
+                                imageView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        //开启一个Activity并把trace传进去
+                                    }
+                                });
+                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.trace);
+                                bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
+                                bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,trace.getTraceName());
+                                imageView.setPadding(30,50,0,0);
+                                imageView.setImageBitmap(bitmap);
+                                linearLayoutTrace.addView(imageView);
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         thread1.start();
