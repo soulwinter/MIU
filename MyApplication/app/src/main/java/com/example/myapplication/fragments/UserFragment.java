@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.ModifyMyInfo;
 import com.example.myapplication.R;
+import com.example.myapplication.entity.User;
 
 import java.io.IOException;
 import java.io.InputStream;

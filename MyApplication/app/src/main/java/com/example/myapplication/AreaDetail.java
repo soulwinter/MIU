@@ -6,10 +6,13 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,9 +21,13 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.entity.Ap;
+import com.example.myapplication.entity.Area;
 import com.example.myapplication.mapDrawing.MapView;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +43,7 @@ public class AreaDetail extends AppCompatActivity {
     private boolean successScanWifi = false;
     private List<Ap> apList = new ArrayList<>();  //记录该区域的服务器已保存的所有 Aps
     private OkHttpClient okHttpClient = new OkHttpClient();
-    private int areaId = 18;
+    private Area areaObj = null;
     public static final int MIN_STRENGTH = -1000;
     private String apStr, strengthStr, x, y, area; // 上传wifi指纹的信息
     private boolean succeedRenewLocation = false;
@@ -44,40 +51,38 @@ public class AreaDetail extends AppCompatActivity {
     private int nowTime = 0; // 当前距离上次刷新的间隔
     public int xPosition, yPosition;
     public MapView mapView;
+    private Bitmap bitmap = null;
 
-    TextView renewTimeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         Intent intent = getIntent();
-        areaId = intent.getIntExtra("area_id", -1);
+        areaObj = (Area)intent.getSerializableExtra("area");
 
 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area_detail);
-        renewTimeText = (TextView) findViewById(R.id.next_time);
+
         mapView = (MapView) findViewById(R.id.area_map);
 
+        //请求区域信息
+        getAreaInfo();
 
 
         // 首先要用定位功能
         getWifiLocation();
 
-        Button renewLocation = (Button) findViewById(R.id.get_location);
-        renewLocation.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getWifiLocation();
-                    }
-                }
-        );
-
-
-
-
+//        Button renewLocation = (Button) findViewById(R.id.get_location);
+//        renewLocation.setOnClickListener(
+//                new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        getWifiLocation();
+//                    }
+//                }
+//        );
 
 
 
@@ -95,14 +100,6 @@ public class AreaDetail extends AppCompatActivity {
                             }
                             if (renewNeedTime > nowTime) {
                                 nowTime++;
-                                runOnUiThread(
-                                        new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                renewTimeText.setText(String.valueOf(renewNeedTime - nowTime));
-                                            }
-                                        }
-                                );
                             } else {
                                 getWifiLocation();
                                 while (!succeedRenewLocation) {
@@ -114,7 +111,7 @@ public class AreaDetail extends AppCompatActivity {
                                             public void run() {
                                                 mapView.directionX = xPosition;
                                                 mapView.directionY = yPosition;
-                                                //mapView.postInvalidate();
+//                                                mapView.postInvalidate();
                                                 Toast.makeText(AreaDetail.this, "X: " + String.valueOf(xPosition) + ", Y: " + String.valueOf(yPosition), Toast.LENGTH_SHORT).show();
                                             }
                                         }
@@ -128,6 +125,47 @@ public class AreaDetail extends AppCompatActivity {
                     }
                 }
         ).start();
+
+    }
+
+    private void getAreaInfo(){
+        //获取区域平面图
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String path = "http://114.116.234.63:8080/image" + areaObj.getPhotoPath();
+                    //2:把网址封装为一个URL对象
+                    URL url = new URL(path);
+                    //3:获取客户端和服务器的连接对象，此时还没有建立连接
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    //4:初始化连接对象
+                    conn.setRequestMethod("GET");
+                    //设置连接超时
+                    conn.setConnectTimeout(8000);
+                    //设置读取超时
+                    conn.setReadTimeout(8000);
+                    //5:发生请求，与服务器建立连接
+                    conn.connect();
+                    //如果响应码为200，说明请求成功
+                    if (conn.getResponseCode() == 200) {
+                        //获取服务器响应头中的流
+                        InputStream is = conn.getInputStream();
+                        //读取流里的数据，构建成bitmap位图
+                        bitmap = BitmapFactory.decodeStream(is);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+            mapView.setBitmap(bitmap);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -178,7 +216,7 @@ public class AreaDetail extends AppCompatActivity {
             public void run() {
                 try {
                     //2、获取到请求的对象
-                    Request request = new Request.Builder().url("http://114.116.234.63:8080/ap/listApByAreaId?areaId="+areaId).get().build();
+                    Request request = new Request.Builder().url("http://114.116.234.63:8080/ap/listApByAreaId?areaId="+areaObj.getId()).get().build();
                     //3、获取到回调的对象
                     Call call = okHttpClient.newCall(request);
                     //4、执行同步请求,获取到响应对象
@@ -244,7 +282,7 @@ public class AreaDetail extends AppCompatActivity {
                 FormBody formBody = new FormBody.Builder()
                         .add("aps",  apStr)
                         .add("strength", strengthStr)
-                        .add("areaId", String.valueOf(areaId))
+                        .add("areaId", String.valueOf(areaObj.getId()))
                         .build();
 
                 Request request = new Request.Builder().url("http://114.116.234.63:8080/wifiRecord/getLocation").post(formBody).build();
@@ -291,7 +329,6 @@ public class AreaDetail extends AppCompatActivity {
 
         return 0;
     }
-
 
 
     // 将list转化为string，string格式为(1,2,3)

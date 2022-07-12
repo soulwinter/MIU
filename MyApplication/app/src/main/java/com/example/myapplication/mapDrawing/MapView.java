@@ -1,23 +1,37 @@
 package com.example.myapplication.mapDrawing;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 
 // 绘制地图 View
 public class MapView extends View {
 
-    public int eachStep = 100;
+    public int eachStep = 1;
     private Paint mPaint = new Paint();
     public int directionX = 0, directionY = 0;
     public int nowX = -eachStep, nowY = -eachStep;
     public int WIDTH, HEIGHT;
     public boolean isOKToDraw = false;
 
+    private Bitmap bitmap = null; //平面图
+
+    public void setBitmap(Bitmap bitmap) {
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        int mScreenWidth = dm.widthPixels;
+        int mScreenHeight = 1000;
+
+        bitmap = Bitmap.createScaledBitmap(bitmap, mScreenWidth, mScreenHeight, true);
+        this.bitmap = bitmap;
+    }
 
     public int widthRectNumber, heightRectNumber;
 
@@ -46,12 +60,13 @@ public class MapView extends View {
 
         Paint paint = new Paint();
         paint.setColor(Color.RED);
-        canvas.drawCircle(nowX + 100,  nowY + 100 , 40, paint);
+        canvas.drawBitmap(bitmap,0,0,null);
+        canvas.drawCircle(nowX + 100,  nowY + 100 , 10, paint);
 
         paint.setColor(Color.BLACK);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(10);
-        canvas.drawCircle(nowX + 100, nowY + 100 , 40, paint);
+        canvas.drawCircle(nowX + 100, nowY + 100 , 10, paint);
 
         eachMove();
         postInvalidateDelayed(eachStep);

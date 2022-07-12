@@ -1,11 +1,10 @@
 package com.example.myapplication.entity;
 
-import lombok.ToString;
+
 
 import java.io.Serializable;
 import java.util.Date;
 
-@ToString
 public class User implements Serializable {
     private Integer id;
 

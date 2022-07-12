@@ -118,11 +118,10 @@ public class HomeFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 ListView listView = (ListView) adapterView;
                 Area area = (Area) listView.getItemAtPosition(position);
-                int area_id = area.getId();
 
                 Intent intent = new Intent(getActivity(), AreaDetail.class);
                 Bundle bundle = new Bundle();
-                bundle.putInt("area_id", area_id);
+                bundle.putSerializable("area", area);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
