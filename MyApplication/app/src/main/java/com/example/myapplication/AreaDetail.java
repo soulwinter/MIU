@@ -18,9 +18,11 @@ import android.graphics.Rect;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -117,6 +119,7 @@ public class AreaDetail extends AppCompatActivity {
 
             }
         });
+
 
         //重新记录轨迹按钮事件绑定
         Button button = (Button) findViewById(R.id.start_record_trace_button);
@@ -302,6 +305,7 @@ public class AreaDetail extends AppCompatActivity {
 
     }
 
+
     private void showTag(Tag tag){
         //显示一个个的tag
         runOnUiThread(new Runnable() {
@@ -310,10 +314,50 @@ public class AreaDetail extends AppCompatActivity {
                 LinearLayout linearLayoutTag = (LinearLayout) findViewById(R.id.linearlayout1);
                 ImageView imageView = new ImageView(AreaDetail.this);
                 //给每个ImageView绑定事件请写在此处
-                imageView.setOnClickListener(new View.OnClickListener() {
+                imageView.setOnTouchListener(new View.OnTouchListener() {
+                    private long firstClickTime;
+                    private long secondClickTime;
+                    private long stillTime;
+                    private boolean isUp=false;
+                    private boolean isDoubleClick=false;
+
                     @Override
-                    public void onClick(View view) {
-                        //开启一个Activity并把tag传进去
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getAction()){
+                            case MotionEvent.ACTION_DOWN:
+                                isUp=false;
+                                if(firstClickTime==0&secondClickTime==0){//第一次点击
+                                    firstClickTime=System.currentTimeMillis();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if(!isUp){
+                                                //长按
+                                                firstClickTime=0;
+                                                secondClickTime=0;
+                                                isDoubleClick=false;
+                                                mapView.setNowTag(tag);
+                                            }else {
+                                                if(!isDoubleClick){
+                                                    //点击
+                                                }
+                                                isDoubleClick=false;
+                                                firstClickTime=0;
+                                                secondClickTime=0;
+                                            }
+                                        }
+                                    }, 1000); //长按1s
+
+                                }else {
+                                    secondClickTime=System.currentTimeMillis();
+                                    stillTime =secondClickTime-firstClickTime;
+                                }
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                isUp=true;
+                                break;
+                        }
+                        return true;
                     }
                 });
                 imageView.setPadding(30,50,0,0);

@@ -35,6 +35,8 @@ public class MapView extends View {
     private List<Tag> tagList = new ArrayList<>(); //标记点
     private List<Trace> traceList = new ArrayList<>(); //轨迹点
 
+    private Tag nowTag = null;
+
     public void setBitmap(Bitmap bitmap) {
 
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -76,6 +78,13 @@ public class MapView extends View {
         paint.setColor(Color.BLACK);
 
         for (Tag tag : tagList) {
+            if (nowTag != null){
+                if (nowTag.getId() == tag.getId()){
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tag_red);
+                    canvas.drawBitmap(bitmap,tag.getX(),tag.getY(),null);
+                    continue;
+                }
+            }
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tag);
             canvas.drawBitmap(bitmap,tag.getX(),tag.getY(),null);
         }
@@ -115,5 +124,13 @@ public class MapView extends View {
 
     public void setTraceList(List<Trace> traceList) {
         this.traceList = traceList;
+    }
+
+    public Tag getNowTag() {
+        return nowTag;
+    }
+
+    public void setNowTag(Tag nowTag) {
+        this.nowTag = nowTag;
     }
 }
