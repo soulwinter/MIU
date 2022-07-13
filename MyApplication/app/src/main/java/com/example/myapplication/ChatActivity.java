@@ -39,6 +39,7 @@ public class ChatActivity extends AppCompatActivity {
     String TAG="XZXChat";
     private MyWebSocketClient myWebSocketClient;
     private List<ChatHisMessageDTO> mData = null;
+    private List<ChatHisMessageDTO> lastList = null;
     private Context mContext;
     private MessageAdapter messageAdapter = null;
     private ListView list_message;
@@ -241,11 +242,27 @@ public class ChatActivity extends AppCompatActivity {
                         Integer code = jsonObject.getInteger("code");
                         if (code == 200){
                             List<ChatHisMessageDTO> resultList = JSONObject.parseArray(jsonObject.getString("data"), ChatHisMessageDTO.class);
+                            int index = 0;
+                            if (lastList != null){
+                                if (resultList.size() > lastList.size()){
+                                    //有新消息
+                                    //使用上次的缓存图片
+                                    for (int i = 0; i < lastList.size(); i++) {
+                                        resultList.get(i).getUser().setBitmap(lastList.get(i).getUser().getBitmap());
+                                    }
+                                    index = lastList.size();
+                                }else {
+                                    continue;
+                                }
+                            }
 
                             if (resultList == null)
                                 continue;
-                            for (ChatHisMessageDTO chatHisMessageDTO : resultList) {
+                            for (int i = index; i < resultList.size(); i++) {
+                                ChatHisMessageDTO chatHisMessageDTO = resultList.get(i);
                                 User user = chatHisMessageDTO.getUser();
+                                if (user.getBitmap() != null)
+                                    continue;
                                 try {
                                     String path = "http://114.116.234.63:8080/image" + user.getPhotoPath();
                                     //2:把网址封装为一个URL对象
@@ -267,11 +284,19 @@ public class ChatActivity extends AppCompatActivity {
                                         //读取流里的数据，构建成bitmap位图
                                         Bitmap bitmap = BitmapFactory.decodeStream(is);
                                         user.setBitmap(bitmap);
+                                        for (int i1 = i+1; i1 < resultList.size(); i1++) {
+                                            ChatHisMessageDTO chatHisMessageDTO1 = resultList.get(i1);
+                                            User user1 = chatHisMessageDTO1.getUser();
+                                            if (user1.getId() == user.getId()){
+                                                user1.setBitmap(bitmap);
+                                            }
+                                        }
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
                             }
+                            lastList = resultList;
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
