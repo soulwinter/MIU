@@ -567,7 +567,10 @@ public class AreaDetail extends AppCompatActivity {
                 Log.v("JSONCODE", jsonObject.toString());
                 Integer code = jsonObject.getInteger("code");
                 Looper.prepare();
-                if (code == 200){
+                if(code == null){
+                    xPosition = 0;
+                    yPosition = 0;
+                }else if(code == 200){
                     JSONObject dataObject = JSONObject.parseObject(jsonObject.getString("data"));
                     xPosition = dataObject.getInteger("x");
                     yPosition = dataObject.getInteger("y");
@@ -596,7 +599,7 @@ public class AreaDetail extends AppCompatActivity {
             if(i!=list.size()-1) s.append( ",");
         }
         s.append(")");
-//        System.out.println("转化的ap和strength："+ s);
+
         return s.toString();
     }
 
