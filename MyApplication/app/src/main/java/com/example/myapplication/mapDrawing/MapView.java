@@ -15,6 +15,7 @@ import android.view.View;
 import com.example.myapplication.R;
 import com.example.myapplication.entity.Tag;
 import com.example.myapplication.entity.Trace;
+import com.example.myapplication.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class MapView extends View {
     private Bitmap bitmap = null; //平面图
     private List<Tag> tagList = new ArrayList<>(); //标记点
     private List<Trace> traceList = new ArrayList<>(); //轨迹点
+    private List<User> userList = new ArrayList<>(); //当前用户集合
 
     private Tag nowTag = null;
 
@@ -64,18 +66,28 @@ public class MapView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         // 如果第一次定义就直接移动到目标位置
-        if (nowX == -eachStep || nowY == -eachStep) {
-            nowX = directionX * eachStep;
-            nowY = directionY * eachStep;
-        } else {
-
-        }
-
+//        if (nowX == -eachStep || nowY == -eachStep) {
+//            nowX = directionX * eachStep;
+//            nowY = directionY * eachStep;
+//        } else {
+//
+//        }
         Paint paint = new Paint();
         paint.setColor(Color.RED);
         canvas.drawBitmap(bitmap,0,0,null);
-        canvas.drawCircle(nowX,  nowY, 15, paint);
-        paint.setColor(Color.BLACK);
+
+        for (int i = 0; i < userList.size(); i++) {
+            User user = userList.get(i);
+            if (i == 0){
+                //画用户自己
+                canvas.drawCircle(user.getX(), user.getY(), 15, paint);
+                paint.setColor(Color.BLACK);
+                continue;
+            }
+            canvas.drawCircle(user.getX(), user.getY(), 15, paint);
+        }
+
+
 
         for (Tag tag : tagList) {
             if (nowTag != null){
@@ -132,5 +144,13 @@ public class MapView extends View {
 
     public void setNowTag(Tag nowTag) {
         this.nowTag = nowTag;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
     }
 }

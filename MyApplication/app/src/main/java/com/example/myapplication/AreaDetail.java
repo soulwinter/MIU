@@ -76,6 +76,7 @@ public class AreaDetail extends AppCompatActivity {
     private int tagListSize = -1;
     private List<View> tagViews = new ArrayList<>(); //记录标记图片控件，用于动态更新
     private List<Trace> traceList = new ArrayList<>(); //轨迹集合
+    private List<User> userList = new ArrayList<>();
 
 
     private List<TracingPoint> tracingPointList = new ArrayList<>();//用来记录用户的轨迹
@@ -198,8 +199,9 @@ public class AreaDetail extends AppCompatActivity {
                                     tracingPoint.setTagId(-1);
                                 tracingPointList.add(tracingPoint);
                             }
-                            mapView.directionX = xPosition;
-                            mapView.directionY = yPosition;
+//                            mapView.directionX = xPosition;
+//                            mapView.directionY = yPosition;
+                            mapView.setUserList(userList);
                             succeedRenewLocation = false;
                             nowTime = 0;
 
@@ -559,9 +561,15 @@ public class AreaDetail extends AppCompatActivity {
                         .add("aps",  apStr)
                         .add("strength", strengthStr)
                         .add("areaId", String.valueOf(areaObj.getId()))
+                        .add("id", String.valueOf(user.getId()))
+                        .add("username", user.getUsername())
+                        .add("email", user.getEmail())
+                        .add("photoPath", user.getPhotoPath())
+                        .add("gender", user.getGender()? "1" : "0")
+                        .add("ifShare", user.getIfShare()? "1" : "0")
                         .build();
 
-                Request request = new Request.Builder().url("http://114.116.234.63:8080/wifiRecord/getLocation").post(formBody).build();
+                Request request = new Request.Builder().url("http://114.116.234.63:8080/wifiRecord/getLocationAndAliveUser").post(formBody).build();
 
                 //3、获取到回调的对象
                 Call call = okHttpClient.newCall(request);
@@ -590,9 +598,9 @@ public class AreaDetail extends AppCompatActivity {
                     xPosition = 0;
                     yPosition = 0;
                 }else if(code == 200){
-                    JSONObject dataObject = JSONObject.parseObject(jsonObject.getString("data"));
-                    xPosition = dataObject.getInteger("x");
-                    yPosition = dataObject.getInteger("y");
+                    userList = JSONObject.parseArray(jsonObject.getString("data"), User.class);
+//                    xPosition = dataObject.getInteger("x");
+//                    yPosition = dataObject.getInteger("y");
 //                    Toast.makeText(AreaDetail.this, "X: " + String.valueOf(xPosition) + ", Y: " + String.valueOf(yPosition), Toast.LENGTH_SHORT).show();
                     succeedRenewLocation = true;
                 }else{
