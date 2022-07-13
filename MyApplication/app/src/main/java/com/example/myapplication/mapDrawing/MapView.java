@@ -15,6 +15,7 @@ import android.view.View;
 import com.example.myapplication.R;
 import com.example.myapplication.entity.Tag;
 import com.example.myapplication.entity.Trace;
+import com.example.myapplication.entity.TracingPoint;
 import com.example.myapplication.entity.User;
 
 import java.util.ArrayList;
@@ -36,6 +37,16 @@ public class MapView extends View {
     private List<Tag> tagList = new ArrayList<>(); //标记点
     private List<Trace> traceList = new ArrayList<>(); //轨迹点
     private List<User> userList = new ArrayList<>(); //当前用户集合
+
+    public List<TracingPoint> getTracingPointList() {
+        return tracingPointList;
+    }
+
+    public void setTracingPointList(List<TracingPoint> tracingPointList) {
+        this.tracingPointList = tracingPointList;
+    }
+
+    private List<TracingPoint> tracingPointList = new ArrayList<>(); // 轨迹记录点
 
     private Tag nowTag = null;
 
@@ -101,6 +112,16 @@ public class MapView extends View {
             canvas.drawBitmap(bitmap,tag.getX(),tag.getY(),null);
         }
 
+        paint.setARGB(255, 0, 0, 255);
+        for (int tracingPointNo = 0; tracingPointNo < tracingPointList.size(); tracingPointNo++)
+        {
+            if (tracingPointNo < tracingPointList.size() - 1) {
+                canvas.drawLine(tracingPointList.get(tracingPointNo).getX(), tracingPointList.get(tracingPointNo).getY(),
+                        tracingPointList.get(tracingPointNo + 1).getX(), tracingPointList.get(tracingPointNo + 1).getY(),
+                        paint
+                );
+            }
+        }
 
         eachMove();
         postInvalidateDelayed(eachStep);
