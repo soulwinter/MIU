@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.example.myapplication.R;
@@ -72,21 +73,24 @@ public class MessageAdapter extends BaseAdapter {
         int type = getItemViewType(position);
         ViewHolder1 holder1 = null;
         ViewHolder2 holder2 = null;
+        SimpleDateFormat f = new SimpleDateFormat( "yyyy年MM月dd日 HH:mm");
         if(convertView == null){
             switch (type){
                 case TYPE_OTHER:
                     holder1 = new ViewHolder1();
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.message_item, parent, false);
-                    holder1.touxiang = (ImageView) convertView.findViewById(R.id.touxiang);
-                    holder1.username = (TextView) convertView.findViewById(R.id.username);
-                    holder1.content = (TextView) convertView.findViewById(R.id.message_content);
+                    holder1.touxiang.setImageBitmap(mData.get(position).getUser().getBitmap());
+                    holder1.username.setText(mData.get(position).getUser().getUsername());
+                    holder1.time.setText(f.format(mData.get(position).getCreateTime()));
+                    holder1.content.setText(mData.get(position).getMessage().getContent());
                     convertView.setTag(R.id.Tag_ME,holder1);
                     break;
                 case TYPE_ME:
                     holder2 = new ViewHolder2();
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.message_item_other, parent, false);
-                    holder2.touxiang = (ImageView) convertView.findViewById(R.id.touxiang);
-                    holder2.content = (TextView) convertView.findViewById(R.id.message_content);
+                    holder2.touxiang.setImageBitmap(mData.get(position).getUser().getBitmap());
+                    holder2.content.setText(mData.get(position).getMessage().getContent());
+                    holder2.time.setText(f.format(mData.get(position).getCreateTime()));
                     convertView.setTag(R.id.Tag_OTHER,holder2);
                     break;
             }
@@ -103,11 +107,13 @@ public class MessageAdapter extends BaseAdapter {
 
         ChatHisMessageDTO chatHisMessageDTO = mData.get(position);
         //设置下控件的值
+
         switch (type){
             case TYPE_OTHER:
                 if(chatHisMessageDTO != null){
                     holder1.touxiang.setImageBitmap(mData.get(position).getUser().getBitmap());
                     holder1.username.setText(mData.get(position).getUser().getUsername());
+                    holder1.time.setText(f.format(mData.get(position).getCreateTime()));
                     holder1.content.setText(mData.get(position).getMessage().getContent());
                 }
                 break;
@@ -115,6 +121,7 @@ public class MessageAdapter extends BaseAdapter {
                 if(chatHisMessageDTO != null){
                     holder2.touxiang.setImageBitmap(mData.get(position).getUser().getBitmap());
                     holder2.content.setText(mData.get(position).getMessage().getContent());
+                    holder2.time.setText(f.format(mData.get(position).getCreateTime()));
                 }
                 break;
         }
@@ -125,12 +132,14 @@ public class MessageAdapter extends BaseAdapter {
     private static class ViewHolder1{
         ImageView touxiang;
         TextView username;
+        TextView time;
         TextView content;
     }
 
     private static class ViewHolder2{
         ImageView touxiang;
         TextView content;
+        TextView time;
     }
 
 
