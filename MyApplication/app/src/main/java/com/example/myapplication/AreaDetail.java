@@ -596,7 +596,8 @@ public class AreaDetail extends AppCompatActivity {
                     yPosition = 0;
                 }else if(code == 200){
                     userList = JSONObject.parseArray(jsonObject.getString("data"), User.class);
-
+                    xPosition = userList.get(0).getX().intValue();
+                    yPosition = userList.get(0).getY().intValue();
                     succeedRenewLocation = true;
                 }else{
                     Toast.makeText(AreaDetail.this, "wifi指纹上传失败！", Toast.LENGTH_SHORT).show();
