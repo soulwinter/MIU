@@ -1,5 +1,6 @@
 package com.example.myapplication.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
+import com.example.myapplication.MainActivity;
 import com.example.myapplication.ModifyMyInfo;
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.UserTagsAdapter;
@@ -27,6 +29,9 @@ import com.example.myapplication.adapter.UserTracesAdapter;
 import com.example.myapplication.entity.Tag;
 import com.example.myapplication.entity.Trace;
 import com.example.myapplication.entity.User;
+import android.app.Activity;
+import android.content.SharedPreferences;
+import static android.content.Context.MODE_PRIVATE;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +45,7 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 
 public class UserFragment extends Fragment {
 
@@ -76,11 +82,27 @@ public class UserFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_user, container, false);
         this.root = root;
-
         user = (User)getActivity().getIntent().getSerializableExtra("user");
 
         //初始化页面显示信息
         flushInfo();
+
+
+        Button logOutButton = (Button) root.findViewById(R.id.logout);
+        logOutButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SharedPreferences sp = getActivity().getSharedPreferences("login", getActivity().MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.clear();
+                        editor.apply();
+                        Intent intent = new Intent();
+                        intent.setClass(getActivity(), MainActivity.class);
+                        startActivity(intent);
+                    }
+                }
+        );
 
         //事件绑定(修改个人信息)
         Button changeInfoButton = (Button) root.findViewById(R.id.changeInfoButton);

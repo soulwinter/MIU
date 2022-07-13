@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
@@ -98,6 +100,12 @@ public class Login_pwd extends AppCompatActivity {
                                 //登陆成功
                                 User user = jsonObject.getObject("data", User.class);
 //                                System.out.println(user.getEmail());
+                                // 保存登录状态
+                                SharedPreferences sp = getSharedPreferences("login", Context.MODE_PRIVATE);
+                                sp.edit()
+                                        .putString("username", user.getEmail())
+                                        .putString("password", user.getPassword())
+                                        .apply();
                                 //跳转到app主页，并传递user对象
                                 Intent intent = new Intent();
                                 intent.putExtra("user", user);
