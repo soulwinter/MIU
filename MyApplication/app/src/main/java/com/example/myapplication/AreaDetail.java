@@ -172,6 +172,9 @@ public class AreaDetail extends AppCompatActivity {
 
 //                            getTagList();
                             getWifiLocation();
+                            mapView.setUserList(userList);
+                            succeedRenewLocation = false;
+                            nowTime = 0;
                             //记录用户的轨迹
                             synchronized (tracingPointList){
 
@@ -201,9 +204,7 @@ public class AreaDetail extends AppCompatActivity {
                             }
 //                            mapView.directionX = xPosition;
 //                            mapView.directionY = yPosition;
-                            mapView.setUserList(userList);
-                            succeedRenewLocation = false;
-                            nowTime = 0;
+
 
 
                         }
