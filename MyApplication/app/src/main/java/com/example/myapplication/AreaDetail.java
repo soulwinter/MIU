@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -91,12 +92,28 @@ public class AreaDetail extends AppCompatActivity {
 
 
 
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area_detail);
 
         mapView = (MapView) findViewById(R.id.area_map);
         ImageView addtagView = (ImageView) findViewById(R.id.add_tag_image);
         ImageView addtraceView = (ImageView) findViewById(R.id.add_trace_image);
+        TextView textClick = findViewById(R.id.clickText);
+
+//      点击文本跳转到标记列表的方法
+        textClick.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent =new Intent();
+                intent.putExtra("areaId", areaObj.getId());
+                intent.setClass(AreaDetail.this,tags_list.class);
+                startActivity(intent);
+            }
+
+        });
+
+
 
         addtagView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,6 +326,7 @@ public class AreaDetail extends AppCompatActivity {
     private void showTag(Tag tag){
         //显示一个个的tag
         runOnUiThread(new Runnable() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public void run() {
                 LinearLayout linearLayoutTag = (LinearLayout) findViewById(R.id.linearlayout1);
@@ -319,6 +337,7 @@ public class AreaDetail extends AppCompatActivity {
                     private long secondClickTime;
                     private long stillTime;
                     private boolean isUp=false;
+                    @SuppressLint("ClickableViewAccessibility")
                     private boolean isDoubleClick=false;
 
                     @Override

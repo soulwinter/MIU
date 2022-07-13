@@ -69,6 +69,7 @@
         <activity android:name=".Register" />
         <activity android:name=".Login_pwd" />
         <activity android:name=".AddTag" />
+        <activity android:name=".tags_list" />
     </application>
 
 </manifest>

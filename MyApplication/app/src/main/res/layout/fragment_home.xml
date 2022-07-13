@@ -7,6 +7,8 @@
     tools:ignore="MissingClass">
 
 
+
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -18,11 +20,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <TextView
         android:id="@+id/textView"
-        android:layout_width="79dp"
+        android:layout_width="103dp"
         android:layout_height="27dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:shadowColor="@color/white"
@@ -31,10 +34,10 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints" />
 
     <ListView
         android:id="@+id/id_lv_msgList"
@@ -43,6 +46,7 @@
         android:background="#ffffff"
         android:divider="@null"
         android:paddingTop="8dp"
+        android:dividerHeight="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -53,57 +57,5 @@
 
 
     </ListView>
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="51dp"
-        android:backgroundTint="#00FFFFFF"
-
-        app:srcCompat="@android:drawable/ic_menu_sort_by_size"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="5dp"
-        app:tint="#FFFFFF" />
-
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="51dp"
-        android:layout_marginEnd="8dp"
-
-        android:backgroundTint="#00FFFFFF"
-        android:focusableInTouchMode="false"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton3"
-        app:srcCompat="@android:drawable/ic_popup_reminder"
-        app:tint="#FFFFFF"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="2dp" />
-
-    <ImageButton
-        android:id="@+id/imageButton3"
-        android:layout_width="wrap_content"
-        android:layout_height="51dp"
-        android:layout_marginEnd="8dp"
-
-        android:backgroundTint="#00FFFFFF"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton4"
-        app:srcCompat="@android:drawable/ic_menu_share"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="2dp"
-        app:tint="#FFFFFF" />
-
-    <ImageButton
-        android:id="@+id/imageButton4"
-        android:layout_width="wrap_content"
-        android:layout_height="51dp"
-        android:layout_marginEnd="8dp"
-
-        android:backgroundTint="#00FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_search"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="2dp"
-        app:tint="#FDFBFB" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

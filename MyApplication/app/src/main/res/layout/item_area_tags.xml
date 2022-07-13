@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--这个是为recycler_view的子项指定的布局-->
+<!--CardView也是一个FrameLayout，只是额外提供了圆角和阴影的效果。这里使用CardView来作为子项的最外层布局，从而使得RecyclerView中的每个元素都是在卡片当中的。-->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="4dp"
+    android:foreground="?attr/selectableItemBackground">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/tag_image"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/tag_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:layout_marginStart="4dp"
+                android:drawablePadding="-20px"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.767"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/tag_descr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+
+                android:lines="1"
+                android:maxEms="5"
+                android:singleLine="true"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="@+id/tag_image"
+                app:layout_constraintStart_toStartOf="@+id/tag_name"
+                app:layout_constraintTop_toBottomOf="@+id/tag_name" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--        下面这条被注释的的代码会让图片保持原有比例填满ImageView,超出的部分将被裁切掉-->
+
+
+
+</androidx.cardview.widget.CardView>

@@ -10,30 +10,44 @@
     <com.example.myapplication.mapDrawing.MapView
         android:id="@+id/area_map"
         android:layout_width="fill_parent"
-        android:layout_height="350dp"
-        />
+        android:layout_height="350dp" />
 
     <TextView
         android:id="@+id/biaojigailan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="25dp"
-        android:paddingLeft="10dp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
         android:layout_below="@+id/area_map"
-        android:text="标记概览"
         android:layout_marginBottom="10dp"
-        >
-    </TextView>
+        android:paddingLeft="10dp"
+        android:text="标记概览"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SpUsage" />
+
+    <TextView
+        android:id="@+id/clickText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/area_map"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/biaojigailan"
+        android:autoLink="all"
+        android:clickable="true"
+        android:text="点击查看列表"
+        android:textColor="?android:attr/statusBarColor"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:background="#E8E6E6"
         android:layout_below="@+id/biaojigailan"
-        >
+        android:background="#E8E6E6"
+        android:paddingLeft="15dp">
+
         <LinearLayout
             android:id="@+id/linearlayout1"
             android:layout_width="match_parent"
@@ -101,7 +115,6 @@
 
         </LinearLayout>
     </HorizontalScrollView>
-
 
 
 </RelativeLayout>

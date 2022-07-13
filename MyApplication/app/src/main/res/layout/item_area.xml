@@ -6,14 +6,18 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:layout_marginLeft="20dp"
-    android:layout_marginTop="12dp"
+    android:layout_marginTop="10dp"
     android:layout_marginRight="20dp"
-    android:layout_marginBottom="12dp"
-    app:cardElevation="1dp"
+    android:layout_marginBottom="10dp"
+    app:cardElevation="6dp"
     android:foreground="?attr/selectableItemBackground"
-    app:cardCornerRadius="4dp"
+    app:cardCornerRadius="10dp"
     app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    tools:ignore="ExtraText">
+
+
+
 
 
     <LinearLayout
@@ -26,18 +30,18 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/id_tv_content2"
+                android:id="@+id/id_area_shortText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/id_tv_title"
-                app:layout_constraintStart_toStartOf="@+id/id_tv_title"
-                app:layout_constraintTop_toBottomOf="@+id/id_tv_title"
+                app:layout_constraintEnd_toEndOf="@+id/id_area_name"
+                app:layout_constraintStart_toStartOf="@+id/id_area_name"
+                app:layout_constraintTop_toBottomOf="@+id/id_area_name"
                 tools:ignore="MissingConstraints" />
 
             <TextView
-                android:id="@+id/id_tv_title"
+                android:id="@+id/id_area_name"
                 android:layout_width="0dp"
                 android:layout_height="20dp"
                 android:layout_margin="8dp"
@@ -49,11 +53,11 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/id_area_smallImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/id_area_smallImage"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="10dp"
@@ -68,7 +72,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
-            android:id="@+id/id_iv_img"
+            android:id="@+id/id_area_bigImage"
             android:layout_width="match_parent"
             android:layout_height="161dp"
             android:scaleType="centerCrop" />
@@ -78,7 +82,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/id_tv_content"
+                android:id="@+id/id_area_longText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
