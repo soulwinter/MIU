@@ -34,13 +34,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        try {
-            checkLoginState();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
         //隐藏title
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
@@ -212,49 +205,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void checkLoginState() throws InterruptedException {
-        SharedPreferences sp = getSharedPreferences("login", Context.MODE_PRIVATE);
-        String email = sp.getString("username", null);
-        String code = sp.getString("password", null);
-        if (email == null) {
-            return;
-        }
-        Thread checkStateThread = new Thread(new Runnable(){
-            @Override
-            public void run() {
-                try {
-                    //1、封装请求体数据
-                    FormBody formBody = new FormBody.Builder().add("email",email).add("password",code).build();
-                    //2、获取到请求的对象
-                    Request request = new Request.Builder().url("http://114.116.234.63:8080/user/loginByPassword").post(formBody).build();
-                    //3、获取到回调的对象
-                    Call call = okHttpClient.newCall(request);
-                    //4、执行同步请求,获取到响应对象
-                    Response response = call.execute();
 
-                    //获取json字符串
-                    String json = response.body().string();
-                    JSONObject jsonObject = JSONObject.parseObject(json);
-                    Integer code = jsonObject.getInteger("code");
-                    if (code == 200){
-                        //登陆成功
-                        User user = jsonObject.getObject("data", User.class);
-//                                System.out.println(user.getEmail());
-
-                        //跳转到app主页，并传递user对象
-                        Intent intent = new Intent();
-                        intent.putExtra("user", user);
-                        intent.setClass(MainActivity.this,Welcome.class);
-                        startActivity(intent);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        checkStateThread.start();
-        checkStateThread.join();
-    }
 
 }
