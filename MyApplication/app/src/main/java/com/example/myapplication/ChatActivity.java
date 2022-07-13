@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -46,13 +47,18 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        areaId =  String.valueOf((Integer)intent.getSerializableExtra("areaId"));
+        userId = (String) intent.getSerializableExtra("userId");
+        String areaName = (String) intent.getSerializableExtra("areaName");
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("聊天室:"+areaName);
+
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_chat);
 
-        Intent intent = getIntent();
-        areaId =  String.valueOf((Integer)intent.getSerializableExtra("areaId"));
-        userId = (String) intent.getSerializableExtra("userId");
+
 
         mContext = this;
         list_message = (ListView)findViewById(R.id.message_list);

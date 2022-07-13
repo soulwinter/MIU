@@ -122,6 +122,7 @@ public class AreaDetail extends AppCompatActivity {
                 Intent intent =new Intent();
                 intent.putExtra("areaId", areaObj.getId());
                 intent.putExtra("userId", user.getEmail());
+                intent.putExtra("areaName", areaObj.getName());
                 intent.setClass(AreaDetail.this,ChatActivity.class);
                 startActivity(intent);
             }
