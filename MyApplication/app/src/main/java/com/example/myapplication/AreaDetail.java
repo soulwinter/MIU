@@ -187,6 +187,7 @@ public class AreaDetail extends AppCompatActivity {
 
 //                            getTagList();
                             getWifiLocation();
+                            System.out.println("获取 Wi-Fi 位置");
                             mapView.setUserList(userList);
                             succeedRenewLocation = false;
                             nowTime = 0;
@@ -216,6 +217,8 @@ public class AreaDetail extends AppCompatActivity {
                                 if (flag)
                                     tracingPoint.setTagId(-1);
                                 tracingPointList.add(tracingPoint);
+                                Log.i("POINT_SIZE", String.valueOf(tracingPointList.size()));
+                                mapView.setTracingPointList(tracingPointList);
                             }
 //                            mapView.directionX = xPosition;
 //                            mapView.directionY = yPosition;
@@ -490,19 +493,29 @@ public class AreaDetail extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    //2、获取到请求的对象
-                    Request request = new Request.Builder().url("http://114.116.234.63:8080/ap/listApByAreaId?areaId="+areaObj.getId()).get().build();
-                    //3、获取到回调的对象
-                    Call call = okHttpClient.newCall(request);
-                    //4、执行同步请求,获取到响应对象
-                    Response response = call.execute();
-                    //获取json字符串
-                    String json = response.body().string();
-                    System.out.println(json);
-                    JSONObject jsonObject = JSONObject.parseObject(json);
-                    String arrayStr = jsonObject.getString("data");
-                    apList = JSONObject.parseArray(arrayStr, Ap.class);  //该area的所有ap
-                    Log.i("apList1", apList.toString());
+                    while (true)
+                    {
+                        //2、获取到请求的对象
+                        Request request = new Request.Builder().url("http://114.116.234.63:8080/ap/listApByAreaId?areaId="+areaObj.getId()).get().build();
+                        //3、获取到回调的对象
+                        Call call = okHttpClient.newCall(request);
+                        //4、执行同步请求,获取到响应对象
+                        Response response = call.execute();
+                        //获取json字符串
+                        String json = response.body().string();
+                        System.out.println(json);
+                        JSONObject jsonObject = JSONObject.parseObject(json);
+                        if (jsonObject.isEmpty())
+                        {
+                            continue;
+                        } else {
+                            String arrayStr = jsonObject.getString("data");
+                            apList = JSONObject.parseArray(arrayStr, Ap.class);  //该area的所有ap
+                            break;
+                        }
+
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -588,7 +601,6 @@ public class AreaDetail extends AppCompatActivity {
 
                 }
                 JSONObject jsonObject = JSONObject.parseObject(json);
-                Log.v("JSONCODE", jsonObject.toString());
                 Integer code = jsonObject.getInteger("code");
                 Looper.prepare();
                 if(code == null){
