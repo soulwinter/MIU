@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 
 import android.graphics.Paint;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 
@@ -91,11 +92,23 @@ public class MapView extends View {
             User user = userList.get(i);
             if (i == 0){
                 //画用户自己
-                canvas.drawCircle(user.getX(), user.getY(), 15, paint);
-                paint.setColor(Color.BLACK);
+                paint.setARGB(255, 0, 188, 255);
+                canvas.drawCircle(user.getX(), user.getY(), 30, paint);
+                paint.setARGB(255, 240, 240, 240);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(10);
+                paint.setShadowLayer(5, 0, 0, Color.GRAY);
+                canvas.drawCircle(user.getX(), user.getY(), 30, paint);
                 continue;
             }
-            canvas.drawCircle(user.getX(), user.getY(), 15, paint);
+
+            paint.setARGB(255, 224, 64, 64);
+            canvas.drawCircle(user.getX(), user.getY(), 30, paint);
+            paint.setARGB(255, 240, 240, 240);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(10);
+            paint.setShadowLayer(5, 0, 0, Color.GRAY);
+            canvas.drawCircle(user.getX(), user.getY(), 30, paint);
         }
 
 
