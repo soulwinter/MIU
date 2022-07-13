@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChatActivity"
+    android:background="#F4F2F2"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="650dp">
+        <ListView
+            android:id="@+id/message_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="0dp"
+            android:divider="#ffffff"
+            >
+        </ListView>
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/input"
+        android:layout_marginLeft="10dp"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:minLines="1"
+        android:maxLines="10"
+        android:layout_alignParentBottom="true"
+        android:scrollbars="vertical"
+        android:background="@android:drawable/edit_text"
+        />
+
+    <Button
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发送"
+        android:layout_toRightOf="@id/input"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        >
+    </Button>
+
+
+
+</RelativeLayout>

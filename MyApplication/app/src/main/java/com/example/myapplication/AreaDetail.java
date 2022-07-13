@@ -101,6 +101,7 @@ public class AreaDetail extends AppCompatActivity {
         ImageView addtagView = (ImageView) findViewById(R.id.add_tag_image);
         ImageView addtraceView = (ImageView) findViewById(R.id.add_trace_image);
         TextView textClick = findViewById(R.id.clickText);
+        TextView chat_room = findViewById(R.id.chat_room);
 
 //      点击文本跳转到标记列表的方法
         textClick.setOnClickListener(new View.OnClickListener(){
@@ -109,6 +110,19 @@ public class AreaDetail extends AppCompatActivity {
                 Intent intent =new Intent();
                 intent.putExtra("areaId", areaObj.getId());
                 intent.setClass(AreaDetail.this,tags_list.class);
+                startActivity(intent);
+            }
+
+        });
+
+        //      点击文本跳转到标记列表的方法
+        chat_room.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent =new Intent();
+                intent.putExtra("areaId", areaObj.getId());
+                intent.putExtra("userId", user.getEmail());
+                intent.setClass(AreaDetail.this,ChatActivity.class);
                 startActivity(intent);
             }
 
@@ -461,26 +475,7 @@ public class AreaDetail extends AppCompatActivity {
         WifiManager wifiManager = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
         successScanWifi = wifiManager.startScan();
-//        if (successScanWifi) {
-//            runOnUiThread(
-//                    new Runnable() {
-//                        @Override
-//                        public void run() {
-//                           // Toast.makeText(AreaDetail.this, "扫描成功", Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                    }
-//            );
-//        } else {
-//            runOnUiThread(
-//                    new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Toast.makeText(AreaDetail.this, "扫描失败", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//            );
-//        }
+
         // 获取扫描结果
         List<Integer> strengthList = new ArrayList<>();  //记录最终要上传的strength
         List<Integer> apIdList = new ArrayList<>();   // 最终要上传的ap；总是(1,2,3,...,ap_num)，但我还是写上了
@@ -599,9 +594,7 @@ public class AreaDetail extends AppCompatActivity {
                     yPosition = 0;
                 }else if(code == 200){
                     userList = JSONObject.parseArray(jsonObject.getString("data"), User.class);
-//                    xPosition = dataObject.getInteger("x");
-//                    yPosition = dataObject.getInteger("y");
-//                    Toast.makeText(AreaDetail.this, "X: " + String.valueOf(xPosition) + ", Y: " + String.valueOf(yPosition), Toast.LENGTH_SHORT).show();
+
                     succeedRenewLocation = true;
                 }else{
                     Toast.makeText(AreaDetail.this, "wifi指纹上传失败！", Toast.LENGTH_SHORT).show();

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MIU</string>
+    <item name="Tag_ME" type="id"></item>
+    <item name="Tag_OTHER" type="id"></item>
 </resources>
