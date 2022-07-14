@@ -94,6 +94,34 @@ public class MapView extends View {
         paint.setColor(Color.RED);
         canvas.drawBitmap(bitmap,0,0 + yOffset,null);
 
+
+
+
+
+        for (Tag tag : tagList) {
+            if (nowTag != null){
+                if (nowTag.getId() == tag.getId()){
+                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tag_red);
+                    canvas.drawBitmap(bitmap,tag.getX(),tag.getY() + yOffset,null);
+                    continue;
+                }
+            }
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tag);
+            canvas.drawBitmap(bitmap,tag.getX(),tag.getY() + yOffset,null);
+        }
+
+        paint.setARGB(255, 0, 0, 255);
+        paint.setStrokeWidth(10);
+        for (int tracingPointNo = 0; tracingPointNo < tracingPointList.size(); tracingPointNo++)
+        {
+            if (tracingPointNo < tracingPointList.size() - 1) {
+                canvas.drawLine(tracingPointList.get(tracingPointNo).getX(), tracingPointList.get(tracingPointNo).getY() + yOffset,
+                        tracingPointList.get(tracingPointNo + 1).getX(), tracingPointList.get(tracingPointNo + 1).getY() + yOffset,
+                        paint
+                );
+            }
+        }
+
         for (int i = 0; i < userList.size(); i++) {
             User user = userList.get(i);
             if (i == 0){
@@ -115,31 +143,6 @@ public class MapView extends View {
             paint.setStrokeWidth(10);
             paint.setShadowLayer(5, 0, 0, Color.GRAY);
             canvas.drawCircle(user.getX(), user.getY() + yOffset, 30, paint);
-        }
-
-
-
-        for (Tag tag : tagList) {
-            if (nowTag != null){
-                if (nowTag.getId() == tag.getId()){
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tag_red);
-                    canvas.drawBitmap(bitmap,tag.getX(),tag.getY() + yOffset,null);
-                    continue;
-                }
-            }
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tag);
-            canvas.drawBitmap(bitmap,tag.getX(),tag.getY() + yOffset,null);
-        }
-
-        paint.setARGB(255, 0, 0, 255);
-        for (int tracingPointNo = 0; tracingPointNo < tracingPointList.size(); tracingPointNo++)
-        {
-            if (tracingPointNo < tracingPointList.size() - 1) {
-                canvas.drawLine(tracingPointList.get(tracingPointNo).getX(), tracingPointList.get(tracingPointNo).getY() + yOffset,
-                        tracingPointList.get(tracingPointNo + 1).getX(), tracingPointList.get(tracingPointNo + 1).getY() + yOffset,
-                        paint
-                );
-            }
         }
 
         eachMove();

@@ -42,6 +42,7 @@ import com.example.myapplication.mapDrawing.MapView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -148,8 +149,15 @@ public class AreaDetail extends AppCompatActivity {
         addtraceView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+               // Log.i("IF_NIL", String.valueOf(tracingPointList.size()));
                 //添加轨迹方法请写在此处
+                Intent intent1 = new Intent();
 
+                intent1.putExtra("area", areaObj);
+                intent1.putExtra("user", user);
+                intent1.putExtra("points", (Serializable) tracingPointList);
+                intent1.setClass(AreaDetail.this, AddTrace.class);
+                startActivity(intent1);
             }
         });
 
@@ -216,8 +224,10 @@ public class AreaDetail extends AppCompatActivity {
                                 if (flag)
                                     tracingPoint.setTagId(-1);
                                 tracingPointList.add(tracingPoint);
-                                Log.i("POINT_SIZE", String.valueOf(tracingPointList.size()));
                                 mapView.setTracingPointList(tracingPointList);
+
+
+
                             }
 //                            mapView.directionX = xPosition;
 //                            mapView.directionY = yPosition;
