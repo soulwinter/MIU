@@ -2,10 +2,14 @@ package com.example.myapplication.multi;
 
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,23 +17,36 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import com.alibaba.fastjson.JSONObject;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.example.myapplication.AddWifiRecord;
 import com.example.myapplication.bean.CommentEntity;
 import com.example.myapplication.bean.CommentMoreBean;
 import com.example.myapplication.bean.FirstLevelBean;
 import com.example.myapplication.bean.SecondLevelBean;
 import com.example.myapplication.dialog.InputTextMsgDialog;
+import com.example.myapplication.entity.CommentOfTag;
+import com.example.myapplication.entity.User;
 import com.example.myapplication.listener.SoftKeyBoardListener;
 import com.example.myapplication.util.RecyclerViewUtil;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.example.myapplication.R;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class CommentMultiActivity extends AppCompatActivity implements BaseQuickAdapter.RequestLoadMoreListener {
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class CommentMultiActivity extends AppCompatActivity {
 
     private List<MultiItemEntity> data = new ArrayList<>();
     private List<FirstLevelBean> datas = new ArrayList<>();
@@ -39,21 +56,197 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
     private String content = "这是个评论";
     private CommentDialogMutiAdapter bottomSheetAdapter;
     private RecyclerView rv_dialog_lists;
-    private long totalCount = 22;
+    private int totalCount = 5;
     private int offsetY;
     private int positionCount = 0;
     private RecyclerViewUtil mRecyclerViewUtil;
     private SoftKeyBoardListener mKeyBoardListener;
 
+    private int userId, tagId;
+    private boolean end;
+    private User currentUser;
+    private Integer recommentWho;  // 被回复的评论的id
+    private final Integer MAX_SHOW_COMMENTS = 5;
+    private OkHttpClient okHttpClient = new OkHttpClient();
+    private OkHttpClient okHttpClient2 = new OkHttpClient();
+    private OkHttpClient okHttpClient3 = new OkHttpClient();
+    private List<CommentOfTag> commentOfTagList = new ArrayList<>();
+    private List<CommentOfTag> secondComentList = new ArrayList<>();
+    private List<CommentOfTag> moreCommentList = new ArrayList<>();
+    private List<FirstLevelBean> moreFirstLevelBean = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // todo 临时测试用数据，还需从上一个界面获取当前user
+        userId = 15;
+        tagId = 5;
+        currentUser = new User();
+        currentUser.setId(15);
+        currentUser.setUsername("333");
+        end = false;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_multi);
         mRecyclerViewUtil = new RecyclerViewUtil();
-        initData();
+//        getInitialData(); // 从服务器获取已有的评论
+        WorkThread workThread = new WorkThread();
+        workThread.start();
+        try {
+            workThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+//        tempgetInitialData();
+        initData(); // 将commentOfTagList转为datas
         dataSort(0);
         showSheetDialog();
 
+    }
+
+    private void tempgetInitialData(){
+
+        CommentOfTag c2 = new CommentOfTag();
+        c2.setId(1);
+        c2.setUserId(1);
+        c2.setTagId(0);
+        c2.setComment("c2的comment");
+        c2.setRecommentWho(0);
+        c2.setCreateTime(new Date(1000));
+        c2.setLikes(66);
+        c2.setUserName("sxj1");
+
+        CommentOfTag c3 = new CommentOfTag();
+        c3.setId(2);
+        c3.setUserId(2);
+        c3.setTagId(0);
+        c3.setComment("c3的comment");
+        c3.setRecommentWho(0);
+        c3.setCreateTime(new Date(1000));
+        c3.setLikes(99);
+        c3.setUserName("sxj2");
+
+        List<CommentOfTag> list = new ArrayList<>();
+        list.add(c2);
+        list.add(c3);
+
+        CommentOfTag c1 = new CommentOfTag();
+        c1.setId(0);
+        c1.setUserId(0);
+        c1.setTagId(0);
+        c1.setComment("c1的comment");
+        c1.setRecommentWho(-1);
+        c1.setCreateTime(new Date(1000));
+        c1.setLikes(33);
+        c1.setUserName("333");
+        c1.setChildList(list);
+
+        commentOfTagList.add(c1);
+    }
+
+    private class WorkThread extends Thread{
+        public void run() {
+            try {
+                //2、获取到请求的对象
+                Request request = new Request.Builder().url("http://114.116.234.63:8080/comment/listCommentByTagId?tagId="+tagId).get().build();
+                //3、获取到回调的对象
+                Call call = okHttpClient2.newCall(request);
+                //4、执行同步请求,获取到响应对象
+                Response response = call.execute();
+                //获取json字符串
+                String json = response.body().string();
+                Log.i("josn",json);
+                JSONObject jsonObject = JSONObject.parseObject(json);
+                String initialCommentString = jsonObject.getString("data");
+
+                commentOfTagList = JSONObject.parseArray(initialCommentString, CommentOfTag.class);  //该area的所有ap
+//                    printCommentList(commentOfTagList);
+//                    copyToMoreCommentList(commentOfTagList);
+                Log.i("commentOfTagList-size",String.valueOf(commentOfTagList.size()));
+
+//                    initData();
+//                    dataSort(0);
+//                    showSheetDialog();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // todo 从服务器获取已有的评论(获取了commentOfTagList）
+    private void getInitialData(){
+
+
+        Thread t =  new Thread(new Runnable(){
+            @Override
+            public void run() {
+                try {
+                    //2、获取到请求的对象
+                    Request request = new Request.Builder().url("http://114.116.234.63:8080/comment/listCommentByTagId?tagId="+tagId).get().build();
+                    //3、获取到回调的对象
+                    Call call = okHttpClient2.newCall(request);
+                    //4、执行同步请求,获取到响应对象
+                    Response response = call.execute();
+                    //获取json字符串
+                    String json = response.body().string();
+                    Log.i("josn",json);
+                    JSONObject jsonObject = JSONObject.parseObject(json);
+                    String initialCommentString = jsonObject.getString("data");
+
+                    commentOfTagList = JSONObject.parseArray(initialCommentString, CommentOfTag.class);  //该area的所有ap
+//                    printCommentList(commentOfTagList);
+//                    copyToMoreCommentList(commentOfTagList);
+                    Log.i("commentOfTagList-size",String.valueOf(commentOfTagList.size()));
+
+//                    initData();
+//                    dataSort(0);
+//                    showSheetDialog();
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        t.start();
+
+
+    }
+
+    private void copyToMoreCommentList(List<CommentOfTag> commentOfTagList){
+        if (commentOfTagList.size()>3){
+
+            CommentOfTag commentOfTag = new CommentOfTag();
+
+            for(int i = 3; i<commentOfTagList.size(); i++){
+
+                commentOfTag = commentOfTagList.get(i);
+                moreCommentList.add(commentOfTag);
+
+                FirstLevelBean firstLevelBean = new FirstLevelBean();
+                firstLevelBean.setUserName(commentOfTag.getUserName());
+                firstLevelBean.setId(commentOfTag.getId());
+//                firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
+                firstLevelBean.setCreateTime(commentOfTag.getCreateTime().getTime());
+                firstLevelBean.setContent(commentOfTag.getComment());
+                firstLevelBean.setLikeCount(commentOfTag.getLikes());
+                firstLevelBean.setSecondLevelBeans(new ArrayList<SecondLevelBean>());
+
+                moreFirstLevelBean.add(firstLevelBean);
+
+            }
+        }
+
+
+    }
+
+    private void printCommentList(List<CommentOfTag> commentOfTagList){
+        for(CommentOfTag comment: commentOfTagList ){
+            Log.i("here-comment_"+comment.getId(), String.valueOf(comment.getId()));
+        }
     }
 
     private void initRefresh() {
@@ -63,38 +256,55 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
         bottomSheetAdapter.setNewData(data);
     }
 
-    //原始数据 一般是从服务器接口请求过来的
+    // 将获取的commentOfTagList，转为datas
+    // todo image
     private void initData() {
-        int size = 10;
+
+        int size = commentOfTagList.size();
+        Log.i("first:commentoftag", String.valueOf(size));
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
         for (int i = 0; i < size; i++) {
+            CommentOfTag commentOfTag = commentOfTagList.get(i);
             FirstLevelBean firstLevelBean = new FirstLevelBean();
-            firstLevelBean.setContent("第" + (i + 1) + "人评论内容" + (i % 3 == 0 ? content + (i + 1) + "次" : ""));
-            firstLevelBean.setCreateTime(System.currentTimeMillis());
-            firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3370302115,85956606&fm=26&gp=0.jpg");
-            firstLevelBean.setId(i + "");
-            firstLevelBean.setIsLike(0);
-            firstLevelBean.setLikeCount(i);
-            firstLevelBean.setUserName("星梦缘" + (i + 1));
+            firstLevelBean.setId(commentOfTag.getId());
+//            firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3370302115,85956606&fm=26&gp=0.jpg");
+            firstLevelBean.setUserName(commentOfTag.getUserName());
+            firstLevelBean.setUserId(commentOfTag.getUserId());
+            firstLevelBean.setContent(commentOfTag.getComment());
+            firstLevelBean.setCreateTime(commentOfTag.getCreateTime().getTime());
+            firstLevelBean.setLikeCount(commentOfTag.getLikes());
+            firstLevelBean.setIsLike(0); // 默认未点赞
             firstLevelBean.setTotalCount(i + size);
 
-            List<SecondLevelBean> beans = new ArrayList<>();
-            for (int j = 0; j < 10; j++) {
-                SecondLevelBean secondLevelBean = new SecondLevelBean();
-                secondLevelBean.setContent("一级第" + (i + 1) + "人 二级第" + (j + 1) + "人评论内容" + (j % 3 == 0 ? content + (j + 1) + "次" : ""));
-                secondLevelBean.setCreateTime(System.currentTimeMillis());
-                secondLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
-                secondLevelBean.setId(j + "");
-                secondLevelBean.setIsLike(0);
-                secondLevelBean.setLikeCount(j);
-                secondLevelBean.setUserName("星梦缘" + (i + 1) + "  " + (j + 1));
-                secondLevelBean.setIsReply(j % 5 == 0 ? 1 : 0);
-                secondLevelBean.setReplyUserName(j % 5 == 0 ? "闭嘴家族" + j : "");
-                secondLevelBean.setTotalCount(firstLevelBean.getTotalCount());
-                beans.add(secondLevelBean);
+            secondComentList = commentOfTag.getChildList();
+            int secondSize = secondComentList.size();
+            if (secondSize!=0) {
+                List<SecondLevelBean> beans = new ArrayList<>();
+                for (int j = 0; j < secondSize; j++) {
+                    CommentOfTag secondComent = secondComentList.get(j);
+                    SecondLevelBean secondLevelBean = new SecondLevelBean();
+                    secondLevelBean.setContent(secondComent.getComment());
+                    secondLevelBean.setCreateTime(secondComent.getCreateTime().getTime());
+                    //                secondLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
+                    secondLevelBean.setId(secondComent.getId());
+                    secondLevelBean.setIsLike(0);
+                    secondLevelBean.setLikeCount(secondComent.getLikes());
+                    secondLevelBean.setUserName(secondComent.getUserName());
+                    secondLevelBean.setUserId(secondLevelBean.getUserId());
+                    secondLevelBean.setIsReply(1);
+                    secondLevelBean.setReplyUserName(secondComent.getReplyUsername());
+                    //                secondLevelBean.setTotalCount(firstLevelBean.getTotalCount());
+                    beans.add(secondLevelBean);
+                }
                 firstLevelBean.setSecondLevelBeans(beans);
             }
             datas.add(firstLevelBean);
+            Log.i("first0:datas.size=", String.valueOf(datas.size()));
+
         }
+
+        Log.i("first:datas.size=", String.valueOf(datas.size()));
     }
 
     /**
@@ -106,6 +316,7 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
      */
     private void dataSort(int position) {
         if (datas.isEmpty()) {
+            Log.i("datas.size=", String.valueOf(datas.size()));
             data.add(new MultiItemEntity() {
                 @Override
                 public int getItemType() {
@@ -118,6 +329,7 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
         if (position <= 0) data.clear();
         int posCount = data.size();
         int count = datas.size();
+//        int count = MAX_SHOW_COMMENTS;
         for (int i = 0; i < count; i++) {
             if (i < position) continue;
 
@@ -133,6 +345,7 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
                 continue;
             }
             int beanSize = secondLevelBeans.size();
+//            int beanSize = MAX_SHOW_COMMENTS;
             posCount += beanSize;
             firstLevelBean.setPositionCount(posCount);
             data.add(firstLevelBean);
@@ -146,16 +359,17 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
                 data.add(secondLevelBean);
             }
 
-            //展示更多的item
-            if (beanSize <= 18) {
-                CommentMoreBean moreBean = new CommentMoreBean();
-                moreBean.setPosition(i);
-                moreBean.setPositionCount(posCount);
-                moreBean.setTotalCount(firstLevelBean.getTotalCount());
-                data.add(moreBean);
-            }
+//            //展示更多的item
+//            if (beanSize <= 8) {
+//                CommentMoreBean moreBean = new CommentMoreBean();
+//                moreBean.setPosition(i);
+//                moreBean.setPositionCount(posCount);
+//                moreBean.setTotalCount(firstLevelBean.getTotalCount());
+//                data.add(moreBean);
+//            }
 
         }
+        Log.i("here-datasize:", String.valueOf(data.size()));
     }
 
     public void show(View view) {
@@ -177,7 +391,7 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
         RelativeLayout rl_comment = view.findViewById(R.id.rl_comment);
         iv_dialog_close.setOnClickListener(v -> bottomSheetDialog.dismiss());
         rl_comment.setOnClickListener(v -> {
-            //添加二级评论
+            //todo 添加二级评论
             initInputTextMsgDialog(null, false, null, -1);
         });
 
@@ -186,7 +400,7 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
         rv_dialog_lists.setHasFixedSize(true);
         rv_dialog_lists.setLayoutManager(new LinearLayoutManager(this));
         closeDefaultAnimator(rv_dialog_lists);
-        bottomSheetAdapter.setOnLoadMoreListener(this, rv_dialog_lists);
+//        bottomSheetAdapter.setOnLoadMoreListener(this, rv_dialog_lists);
         rv_dialog_lists.setAdapter(bottomSheetAdapter);
 
         //dialog
@@ -218,6 +432,42 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
         initListener();
     }
 
+    private void modifyLikeCount(int id, int likes){
+        boolean ok = false;
+        // 上传服务器
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                try {
+                    //1、封装请求体数据
+                    FormBody formBody = new FormBody.Builder().add("id", String.valueOf(id)).add("likes", String.valueOf(likes)).build();
+                    //2、获取到请求的对象
+                    Request request = new Request.Builder().url("http://114.116.234.63:8080/comment/updateComment").post(formBody).build();
+                    //3、获取到回调的对象
+                    Call call = okHttpClient3.newCall(request);
+                    //4、执行同步请求,获取到响应对象
+                    Response response = call.execute();
+
+                    //获取json字符串
+                    String json = response.body().string();
+                    JSONObject jsonObject = JSONObject.parseObject(json);
+                    Integer code = jsonObject.getInteger("code");
+//                    if (code == 200){
+//                        Looper.prepare();
+//                        Toast.makeText(CommentMultiActivity.this, "点赞上传服务器成功！", Toast.LENGTH_SHORT).show();
+//                        Looper.loop();
+//                    }else{
+//                        Looper.prepare();
+//                        Toast.makeText(CommentMultiActivity.this, "点赞上传服务器失败！", Toast.LENGTH_SHORT).show();
+//                        Looper.loop();
+//                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
     private void initListener() {
         // 点击事件
         bottomSheetAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
@@ -226,12 +476,14 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
                 switch ((int) view1.getTag()) {
                     case CommentEntity.TYPE_COMMENT_PARENT:
                         if (view1.getId() == R.id.rl_group) {
-                            //添加二级评论
+                            //todo 添加二级评论
                             CommentMultiActivity.this.initInputTextMsgDialog((View) view1.getParent(), false, bottomSheetAdapter.getData().get(position), position);
                         } else if (view1.getId() == R.id.ll_like) {
-                            //一级评论点赞 项目中还得通知服务器 成功才可以修改
+                            //todo 一级评论点赞 项目中还得通知服务器 成功才可以修改
                             FirstLevelBean bean = (FirstLevelBean) bottomSheetAdapter.getData().get(position);
                             bean.setLikeCount(bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
+                            // 上传到服务器
+                            modifyLikeCount(bean.getId(), bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
                             bean.setIsLike(bean.getIsLike() == 0 ? 1 : 0);
                             datas.set(bean.getPosition(), bean);
                             CommentMultiActivity.this.dataSort(0);
@@ -241,12 +493,15 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
                     case CommentEntity.TYPE_COMMENT_CHILD:
 
                         if (view1.getId() == R.id.rl_group) {
-                            //添加二级评论（回复）
+                            //todo 添加二级评论（回复）
                             CommentMultiActivity.this.initInputTextMsgDialog(view1, true, bottomSheetAdapter.getData().get(position), position);
                         } else if (view1.getId() == R.id.ll_like) {
-                            //二级评论点赞 项目中还得通知服务器 成功才可以修改
+                            //todo 二级评论点赞 项目中还得通知服务器 成功才可以修改
                             SecondLevelBean bean = (SecondLevelBean) bottomSheetAdapter.getData().get(position);
                             bean.setLikeCount(bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
+                            // 上传到服务器
+                            modifyLikeCount(bean.getId(), bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
+
                             bean.setIsLike(bean.getIsLike() == 0 ? 1 : 0);
 
                             List<SecondLevelBean> secondLevelBeans = datas.get((int) bean.getPosition()).getSecondLevelBeans();
@@ -257,19 +512,13 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
 
                         break;
                     case CommentEntity.TYPE_COMMENT_MORE:
-                        //在项目中是从服务器获取数据，其实就是二级评论分页获取
+                        //todo 在项目中是从服务器获取数据，其实就是二级评论分页获取【这里有个setId】
                         CommentMoreBean moreBean = (CommentMoreBean) bottomSheetAdapter.getData().get(position);
                         SecondLevelBean secondLevelBean = new SecondLevelBean();
-                        secondLevelBean.setContent("more comment" + 1);
-                        secondLevelBean.setCreateTime(System.currentTimeMillis());
-                        secondLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
-                        secondLevelBean.setId(1 + "");
-                        secondLevelBean.setIsLike(0);
-                        secondLevelBean.setLikeCount(0);
-                        secondLevelBean.setUserName("星梦缘" + 1);
-                        secondLevelBean.setIsReply(0);
-                        secondLevelBean.setReplyUserName("闭嘴家族" + 1);
-                        secondLevelBean.setTotalCount(moreBean.getTotalCount() + 1);
+
+                        secondLevelBean.setUserId(0);
+                        secondLevelBean.setRecommentWho(1);
+                        secondLevelBean.setContent("xxxxxxxxx");
 
                         datas.get((int) moreBean.getPosition()).getSecondLevelBeans().add(secondLevelBean);
                         CommentMultiActivity.this.dataSort(0);
@@ -323,11 +572,10 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
         showInputTextMsgDialog();
     }
 
-    //添加评论
+    //todo 添加评论
     private void addComment(boolean isReply, MultiItemEntity item, final int position, String msg) {
-        final String userName = "hui";
+        String userName = currentUser.getUsername();
         if (position >= 0) {
-            //添加二级评论
             int pos = 0;
             String replyUserName = "未知";
             if (item instanceof FirstLevelBean) {
@@ -335,13 +583,16 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
                 positionCount = (int) (firstLevelBean.getPositionCount() + 1);
                 pos = (int) firstLevelBean.getPosition();
                 replyUserName = firstLevelBean.getUserName();
+                recommentWho = firstLevelBean.getId();
             } else if (item instanceof SecondLevelBean) {
                 SecondLevelBean secondLevelBean = (SecondLevelBean) item;
                 positionCount = (int) (secondLevelBean.getPositionCount() + 1);
                 pos = (int) secondLevelBean.getPosition();
                 replyUserName = secondLevelBean.getUserName();
+                recommentWho = secondLevelBean.getId();
             }
 
+            //todo 添加二级评论
             SecondLevelBean secondLevelBean = new SecondLevelBean();
             secondLevelBean.setReplyUserName(replyUserName);
             secondLevelBean.setIsReply(isReply ? 1 : 0);
@@ -350,8 +601,45 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
             secondLevelBean.setCreateTime(System.currentTimeMillis());
             secondLevelBean.setIsLike(0);
             secondLevelBean.setUserName(userName);
-            secondLevelBean.setId("");
+            secondLevelBean.setId(currentUser.getId());
             secondLevelBean.setPosition(positionCount);
+
+            // todo 将2级评论添加到服务器
+            new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+                        //1、封装请求体数据
+                        FormBody formBody = new FormBody.Builder().add("comment",msg)
+                                .add("recommentWho", String.valueOf(recommentWho))
+                                .add("userId",String.valueOf(currentUser.getId()))
+                                .add("tagId",String.valueOf(tagId)).build();
+                        //2、获取到请求的对象
+                        Request request = new Request.Builder().url("http://114.116.234.63:8080/comment/addComment").post(formBody).build();
+                        //3、获取到回调的对象
+                        Call call = okHttpClient.newCall(request);
+                        //4、执行同步请求,获取到响应对象
+                        Response response = call.execute();
+
+                        //获取json字符串
+                        String json = response.body().string();
+                        JSONObject jsonObject = JSONObject.parseObject(json);
+                        Integer code = jsonObject.getInteger("code");
+                        if (code == 200){
+                            Looper.prepare();
+                            Toast.makeText(CommentMultiActivity.this, "回复成功！", Toast.LENGTH_SHORT).show();
+                            Looper.loop();
+                        }else{
+                            Looper.prepare();
+                            Toast.makeText(CommentMultiActivity.this, "回复失败！", Toast.LENGTH_SHORT).show();
+                            Looper.loop();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
 
             datas.get(pos).getSecondLevelBeans().add(secondLevelBean);
             CommentMultiActivity.this.dataSort(0);
@@ -366,10 +654,10 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
             }, 100);
 
         } else {
-            //添加一级评论
+            //todo 添加一级评论
             FirstLevelBean firstLevelBean = new FirstLevelBean();
             firstLevelBean.setUserName(userName);
-            firstLevelBean.setId(bottomSheetAdapter.getItemCount() + 1 + "");
+            firstLevelBean.setId(bottomSheetAdapter.getItemCount() + 1);
             firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
             firstLevelBean.setCreateTime(System.currentTimeMillis());
             firstLevelBean.setContent(msg);
@@ -379,6 +667,43 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
             CommentMultiActivity.this.dataSort(0);
             bottomSheetAdapter.notifyDataSetChanged();
             rv_dialog_lists.scrollToPosition(0);
+
+            // todo 将1级评论添加到服务器
+            new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+                        //1、封装请求体数据
+                        FormBody formBody = new FormBody.Builder().add("comment",msg)
+                                .add("recommentWho", String.valueOf(-1))
+                                .add("userId",String.valueOf(currentUser.getId()))
+                                .add("tagId",String.valueOf(tagId)).build();
+                        //2、获取到请求的对象
+                        Request request = new Request.Builder().url("http://114.116.234.63:8080/comment/addComment").post(formBody).build();
+                        //3、获取到回调的对象
+                        Call call = okHttpClient.newCall(request);
+                        //4、执行同步请求,获取到响应对象
+                        Response response = call.execute();
+
+                        //获取json字符串
+                        String json = response.body().string();
+                        JSONObject jsonObject = JSONObject.parseObject(json);
+                        Integer code = jsonObject.getInteger("code");
+                        if (code == 200){
+                            Looper.prepare();
+                            Toast.makeText(CommentMultiActivity.this, "评论成功！", Toast.LENGTH_SHORT).show();
+                            Looper.loop();
+                        }else{
+                            Looper.prepare();
+                            Toast.makeText(CommentMultiActivity.this, "评论失败！", Toast.LENGTH_SHORT).show();
+                            Looper.loop();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
         }
     }
 
@@ -400,26 +725,23 @@ public class CommentMultiActivity extends AppCompatActivity implements BaseQuick
         return displayMetrics.heightPixels;
     }
 
-    @Override
-    public void onLoadMoreRequested() {
-        if (datas.size() >= totalCount) {
-            bottomSheetAdapter.loadMoreEnd(false);
-            return;
-        }
-        FirstLevelBean firstLevelBean = new FirstLevelBean();
-        firstLevelBean.setUserName("hui");
-        firstLevelBean.setId((datas.size() + 1) + "");
-        firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
-        firstLevelBean.setCreateTime(System.currentTimeMillis());
-        firstLevelBean.setContent("add loadmore comment");
-        firstLevelBean.setLikeCount(0);
-        firstLevelBean.setSecondLevelBeans(new ArrayList<SecondLevelBean>());
-        datas.add(firstLevelBean);
-        dataSort(datas.size() - 1);
-        bottomSheetAdapter.notifyDataSetChanged();
-        bottomSheetAdapter.loadMoreComplete();
-
-    }
+//    // todo  【这里有添加id】
+//    @Override
+//    public void onLoadMoreRequested() {
+//        if (datas.size() >= totalCount) {
+//            bottomSheetAdapter.loadMoreEnd(false);
+//            return;
+//        }
+//        FirstLevelBean firstLevelBean = new FirstLevelBean();
+//
+//        // todo here
+//        firstLevelBean = moreFirstLevelBean.get(0);
+//        datas.add(firstLevelBean);
+//        dataSort(datas.size() - 1);
+//        bottomSheetAdapter.notifyDataSetChanged();
+//        bottomSheetAdapter.loadMoreComplete();
+//        return;
+//    }
 
     // item滑动
     public void scrollLocation(int offsetY) {

@@ -7,13 +7,13 @@ import static com.example.myapplication.bean.CommentEntity.TYPE_COMMENT_CHILD;
 public class SecondLevelBean implements MultiItemEntity {
 
     //二级评论id
-    private String id;
+    private Integer id;
     //二级评论头像
     private String headImg;
     //二级评论的用户名
     private String userName;
     //二级评论的用户id
-    private String userId;
+    private Integer userId;
     //回复评论人的用户名
     private String replyUserName;
     //回复评论人的用户id
@@ -23,7 +23,7 @@ public class SecondLevelBean implements MultiItemEntity {
     //创建时间
     private long createTime;
     //点赞数量
-    private long likeCount;
+    private int likeCount;
     //是否点赞了  0没有 1点赞
     private int isLike;
     //本条评论是否为回复
@@ -36,12 +36,22 @@ public class SecondLevelBean implements MultiItemEntity {
     private int positionCount;
     //当前二级评论所在一级评论条数的位置（下标）
     private int childPosition;
+    // 被回复的comment的数据库id
+    private Integer recommentWho;
 
-    public String getUserId() {
+    public Integer getRecommentWho() {
+        return recommentWho;
+    }
+
+    public void setRecommentWho(Integer recommentWho) {
+        this.recommentWho = recommentWho;
+    }
+
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -69,11 +79,11 @@ public class SecondLevelBean implements MultiItemEntity {
         this.userName = userName;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -101,11 +111,11 @@ public class SecondLevelBean implements MultiItemEntity {
         this.createTime = createTime;
     }
 
-    public long getLikeCount() {
+    public int getLikeCount() {
         return likeCount;
     }
 
-    public void setLikeCount(long likeCount) {
+    public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
     }
 

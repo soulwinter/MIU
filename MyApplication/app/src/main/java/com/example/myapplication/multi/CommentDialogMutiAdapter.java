@@ -34,7 +34,7 @@ public class CommentDialogMutiAdapter extends BaseMultiItemQuickAdapter<MultiIte
         super(list);
         addItemType(CommentEntity.TYPE_COMMENT_PARENT, R.layout.item_comment_new);
         addItemType(CommentEntity.TYPE_COMMENT_CHILD, R.layout.item_comment_child_new);
-        addItemType(CommentEntity.TYPE_COMMENT_MORE, R.layout.item_comment_new_more);
+//        addItemType(CommentEntity.TYPE_COMMENT_MORE, R.layout.item_comment_new_more);
         addItemType(CommentEntity.TYPE_COMMENT_EMPTY, R.layout.item_comment_empty);
     }
 
@@ -47,9 +47,9 @@ public class CommentDialogMutiAdapter extends BaseMultiItemQuickAdapter<MultiIte
             case CommentEntity.TYPE_COMMENT_CHILD:
                 bindCommentChild(helper, (SecondLevelBean) item);
                 break;
-            case CommentEntity.TYPE_COMMENT_MORE:
-                bindCommonMore(helper, item);
-                break;
+//            case CommentEntity.TYPE_COMMENT_MORE:
+//                bindCommonMore(helper, item);
+//                break;
             case CommentEntity.TYPE_COMMENT_EMPTY:
                 bindEmpty(helper, item);
                 break;

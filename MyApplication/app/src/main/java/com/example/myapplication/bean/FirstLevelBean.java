@@ -11,19 +11,19 @@ public class FirstLevelBean implements MultiItemEntity{
     private List<SecondLevelBean> secondLevelBeans;
 
     //一级评论id
-    private String id;
+    private Integer id;
     //一级评论头像
     private String headImg;
     //一级评论的用户名
     private String userName;
     //一级评论的用户id
-    private String userId;
+    private Integer userId;
     //评论内容
     private String content;
     //创建时间
     private long createTime;
     //点赞数量
-    private long likeCount;
+    private int likeCount;
     //是否点赞了  0没有 1点赞
     private int isLike;
     //当前评论的总条数（包括这条一级评论）ps:处于未使用状态
@@ -32,12 +32,22 @@ public class FirstLevelBean implements MultiItemEntity{
     private int position;
     //当前一级评论所在的位置(下标)
     private int positionCount;
+    // 被回复的comment的数据库id
+    private Integer recommentWho;
 
-    public String getUserId() {
+    public Integer getRecommentWho() {
+        return recommentWho;
+    }
+
+    public void setRecommentWho(Integer recommentWho) {
+        this.recommentWho = recommentWho;
+    }
+
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -49,11 +59,11 @@ public class FirstLevelBean implements MultiItemEntity{
         this.userName = userName;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -81,11 +91,11 @@ public class FirstLevelBean implements MultiItemEntity{
         this.createTime = createTime;
     }
 
-    public long getLikeCount() {
+    public int getLikeCount() {
         return likeCount;
     }
 
-    public void setLikeCount(long likeCount) {
+    public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
     }
 
