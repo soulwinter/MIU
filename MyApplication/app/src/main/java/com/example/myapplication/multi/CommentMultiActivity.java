@@ -1,6 +1,7 @@
 package com.example.myapplication.multi;
 
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.DisplayMetrics;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,7 +28,9 @@ import com.example.myapplication.bean.CommentMoreBean;
 import com.example.myapplication.bean.FirstLevelBean;
 import com.example.myapplication.bean.SecondLevelBean;
 import com.example.myapplication.dialog.InputTextMsgDialog;
+import com.example.myapplication.entity.Ap;
 import com.example.myapplication.entity.CommentOfTag;
+import com.example.myapplication.entity.Tag;
 import com.example.myapplication.entity.User;
 import com.example.myapplication.listener.SoftKeyBoardListener;
 import com.example.myapplication.util.RecyclerViewUtil;
@@ -35,6 +39,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.example.myapplication.R;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +69,7 @@ public class CommentMultiActivity extends AppCompatActivity {
     private RecyclerViewUtil mRecyclerViewUtil;
     private SoftKeyBoardListener mKeyBoardListener;
 
-    private int userId, tagId;
+    private int userId, tagId, areaId;
     private boolean end;
     private User currentUser;
     private Integer recommentWho;  // 被回复的评论的id
@@ -71,10 +78,16 @@ public class CommentMultiActivity extends AppCompatActivity {
     private OkHttpClient okHttpClient = new OkHttpClient();
     private OkHttpClient okHttpClient2 = new OkHttpClient();
     private OkHttpClient okHttpClient3 = new OkHttpClient();
+    private OkHttpClient okHttpClient4 = new OkHttpClient();
     private List<CommentOfTag> commentOfTagList = new ArrayList<>();
     private List<CommentOfTag> secondComentList = new ArrayList<>();
     private List<CommentOfTag> moreCommentList = new ArrayList<>();
     private List<FirstLevelBean> moreFirstLevelBean = new ArrayList<>();
+    private List<Tag> tagList = new ArrayList<>();
+
+    ImageView tagImage;
+    TextView text_tag_name, text_description;
+    String tagImagePath, tagName, tagDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +95,21 @@ public class CommentMultiActivity extends AppCompatActivity {
         // todo 临时测试用数据，还需从上一个界面获取当前user
         userId = 15;
         tagId = 5;
+        areaId = 14;
+        tagName = "333_tag";
+        tagDescription = "333测试tag";
         currentUser = new User();
         currentUser.setId(15);
         currentUser.setUsername("333");
         end = false;
 
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_multi);
+
+        // 初始化tag名字、图片、描述
+        initTagView();
+
         mRecyclerViewUtil = new RecyclerViewUtil();
 //        getInitialData(); // 从服务器获取已有的评论
         WorkThread workThread = new WorkThread();
@@ -165,11 +186,6 @@ public class CommentMultiActivity extends AppCompatActivity {
 //                    copyToMoreCommentList(commentOfTagList);
 //                Log.i("commentOfTagList-size",String.valueOf(commentOfTagList.size()));
 
-//                    initData();
-//                    dataSort(0);
-//                    showSheetDialog();
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -178,7 +194,6 @@ public class CommentMultiActivity extends AppCompatActivity {
 
     // 从服务器获取已有的评论(获取了commentOfTagList）
     private void getInitialData(){
-
 
         Thread t =  new Thread(new Runnable(){
             @Override
@@ -394,6 +409,7 @@ public class CommentMultiActivity extends AppCompatActivity {
             return;
         }
 
+        Log.e("intoShow:", "intoshow");
         //view
         View view = View.inflate(this, R.layout.dialog_bottomsheet, null);
         ImageView iv_dialog_close = (ImageView) view.findViewById(R.id.dialog_bottomsheet_iv_close);
@@ -797,4 +813,58 @@ public class CommentMultiActivity extends AppCompatActivity {
         bottomSheetAdapter = null;
         super.onDestroy();
     }
+
+    private void initTagView(){
+        tagImage = (ImageView) findViewById(R.id.imageview_tag_image);
+        text_tag_name = (TextView) findViewById(R.id.text_tag_name);
+        text_description = (TextView) findViewById(R.id.text_description);
+
+        text_tag_name.setText(tagName);
+        text_description.setText(tagDescription);
+
+//        setImage();
+
+    }
+
+    private void setImage(){
+
+        //获取区域平面图
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String path = "http://114.116.234.63:8080/image" + tagImagePath;
+                    Log.i("PATH", path);
+                    //2:把网址封装为一个URL对象
+                    URL url = new URL(path);
+                    //3:获取客户端和服务器的连接对象，此时还没有建立连接
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    //4:初始化连接对象
+                    conn.setRequestMethod("GET");
+                    //设置连接超时
+                    conn.setConnectTimeout(8000);
+                    //设置读取超时
+                    conn.setReadTimeout(8000);
+                    //5:发生请求，与服务器建立连接
+                    conn.connect();
+                    //如果响应码为200，说明请求成功
+                    if (conn.getResponseCode() == 200) {
+                        //获取服务器响应头中的流
+                        InputStream is = conn.getInputStream();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+
+        try {
+            thread.join();
+//            设置tag图片
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
