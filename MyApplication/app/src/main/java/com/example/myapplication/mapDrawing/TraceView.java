@@ -1,5 +1,6 @@
 package com.example.myapplication.mapDrawing;
 
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,7 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 // 绘制地图 View
-public class MapView extends View {
+public class TraceView extends View {
+
+    public TraceView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
     public int yOrigin = 0;
     public int yOffset = 0;
@@ -41,8 +46,6 @@ public class MapView extends View {
     public int widthRectNumber, heightRectNumber;
 
     private Bitmap bitmap = null; //平面图
-    private List<Tag> tagList = new ArrayList<>(); //标记点
-    private List<Trace> traceList = new ArrayList<>(); //轨迹点
     private List<User> userList = new ArrayList<>(); //当前用户集合
 
     public List<TracingPoint> getTracingPointList() {
@@ -68,9 +71,7 @@ public class MapView extends View {
     }
 
 
-    public MapView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -94,42 +95,7 @@ public class MapView extends View {
         paint.setColor(Color.RED);
         canvas.drawBitmap(bitmap,0,0 + yOffset,null);
 
-        for (int i = 0; i < userList.size(); i++) {
-            User user = userList.get(i);
-            if (i == 0){
-                //画用户自己
-                paint.setARGB(255, 0, 188, 255);
-                canvas.drawCircle(user.getX(), user.getY() + yOffset, 30, paint);
-                paint.setARGB(255, 240, 240, 240);
-                paint.setStyle(Paint.Style.STROKE);
-                paint.setStrokeWidth(10);
-                paint.setShadowLayer(5, 0, 0, Color.GRAY);
-                canvas.drawCircle(user.getX(), user.getY() + yOffset, 30, paint);
-                continue;
-            }
 
-            paint.setARGB(255, 224, 64, 64);
-            canvas.drawCircle(user.getX(), user.getY() + yOffset, 30, paint);
-            paint.setARGB(255, 240, 240, 240);
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(10);
-            paint.setShadowLayer(5, 0, 0, Color.GRAY);
-            canvas.drawCircle(user.getX(), user.getY() + yOffset, 30, paint);
-        }
-
-
-
-        for (Tag tag : tagList) {
-            if (nowTag != null){
-                if (nowTag.getId() == tag.getId()){
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tag_red);
-                    canvas.drawBitmap(bitmap,tag.getX(),tag.getY() + yOffset,null);
-                    continue;
-                }
-            }
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tag);
-            canvas.drawBitmap(bitmap,tag.getX(),tag.getY() + yOffset,null);
-        }
 
         paint.setARGB(255, 0, 0, 255);
         for (int tracingPointNo = 0; tracingPointNo < tracingPointList.size(); tracingPointNo++)
@@ -142,7 +108,6 @@ public class MapView extends View {
             }
         }
 
-        eachMove();
         postInvalidateDelayed(eachStep);
 
 
@@ -175,49 +140,5 @@ public class MapView extends View {
         return true;
     }
 
-    private void eachMove() {
-        float totalDistance = (float) Math.sqrt(Math.pow(nowX - directionX, 2) + Math.pow(nowY - directionY, 2));
-        if (totalDistance < 0) {
-            nowX = directionX * eachStep ;
-            nowY = directionY * eachStep ;
-        } else {
-            nowX += (float)(directionX * eachStep - nowX) / 10.0;
-            nowY += (float)(directionY * eachStep - nowY) / 10.0;
 
-        }
-
-    }
-
-
-    public List<Tag> getTagList() {
-        return tagList;
-    }
-
-    public void setTagList(List<Tag> tagList) {
-        this.tagList = tagList;
-    }
-
-    public List<Trace> getTraceList() {
-        return traceList;
-    }
-
-    public void setTraceList(List<Trace> traceList) {
-        this.traceList = traceList;
-    }
-
-    public Tag getNowTag() {
-        return nowTag;
-    }
-
-    public void setNowTag(Tag nowTag) {
-        this.nowTag = nowTag;
-    }
-
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
-    }
 }

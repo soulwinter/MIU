@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
@@ -81,7 +83,7 @@ public class Login_pwd extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            while (true){
+                            while (true) {
                                 //1、封装请求体数据
                                 FormBody formBody = new FormBody.Builder().add("email",email).add("password",code).build();
                                 //2、获取到请求的对象
@@ -101,6 +103,12 @@ public class Login_pwd extends AppCompatActivity {
                                     //登陆成功
                                     User user = jsonObject.getObject("data", User.class);
 //                                System.out.println(user.getEmail());
+                                    // 保存登录状态
+                                    SharedPreferences sp = getSharedPreferences("login", Context.MODE_PRIVATE);
+                                    sp.edit()
+                                            .putString("username", user.getEmail())
+                                            .putString("password", user.getPassword())
+                                            .apply();
                                     //跳转到app主页，并传递user对象
                                     Intent intent = new Intent();
                                     intent.putExtra("user", user);
@@ -114,8 +122,6 @@ public class Login_pwd extends AppCompatActivity {
                                 }
                                 break;
                             }
-
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

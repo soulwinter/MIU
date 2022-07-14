@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
@@ -12,6 +14,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.myapplication.entity.User;
 
 import java.io.IOException;
 
@@ -82,9 +85,9 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-
-                            while (true){
-                                //1、封装请求体数据
+                            JSONObject jsonObject = new JSONObject();
+                            //1、封装请求体数据
+                            while (true) {
                                 FormBody formBody = new FormBody.Builder().add("email",email).add("username",name).add("password",pwd).build();
                                 //2、获取到请求的对象
                                 Request request = new Request.Builder().url("http://114.116.234.63:8080/user/register").post(formBody).build();
@@ -92,21 +95,28 @@ public class Register extends AppCompatActivity {
                                 Call call = okHttpClient.newCall(request);
                                 //4、执行同步请求,获取到响应对象
                                 Response response = call.execute();
-
                                 //获取json字符串
                                 String json = response.body().string();
-                                JSONObject jsonObject = JSONObject.parseObject(json);
-                                if (jsonObject == null)
+                                jsonObject = JSONObject.parseObject(json);
+                                if (jsonObject == null) {
                                     continue;
+                                }
                                 Integer code = jsonObject.getInteger("code");
                                 if (code == 200){
                                     //注册成功
-//                                User user = jsonObject.getObject("data", User.class);
-//                                System.out.println(user.getEmail());
+                                    User user = jsonObject.getObject("data", User.class);
+                                    System.out.println(user.getEmail());
+
+                                    // 保存登录状态
+                                    SharedPreferences sp = getSharedPreferences("login", Context.MODE_PRIVATE);
+                                    sp.edit()
+                                            .putString("username", user.getEmail())
+                                            .putString("password", user.getPassword())
+                                            .apply();
 
                                     //跳转到app主页，把登录的邮箱传过去
                                     Intent intent = new Intent();
-                                    intent.putExtra("user_email", email);
+                                    intent.putExtra("user", user);
                                     intent.setClass(Register.this,Welcome.class);
                                     startActivity(intent);
 
@@ -121,7 +131,6 @@ public class Register extends AppCompatActivity {
                                 }
                                 break;
                             }
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

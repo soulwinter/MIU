@@ -1,46 +1,53 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
+import com.example.myapplication.entity.Area;
+import com.example.myapplication.entity.User;
+import com.example.myapplication.mapDrawing.TraceView;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class Me extends AppCompatActivity {
+public class AddTrace extends AppCompatActivity {
 
-    private String str;
-    private MyHandler handler1;
-    class MyHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            ImageView imageView = (ImageView)findViewById(R.id.head_image);
-            imageView.setImageBitmap((Bitmap)msg.obj);
-        }
-    }
-
+    public TraceView traceView;
+    private Bitmap bitmap = null; //平面图
+    private Area areaObj = null;
+    private User user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_me);
 
-        handler1 = new MyHandler();
-        new Thread(new Runnable() {
+        Intent intent = getIntent();
+        areaObj = (Area)intent.getSerializableExtra("area");
+        user = (User)intent.getSerializableExtra("user");
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("上传轨迹");
+
+        traceView = (TraceView) findViewById(R.id.trace_map);
+
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_trace);
+    }
+
+    private void getAreaInfo(){
+        //获取区域平面图
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-
                 try {
-                    String path = "http://114.116.234.63:8080/image/home/project/miu/images/user/1/sss.jpg";
+                    String path = "http://114.116.234.63:8080/image" + areaObj.getPhotoPath();
                     //2:把网址封装为一个URL对象
                     URL url = new URL(path);
                     //3:获取客户端和服务器的连接对象，此时还没有建立连接
@@ -58,17 +65,21 @@ public class Me extends AppCompatActivity {
                         //获取服务器响应头中的流
                         InputStream is = conn.getInputStream();
                         //读取流里的数据，构建成bitmap位图
-                        Bitmap bm = BitmapFactory.decodeStream(is);
-                        Message msg = new Message();
-                        msg.obj = bm;
-                        handler1.sendMessage(msg);
-                        handler1.sendMessage(msg);
+                        bitmap = BitmapFactory.decodeStream(is);
                     }
-                } catch (Exception e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        }).start();
-    }
+        });
+        thread.start();
 
+
+        try {
+            thread.join();
+            traceView.setBitmap(bitmap);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

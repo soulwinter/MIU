@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".Me">
 
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_view"
+        android:layout_alignRight="@id/top_view"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="137dp"
+        android:padding="10dp"
+        android:text="退出登录"
+        android:textSize="18dp">
+
+    </Button>
+
     <TextView
         android:id="@+id/top_view"
         android:layout_width="match_parent"
@@ -61,14 +75,13 @@
         android:id="@+id/changeInfoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="修改信息"
-        android:padding="10dp"
-        android:textSize="18dp"
         android:layout_below="@id/top_view"
         android:layout_alignRight="@id/top_view"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        >
+        android:layout_marginRight="10dp"
+        android:padding="10dp"
+        android:text="修改信息"
+        android:textSize="18dp">
 
     </Button>
 

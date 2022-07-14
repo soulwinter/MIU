@@ -3,7 +3,9 @@ package com.example.myapplication;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
@@ -31,9 +33,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         //隐藏title
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -113,21 +117,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String email = ((EditText)findViewById(R.id.email_edit)).getText().toString();
-                String code = ((EditText)findViewById(R.id.code_edit)).getText().toString();
-                if (!check_email(email)){
+                String email = ((EditText) findViewById(R.id.email_edit)).getText().toString();
+                String code = ((EditText) findViewById(R.id.code_edit)).getText().toString();
+                if (!check_email(email)) {
                     Toast.makeText(MainActivity.this, "请输入正确的邮箱！", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (code.length()==0){
+                if (code.length() == 0) {
                     Toast.makeText(MainActivity.this, "验证码不能为空！", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                new Thread(new Runnable(){
+
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            while (true){
+                            while (true) {
                                 //1、封装请求体数据
                                 FormBody formBody = new FormBody.Builder().add("email",email).add("codeValue",code).build();
                                 //2、获取到请求的对象
@@ -136,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
                                 Call call = okHttpClient.newCall(request);
                                 //4、执行同步请求,获取到响应对象
                                 Response response = call.execute();
-
                                 //获取json字符串
                                 String json = response.body().string();
                                 JSONObject jsonObject = JSONObject.parseObject(json);
@@ -150,6 +154,13 @@ public class MainActivity extends AppCompatActivity {
                                 }else if (code == 200){
                                     //登陆成功
                                     User user = jsonObject.getObject("data", User.class);
+                                    // 保存登录状态
+                                    SharedPreferences sp = getSharedPreferences("login", Context.MODE_PRIVATE);
+                                    sp.edit()
+                                            .putString("username", user.getEmail())
+                                            .putString("password", user.getPassword())
+                                            .apply();
+
                                     //跳转到app主页，把登录的邮箱传过去
                                     Intent intent = new Intent();
                                     intent.putExtra("user", user);
@@ -164,13 +175,12 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 break;
                             }
-
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                     }
                 }).start();
+
             }
         });
 
@@ -199,5 +209,7 @@ public class MainActivity extends AppCompatActivity {
         return pattern.matcher(email).matches();
 
     }
+
+
 
 }
