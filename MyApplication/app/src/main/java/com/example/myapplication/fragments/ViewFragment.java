@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.AddTag;
 import com.example.myapplication.R;
+import com.example.myapplication.multi.CommentMultiActivity;
 
 public class ViewFragment extends Fragment {
     @Override
@@ -26,13 +27,13 @@ public class ViewFragment extends Fragment {
 
         // 添加标记的button
         // 临时button，测试add_tag界面用
-        Button button_add_tag = root.findViewById(R.id.button_add_tag);
+        Button button_view_comment = root.findViewById(R.id.button_view_comment);
 
-        button_add_tag.setOnClickListener(new View.OnClickListener() {
+        button_view_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getActivity(), AddTag.class);
+                Intent intent = new Intent(getActivity(), CommentMultiActivity.class);
                 intent.putExtra("pointX",x);
                 intent.putExtra("pointY",y);
                 intent.putExtra("userId", userId);

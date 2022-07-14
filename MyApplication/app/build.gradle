@@ -44,5 +44,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
 
+    //圆角圆形图片控件 主要是可以带边框
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    //万能适配器
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
 
 }
