@@ -49,7 +49,7 @@ public class TraceDetail extends AppCompatActivity {
         tracePointNumber = (TextView) findViewById(R.id.traceNumber2);
         traceNameText = (TextView) findViewById(R.id.traceNameDetail);
         traceDescriptionText = (TextView) findViewById(R.id.traceDeseriptionDetail);
-
+        traceView.setTracingPointList(trace.getPointList());
         tracePointNumber.setText(String.valueOf(trace.getPointList().size()));
         traceNameText.setText(trace.getTraceName());
         traceDescriptionText.setText(trace.getDescription());
