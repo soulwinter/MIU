@@ -83,38 +83,44 @@ public class Register extends AppCompatActivity {
                     public void run() {
                         try {
 
-                            //1、封装请求体数据
-                            FormBody formBody = new FormBody.Builder().add("email",email).add("username",name).add("password",pwd).build();
-                            //2、获取到请求的对象
-                            Request request = new Request.Builder().url("http://114.116.234.63:8080/user/register").post(formBody).build();
-                            //3、获取到回调的对象
-                            Call call = okHttpClient.newCall(request);
-                            //4、执行同步请求,获取到响应对象
-                            Response response = call.execute();
+                            while (true){
+                                //1、封装请求体数据
+                                FormBody formBody = new FormBody.Builder().add("email",email).add("username",name).add("password",pwd).build();
+                                //2、获取到请求的对象
+                                Request request = new Request.Builder().url("http://114.116.234.63:8080/user/register").post(formBody).build();
+                                //3、获取到回调的对象
+                                Call call = okHttpClient.newCall(request);
+                                //4、执行同步请求,获取到响应对象
+                                Response response = call.execute();
 
-                            //获取json字符串
-                            String json = response.body().string();
-                            JSONObject jsonObject = JSONObject.parseObject(json);
-                            Integer code = jsonObject.getInteger("code");
-                            if (code == 200){
-                                //注册成功
+                                //获取json字符串
+                                String json = response.body().string();
+                                JSONObject jsonObject = JSONObject.parseObject(json);
+                                if (jsonObject == null)
+                                    continue;
+                                Integer code = jsonObject.getInteger("code");
+                                if (code == 200){
+                                    //注册成功
 //                                User user = jsonObject.getObject("data", User.class);
 //                                System.out.println(user.getEmail());
 
-                                //跳转到app主页，把登录的邮箱传过去
-                                Intent intent = new Intent();
-                                intent.putExtra("user_email", email);
-                                intent.setClass(Register.this,Welcome.class);
-                                startActivity(intent);
+                                    //跳转到app主页，把登录的邮箱传过去
+                                    Intent intent = new Intent();
+                                    intent.putExtra("user_email", email);
+                                    intent.setClass(Register.this,Welcome.class);
+                                    startActivity(intent);
 
-                                Looper.prepare();
-                                Toast.makeText(Register.this, "注册成功！", Toast.LENGTH_SHORT).show();
-                                Looper.loop();
+                                    Looper.prepare();
+                                    Toast.makeText(Register.this, "注册成功！", Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
 
-                            }else{
-                                Looper.prepare();
-                                Toast.makeText(Register.this, "注册失败！", Toast.LENGTH_SHORT).show();
-                                Looper.loop();                            }
+                                }else{
+                                    Looper.prepare();
+                                    Toast.makeText(Register.this, "注册失败！", Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                }
+                                break;
+                            }
 
                         } catch (IOException e) {
                             e.printStackTrace();

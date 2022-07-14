@@ -75,9 +75,16 @@ public class area_adapter extends BaseAdapter {
         viewHolder.areaName.setText(msg.getName());
         viewHolder.shortContent.setText(msg.getShortDescription());
         viewHolder.longContent.setText(msg.getLongDescription());
-        Glide.with(viewHolder.smallImg) .load("http://114.116.234.63:8080/image/"+msg.getImagePath()) .into(viewHolder.smallImg);
-        Glide.with(viewHolder.bigImg) .load("http://114.116.234.63:8080/image/"+msg.getPhotoPath()) .into(viewHolder.bigImg);
-
+        boolean flag = true;
+        while (flag){
+            try{
+                Glide.with(viewHolder.smallImg) .load("http://114.116.234.63:8080/image/"+msg.getImagePath()) .into(viewHolder.smallImg);
+                Glide.with(viewHolder.bigImg) .load("http://114.116.234.63:8080/image/"+msg.getPhotoPath()) .into(viewHolder.bigImg);
+                flag = false;
+            }catch (Exception e){
+               flag = true;
+            }
+        }
         return convertView;
     }
 

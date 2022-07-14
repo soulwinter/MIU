@@ -15,6 +15,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -249,20 +250,24 @@ public class AddTag extends AppCompatActivity {
                 .build();
 
         // 创建一个通信请求
-        try (Response response = client.newCall(request).execute()) {
-            // 尝试将返回值转换成字符串并返回
-            if (response.code() == 200){
-                Looper.prepare();
-                Toast.makeText(AddTag.this, "添加标记成功！", Toast.LENGTH_SHORT).show();
-                Looper.loop();
-            }else{
-                Looper.prepare();
-                Toast.makeText(AddTag.this, "添加标记失败！", Toast.LENGTH_SHORT).show();
-                Looper.loop();
+        while (true){
+            try (Response response = client.newCall(request).execute()) {
+                // 尝试将返回值转换成字符串并返回
+                if (response.code() == 200){
+                    Looper.prepare();
+                    Toast.makeText(AddTag.this, "添加标记成功！", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }else{
+                    Looper.prepare();
+                    Toast.makeText(AddTag.this, "添加标记失败！", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+                break;
+            } catch (IOException e) {
+                Log.i("已处理错误","服务器繁忙");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
     }
 
 

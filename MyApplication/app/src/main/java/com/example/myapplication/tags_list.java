@@ -83,30 +83,35 @@ public class tags_list  extends AppCompatActivity  {
             public void run() {
                 try {
 
-                    //2、获取到请求的对象
-                    Request request = new Request.Builder().url("http://114.116.234.63:8080/tag/listTagByAreaId?areaId="+areaIdStr).get().build();
-                    //3、获取到回调的对象
-                    Call call = okHttpClient.newCall(request);
+                    while (true){
+                        //2、获取到请求的对象
+                        Request request = new Request.Builder().url("http://114.116.234.63:8080/tag/listTagByAreaId?areaId="+areaIdStr).get().build();
+                        //3、获取到回调的对象
+                        Call call = okHttpClient.newCall(request);
 
-                    //4、执行同步请求,获取到响应对象
-                    Response response = call.execute();
-
-
-                    //获取json字符串
-                    String json = response.body().string();
-                    System.out.println(json);
-                    JSONObject jsonObject = JSONObject.parseObject(json);
-                    String arrayStr = jsonObject.getString("data");
+                        //4、执行同步请求,获取到响应对象
+                        Response response = call.execute();
 
 
-                    tagsL = JSONObject.parseArray(arrayStr, Tag.class);
-                    adapter = new tags_list_adapter(tagsL);
+                        //获取json字符串
+                        String json = response.body().string();
+                        System.out.println(json);
+                        JSONObject jsonObject = JSONObject.parseObject(json);
+                        if (jsonObject == null)
+                            continue;
+                        String arrayStr = jsonObject.getString("data");
 
-                    Message msg = new Message();
 
-                    msg.what = 100;  //消息发送的标志
-                    msg.obj = "adapter"; //消息发送的内容如：  Object String 类 int
-                    handler1.sendMessage(msg);
+                        tagsL = JSONObject.parseArray(arrayStr, Tag.class);
+                        adapter = new tags_list_adapter(tagsL);
+
+                        Message msg = new Message();
+
+                        msg.what = 100;  //消息发送的标志
+                        msg.obj = "adapter"; //消息发送的内容如：  Object String 类 int
+                        handler1.sendMessage(msg);
+                        break;
+                    }
 
 
                 } catch (IOException e) {

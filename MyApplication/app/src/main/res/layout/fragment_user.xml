@@ -19,14 +19,15 @@
         android:textSize="25dp"
         android:textStyle="bold" />
 
-    <ImageView
+
+    <com.example.myapplication.imageView.CircleImageView
         android:id="@+id/head_image"
+        android:layout_marginTop="80dp"
         android:layout_width="140dp"
         android:layout_height="140dp"
-        android:layout_marginTop="80dp"
-        android:background="#DAD6D6">
-
-    </ImageView>
+        android:scaleType="centerCrop"
+        >
+    </com.example.myapplication.imageView.CircleImageView>
 
     <TextView
         android:id="@+id/username"

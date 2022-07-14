@@ -83,22 +83,25 @@ public class ChatActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //1、封装请求体数据
-//        FormBody formBody = new FormBody.Builder().add("email",email).add("password",code).build();
-                //2、获取到请求的对象
-                Request request = new Request.Builder().url("http://114.116.234.63:8080/chat/channel/join?channel="+areaId).get().build();
-                //3、获取到回调的对象
-                OkHttpClient okHttpClient = new OkHttpClient();
-                Call call = okHttpClient.newCall(request);
-                //4、执行同步请求,获取到响应对象
-                Response response = null;
-                try {
-                    response = call.execute();
-                    //获取json字符串
-                    String json = response.body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+                while (true){
+                    //2、获取到请求的对象
+                    Request request = new Request.Builder().url("http://114.116.234.63:8080/chat/channel/join?channel="+areaId).get().build();
+                    //3、获取到回调的对象
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    Call call = okHttpClient.newCall(request);
+                    //4、执行同步请求,获取到响应对象
+                    Response response = null;
+                    try {
+                        response = call.execute();
+                        //获取json字符串
+                        String json = response.body().string();
+                        break;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
+
             }
         }).start();
 
@@ -239,6 +242,8 @@ public class ChatActivity extends AppCompatActivity {
                         //获取json字符串
                         String json = response.body().string();
                         JSONObject jsonObject = JSONObject.parseObject(json);
+                        if (jsonObject == null)
+                            continue;
                         Integer code = jsonObject.getInteger("code");
                         if (code == 200){
                             List<ChatHisMessageDTO> resultList = JSONObject.parseArray(jsonObject.getString("data"), ChatHisMessageDTO.class);

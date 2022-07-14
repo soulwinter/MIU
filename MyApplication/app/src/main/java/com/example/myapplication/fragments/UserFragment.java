@@ -67,7 +67,15 @@ public class UserFragment extends Fragment {
 
         ImageView imageView = (ImageView)root.findViewById(R.id.head_image);
 
-        Glide.with(imageView).load("http://114.116.234.63:8080/image" + user.getPhotoPath()).into(imageView);
+        boolean flag = true;
+        while (flag){
+            try{
+                Glide.with(imageView).load("http://114.116.234.63:8080/image" + user.getPhotoPath()).into(imageView);
+                flag = false;
+            }catch (Exception e){
+                flag = true;
+            }
+        }
 //
     }
 
@@ -109,23 +117,29 @@ public class UserFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    //1、封装请求体数据
-                    FormBody formBody = new FormBody.Builder().add("email", email).add("password", password).build();
-                    //2、获取到请求的对象
-                    Request request = new Request.Builder().url("http://114.116.234.63:8080/user/loginByPassword").post(formBody).build();
-                    //3、获取到回调的对象
-                    OkHttpClient okHttpClient = new OkHttpClient();
-                    Call call = okHttpClient.newCall(request);
-                    //4、执行同步请求,获取到响应对象
-                    Response response = call.execute();
+                    while (true){
+                        //1、封装请求体数据
+                        FormBody formBody = new FormBody.Builder().add("email", email).add("password", password).build();
+                        //2、获取到请求的对象
+                        Request request = new Request.Builder().url("http://114.116.234.63:8080/user/loginByPassword").post(formBody).build();
+                        //3、获取到回调的对象
+                        OkHttpClient okHttpClient = new OkHttpClient();
+                        Call call = okHttpClient.newCall(request);
+                        //4、执行同步请求,获取到响应对象
+                        Response response = call.execute();
 
-                    //获取json字符串
-                    String json = response.body().string();
-                    JSONObject jsonObject = JSONObject.parseObject(json);
-                    Integer code = jsonObject.getInteger("code");
-                    if (code == 200) {
-                        //登陆成功
-                        user = jsonObject.getObject("data", User.class);
+                        //获取json字符串
+                        String json = response.body().string();
+                        JSONObject jsonObject = JSONObject.parseObject(json);
+                        if (jsonObject == null){
+                            continue;
+                        }
+                        Integer code = jsonObject.getInteger("code");
+                        if (code == 200) {
+                            //登陆成功
+                            user = jsonObject.getObject("data", User.class);
+                        }
+                        break;
                     }
 
                 } catch (IOException e) {
@@ -151,29 +165,36 @@ public class UserFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    //2、获取到请求的对象
-                    Request request = new Request.Builder().url("http://114.116.234.63:8080/tag/listTagByUserId?userId="
-                            +user.getId()).get().build();
-                    //3、获取到回调的对象
-                    OkHttpClient okHttpClient = new OkHttpClient();
-                    Call call = okHttpClient.newCall(request);
-                    //4、执行同步请求,获取到响应对象
-                    Response response = call.execute();
-                    //获取json字符串
-                    String json = response.body().string();
+                    while (true){
+                        //2、获取到请求的对象
+                        Request request = new Request.Builder().url("http://114.116.234.63:8080/tag/listTagByUserId?userId="
+                                +user.getId()).get().build();
+                        //3、获取到回调的对象
+                        OkHttpClient okHttpClient = new OkHttpClient();
+                        Call call = okHttpClient.newCall(request);
+                        //4、执行同步请求,获取到响应对象
+                        Response response = call.execute();
+                        //获取json字符串
+                        String json = response.body().string();
 
-                    JSONObject jsonObject = JSONObject.parseObject(json);
-                    String arrayStr = jsonObject.getString("data");
-                    final List<Tag> tagList = new ArrayList<>();
-                    synchronized (tagList){
-                        tagList.addAll(JSONObject.parseArray(arrayStr, Tag.class));
-                        clvTags.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                clvTags.setAdapter(new UserTagsAdapter(tagList));
-                            }
-                        });
+                        JSONObject jsonObject = JSONObject.parseObject(json);
+                        if (jsonObject == null){
+                            continue;
+                        }
+                        String arrayStr = jsonObject.getString("data");
+                        final List<Tag> tagList = new ArrayList<>();
+                        synchronized (tagList){
+                            tagList.addAll(JSONObject.parseArray(arrayStr, Tag.class));
+                            clvTags.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    clvTags.setAdapter(new UserTagsAdapter(tagList));
+                                }
+                            });
+                        }
+                        break;
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -188,29 +209,35 @@ public class UserFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    //2、获取到请求的对象
-                    Request request = new Request.Builder().url("http://114.116.234.63:8080/trace/listTraceByUserId?userId="
-                            +user.getId()).get().build();
-                    //3、获取到回调的对象
-                    OkHttpClient okHttpClient = new OkHttpClient();
-                    Call call = okHttpClient.newCall(request);
-                    //4、执行同步请求,获取到响应对象
-                    Response response = call.execute();
-                    //获取json字符串
-                    String json = response.body().string();
+                    while (true){
+                        //2、获取到请求的对象
+                        Request request = new Request.Builder().url("http://114.116.234.63:8080/trace/listTraceByUserId?userId="
+                                +user.getId()).get().build();
+                        //3、获取到回调的对象
+                        OkHttpClient okHttpClient = new OkHttpClient();
+                        Call call = okHttpClient.newCall(request);
+                        //4、执行同步请求,获取到响应对象
+                        Response response = call.execute();
+                        //获取json字符串
+                        String json = response.body().string();
 
-                    JSONObject jsonObject = JSONObject.parseObject(json);
-                    String arrayStr = jsonObject.getString("data");
-                    final List<Trace> traceList = new ArrayList<>();
-                    synchronized (traceList){
-                        traceList.addAll(JSONObject.parseArray(arrayStr, Trace.class));
-                        clvTrace.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                clvTrace.setAdapter(new UserTracesAdapter(traceList));
-                            }
-                        });
+                        JSONObject jsonObject = JSONObject.parseObject(json);
+                        if (jsonObject == null)
+                            continue;
+                        String arrayStr = jsonObject.getString("data");
+                        final List<Trace> traceList = new ArrayList<>();
+                        synchronized (traceList){
+                            traceList.addAll(JSONObject.parseArray(arrayStr, Trace.class));
+                            clvTrace.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    clvTrace.setAdapter(new UserTracesAdapter(traceList));
+                                }
+                            });
+                        }
+                        break;
                     }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

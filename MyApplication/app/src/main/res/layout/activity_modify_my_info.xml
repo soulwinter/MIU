@@ -20,15 +20,25 @@
         android:textStyle="bold">
     </TextView>
 
-    <ImageView
+<!--    <ImageView-->
+<!--        android:id="@+id/head_image"-->
+<!--        android:layout_width="140dp"-->
+<!--        android:layout_height="140dp"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_marginTop="80dp"-->
+<!--        android:background="#DAD6D6">-->
+
+<!--    </ImageView>-->
+
+    <com.example.myapplication.imageView.CircleImageView
         android:id="@+id/head_image"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        android:background="#DAD6D6">
-
-    </ImageView>
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:scaleType="centerCrop"
+        >
+    </com.example.myapplication.imageView.CircleImageView>
 
     <TextView
         android:id="@+id/username_label"
@@ -44,12 +54,12 @@
 
     <EditText
         android:id="@+id/username_edit"
+        style="@style/InputBoxStyle"
         android:layout_width="match_parent"
         android:layout_below="@id/username_label"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
-        android:textSize="15dp"
-        style="@style/InputBoxStyle"/>
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/description_label"
@@ -69,12 +79,8 @@
         android:layout_below="@id/description_label"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="20dp"
-        android:background="@android:drawable/edit_text"
         android:gravity="top"
         android:inputType="textMultiLine"
-        android:maxLines="60"
-        android:minLines="4"
-        android:scrollbars="vertical"
         android:textSize="10dp"
         style="@style/InputBoxStyle"/>
 

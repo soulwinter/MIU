@@ -95,7 +95,15 @@ public class ModifyMyInfo extends AppCompatActivity {
         }
 
         ImageView imageView = (ImageView)findViewById(R.id.head_image);
-        Glide.with(imageView).load("http://114.116.234.63:8080/image" + user.getPhotoPath()).into(imageView);
+        while (true){
+            try {
+                Glide.with(imageView).load("http://114.116.234.63:8080/image" + user.getPhotoPath()).into(imageView);
+                break;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
 
 
         bindClick();
@@ -276,27 +284,32 @@ public class ModifyMyInfo extends AppCompatActivity {
         }
         RequestBody body = builder.build();
 
-        // 创建request, 表单提交
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
 
-        // 创建一个通信请求
-        try (Response response = client.newCall(request).execute()) {
-            // 尝试将返回值转换成字符串并返回
-            if (response.code() == 200){
-                Looper.prepare();
-                Toast.makeText(ModifyMyInfo.this, "修改个人信息成功！", Toast.LENGTH_SHORT).show();
-                Looper.loop();
-            }else{
-                Looper.prepare();
-                Toast.makeText(ModifyMyInfo.this, "修改个人信息失败！", Toast.LENGTH_SHORT).show();
-                Looper.loop();
+        while (true){
+            // 创建request, 表单提交
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
+
+            // 创建一个通信请求
+            try (Response response = client.newCall(request).execute()) {
+                // 尝试将返回值转换成字符串并返回
+                if (response.code() == 200){
+                    Looper.prepare();
+                    Toast.makeText(ModifyMyInfo.this, "修改个人信息成功！", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }else{
+                    Looper.prepare();
+                    Toast.makeText(ModifyMyInfo.this, "修改个人信息失败！", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+                break;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
     }
 
 }
