@@ -76,7 +76,12 @@ public class UserFragment extends Fragment {
         boolean flag = true;
         while (flag){
             try{
-                Glide.with(imageView).load("http://114.116.234.63:8080/image" + user.getPhotoPath()).into(imageView);
+                if (user.getPhotoPath() == null || user.getPhotoPath().length() <=0){
+                    Glide.with(imageView).load("http://114.116.234.63:8080/image/home/project/miu/images/user/default/deafultTouxiang.png").into(imageView);
+                }else {
+                    Glide.with(imageView).load("http://114.116.234.63:8080/image" + user.getPhotoPath()).into(imageView);
+                }
+
                 flag = false;
             }catch (Exception e){
                 flag = true;
