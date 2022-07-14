@@ -33,6 +33,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".AddTrace"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ChatActivity"
+            android:exported="true" />
+        <activity
             android:name=".AreaDetail"
             android:exported="false" />
         <activity
@@ -57,7 +66,7 @@
             android:name=".testA"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Launcher"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

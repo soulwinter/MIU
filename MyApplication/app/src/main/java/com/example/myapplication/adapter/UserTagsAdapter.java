@@ -34,7 +34,15 @@ public class UserTagsAdapter extends RecyclerView.Adapter<UserTagsAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Tag tag = tags.get(position);
-        Glide.with(holder.imageView).load("http://114.116.234.63:8080/image/"+tag.getPicturePath()) .into(holder.imageView);
+        boolean flag = true;
+        while (flag){
+            try{
+                Glide.with(holder.imageView).load("http://114.116.234.63:8080/image/"+tag.getPicturePath()) .into(holder.imageView);
+                flag = false;
+            }catch (Exception e){
+                flag = true;
+            }
+        }
         holder.tvName.setText(tag.getTagName());
         holder.tvDesc.setText(tag.getTagDescription());
     }

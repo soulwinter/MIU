@@ -15,10 +15,10 @@
         android:name="com.example.myapplication.fragments.ViewFragment"
         tools:layout="@layout/fragment_view" />
 
-    <fragment
-        android:id="@+id/navigation_edit"
-        android:name="com.example.myapplication.fragments.EditFragment"
-        tools:layout="@layout/fragment_edit" />
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_edit"-->
+<!--        android:name="com.example.myapplication.fragments.EditFragment"-->
+<!--        tools:layout="@layout/fragment_edit" />-->
 
     <fragment
         android:id="@+id/navigation_user"

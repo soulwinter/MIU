@@ -68,7 +68,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="40dp"
         android:layout_marginRight="20dp"
-        android:textSize="20dp"></EditText>
+        android:textSize="20dp"
+        android:inputType="textPassword"></EditText>
 
     <TextView
         android:layout_width="wrap_content"

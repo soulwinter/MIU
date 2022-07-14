@@ -64,7 +64,15 @@ public class tags_list_adapter extends RecyclerView.Adapter<tags_list_adapter.Vi
         Tag tag = tagList.get(position);
         holder.tagName.setText(tag.getTagName());
         holder.tag_descr.setText(tag.getTagDescription());
-        Glide.with(mContext).load("http://114.116.234.63:8080/image/"+tag.getPicturePath()).into(holder.tagImage);
+        boolean flag = true;
+        while (flag){
+            try{
+                Glide.with(mContext).load("http://114.116.234.63:8080/image/"+tag.getPicturePath()).into(holder.tagImage);
+                flag = false;
+            }catch (Exception e){
+                flag = true;
+            }
+        }
 
     }
     @Override

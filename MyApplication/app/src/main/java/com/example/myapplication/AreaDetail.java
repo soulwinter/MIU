@@ -42,6 +42,7 @@ import com.example.myapplication.mapDrawing.MapView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -101,6 +102,7 @@ public class AreaDetail extends AppCompatActivity {
         ImageView addtagView = (ImageView) findViewById(R.id.add_tag_image);
         ImageView addtraceView = (ImageView) findViewById(R.id.add_trace_image);
         TextView textClick = findViewById(R.id.clickText);
+        TextView chat_room = findViewById(R.id.chat_room);
 
 //      点击文本跳转到标记列表的方法
         textClick.setOnClickListener(new View.OnClickListener(){
@@ -109,6 +111,20 @@ public class AreaDetail extends AppCompatActivity {
                 Intent intent =new Intent();
                 intent.putExtra("areaId", areaObj.getId());
                 intent.setClass(AreaDetail.this,tags_list.class);
+                startActivity(intent);
+            }
+
+        });
+
+        //      点击文本跳转到标记列表的方法
+        chat_room.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent =new Intent();
+                intent.putExtra("areaId", areaObj.getId());
+                intent.putExtra("userId", user.getEmail());
+                intent.putExtra("areaName", areaObj.getName());
+                intent.setClass(AreaDetail.this,ChatActivity.class);
                 startActivity(intent);
             }
 
@@ -133,8 +149,15 @@ public class AreaDetail extends AppCompatActivity {
         addtraceView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+               // Log.i("IF_NIL", String.valueOf(tracingPointList.size()));
                 //添加轨迹方法请写在此处
+                Intent intent1 = new Intent();
 
+                intent1.putExtra("area", areaObj);
+                intent1.putExtra("user", user);
+                intent1.putExtra("points", (Serializable) tracingPointList);
+                intent1.setClass(AreaDetail.this, AddTrace.class);
+                startActivity(intent1);
             }
         });
 
@@ -170,8 +193,11 @@ public class AreaDetail extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-//                            getTagList();
                             getWifiLocation();
+                            System.out.println("获取 Wi-Fi 位置");
+                            mapView.setUserList(userList);
+                            succeedRenewLocation = false;
+                            nowTime = 0;
                             //记录用户的轨迹
                             synchronized (tracingPointList){
 
@@ -198,12 +224,14 @@ public class AreaDetail extends AppCompatActivity {
                                 if (flag)
                                     tracingPoint.setTagId(-1);
                                 tracingPointList.add(tracingPoint);
+                                mapView.setTracingPointList(tracingPointList);
+
+
+
                             }
 //                            mapView.directionX = xPosition;
 //                            mapView.directionY = yPosition;
-                            mapView.setUserList(userList);
-                            succeedRenewLocation = false;
-                            nowTime = 0;
+
 
 
                         }
@@ -219,30 +247,34 @@ public class AreaDetail extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    String path = "http://114.116.234.63:8080/image" + areaObj.getPhotoPath();
-                    //2:把网址封装为一个URL对象
-                    URL url = new URL(path);
-                    //3:获取客户端和服务器的连接对象，此时还没有建立连接
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    //4:初始化连接对象
-                    conn.setRequestMethod("GET");
-                    //设置连接超时
-                    conn.setConnectTimeout(8000);
-                    //设置读取超时
-                    conn.setReadTimeout(8000);
-                    //5:发生请求，与服务器建立连接
-                    conn.connect();
-                    //如果响应码为200，说明请求成功
-                    if (conn.getResponseCode() == 200) {
-                        //获取服务器响应头中的流
-                        InputStream is = conn.getInputStream();
-                        //读取流里的数据，构建成bitmap位图
-                        bitmap = BitmapFactory.decodeStream(is);
+                while (true){
+                    try {
+                        String path = "http://114.116.234.63:8080/image" + areaObj.getPhotoPath();
+                        //2:把网址封装为一个URL对象
+                        URL url = new URL(path);
+                        //3:获取客户端和服务器的连接对象，此时还没有建立连接
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        //4:初始化连接对象
+                        conn.setRequestMethod("GET");
+                        //设置连接超时
+                        conn.setConnectTimeout(8000);
+                        //设置读取超时
+                        conn.setReadTimeout(8000);
+                        //5:发生请求，与服务器建立连接
+                        conn.connect();
+                        //如果响应码为200，说明请求成功
+                        if (conn.getResponseCode() == 200) {
+                            //获取服务器响应头中的流
+                            InputStream is = conn.getInputStream();
+                            //读取流里的数据，构建成bitmap位图
+                            bitmap = BitmapFactory.decodeStream(is);
+                        }
+                        break;
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+
             }
         });
         thread.start();
@@ -264,55 +296,60 @@ public class AreaDetail extends AppCompatActivity {
             @Override
             public void run() {
                     try {
-                        //2、获取到请求的对象
-                        Request request = new Request.Builder().url("http://114.116.234.63:8080/tag/listTagByAreaId?areaId="+areaObj.getId()).get().build();
-                        //3、获取到回调的对象
-                        Call call = okHttpClient.newCall(request);
-                        //4、执行同步请求,获取到响应对象
-                        Response response = call.execute();
-                        //获取json字符串
-                        String json = response.body().string();
+                        while (true){
+                            //2、获取到请求的对象
+                            Request request = new Request.Builder().url("http://114.116.234.63:8080/tag/listTagByAreaId?areaId="+areaObj.getId()).get().build();
+                            //3、获取到回调的对象
+                            Call call = okHttpClient.newCall(request);
+                            //4、执行同步请求,获取到响应对象
+                            Response response = call.execute();
+                            //获取json字符串
+                            String json = response.body().string();
 
-                        JSONObject jsonObject = JSONObject.parseObject(json);
-                        String arrayStr = jsonObject.getString("data");
-                        tagList = JSONObject.parseArray(arrayStr, Tag.class);  //该area的所有tag
+                            JSONObject jsonObject = JSONObject.parseObject(json);
+                            if (jsonObject == null)
+                                continue;
+                            String arrayStr = jsonObject.getString("data");
+                            tagList = JSONObject.parseArray(arrayStr, Tag.class);  //该area的所有tag
 
-                        //把tag传给mapView用于显示
-                        mapView.setTagList(tagList);
-                        //请求tag对应的图片
-                        ImageUtil imageUtil = new ImageUtil();
-                        for (Tag tag : tagList) {
-                            try {
-                                String path = "http://114.116.234.63:8080/image" + tag.getPicturePath();
-                                //2:把网址封装为一个URL对象
-                                URL url = new URL(path);
-                                //3:获取客户端和服务器的连接对象，此时还没有建立连接
-                                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                //4:初始化连接对象
-                                conn.setRequestMethod("GET");
-                                //设置连接超时
-                                conn.setConnectTimeout(8000);
-                                //设置读取超时
-                                conn.setReadTimeout(8000);
-                                //5:发生请求，与服务器建立连接
-                                conn.connect();
-                                //如果响应码为200，说明请求成功
-                                if (conn.getResponseCode() == 200) {
-                                    //获取服务器响应头中的流
-                                    InputStream is = conn.getInputStream();
-                                    //读取流里的数据，构建成bitmap位图
-                                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-                                    bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
-                                    bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,tag.getTagName());
-                                    tag.setBitmap(bitmap);
-                                    showTag(tag);
+                            //把tag传给mapView用于显示
+                            mapView.setTagList(tagList);
+                            //请求tag对应的图片
+                            ImageUtil imageUtil = new ImageUtil();
+                            for (Tag tag : tagList) {
+                                try {
+                                    if (tag.getPicturePath() == null)
+                                        continue;
+                                    String path = "http://114.116.234.63:8080/image" + tag.getPicturePath();
+                                    //2:把网址封装为一个URL对象
+                                    URL url = new URL(path);
+                                    //3:获取客户端和服务器的连接对象，此时还没有建立连接
+                                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                                    //4:初始化连接对象
+                                    conn.setRequestMethod("GET");
+                                    //设置连接超时
+                                    conn.setConnectTimeout(8000);
+                                    //设置读取超时
+                                    conn.setReadTimeout(8000);
+                                    //5:发生请求，与服务器建立连接
+                                    conn.connect();
+                                    //如果响应码为200，说明请求成功
+                                    if (conn.getResponseCode() == 200) {
+                                        //获取服务器响应头中的流
+                                        InputStream is = conn.getInputStream();
+                                        //读取流里的数据，构建成bitmap位图
+                                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                                        bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
+                                        bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,tag.getTagName());
+                                        tag.setBitmap(bitmap);
+                                        showTag(tag);
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (IOException e) {
-                                e.printStackTrace();
                             }
+                            break;
                         }
-
-
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -396,47 +433,52 @@ public class AreaDetail extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    //2、获取到请求的对象
-                    Request request = new Request.Builder().url("http://114.116.234.63:8080/trace/listTraceByAreaId?areaId="+areaObj.getId()).get().build();
-                    //3、获取到回调的对象
-                    Call call = okHttpClient.newCall(request);
-                    //4、执行同步请求,获取到响应对象
-                    Response response = call.execute();
-                    //获取json字符串
-                    String json = response.body().string();
+                    while (true){
+                        //2、获取到请求的对象
+                        Request request = new Request.Builder().url("http://114.116.234.63:8080/trace/listTraceByAreaId?areaId="+areaObj.getId()).get().build();
+                        //3、获取到回调的对象
+                        Call call = okHttpClient.newCall(request);
+                        //4、执行同步请求,获取到响应对象
+                        Response response = call.execute();
+                        //获取json字符串
+                        String json = response.body().string();
 
-                    JSONObject jsonObject = JSONObject.parseObject(json);
-                    String arrayStr = jsonObject.getString("data");
-                    traceList = JSONObject.parseArray(arrayStr, Trace.class);  //该area的所有tag
+                        JSONObject jsonObject = JSONObject.parseObject(json);
+                        if (jsonObject == null)
+                            continue;
+                        String arrayStr = jsonObject.getString("data");
+                        traceList = JSONObject.parseArray(arrayStr, Trace.class);  //该area的所有tag
 
-                    //把trace传给mapView用于显示
-                    mapView.setTraceList(traceList);
+                        //把trace传给mapView用于显示
+                        mapView.setTraceList(traceList);
 
-                    //显示一个个的trace
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            LinearLayout linearLayoutTrace = (LinearLayout) findViewById(R.id.linearlayout2);
+                        //显示一个个的trace
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                LinearLayout linearLayoutTrace = (LinearLayout) findViewById(R.id.linearlayout2);
 
-                            ImageUtil imageUtil = new ImageUtil();
-                            for (Trace trace : traceList) {
-                                ImageView imageView = new ImageView(AreaDetail.this);
-                                //给每个ImageView绑定事件请写在此处
-                                imageView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        //开启一个Activity并把trace传进去
-                                    }
-                                });
-                                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.trace);
-                                bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
-                                bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,trace.getTraceName());
-                                imageView.setPadding(30,50,0,0);
-                                imageView.setImageBitmap(bitmap);
-                                linearLayoutTrace.addView(imageView);
+                                ImageUtil imageUtil = new ImageUtil();
+                                for (Trace trace : traceList) {
+                                    ImageView imageView = new ImageView(AreaDetail.this);
+                                    //给每个ImageView绑定事件请写在此处
+                                    imageView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            //开启一个Activity并把trace传进去
+                                        }
+                                    });
+                                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.trace);
+                                    bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
+                                    bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,trace.getTraceName());
+                                    imageView.setPadding(30,50,0,0);
+                                    imageView.setImageBitmap(bitmap);
+                                    linearLayoutTrace.addView(imageView);
+                                }
                             }
-                        }
-                    });
+                        });
+                        break;
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -461,26 +503,7 @@ public class AreaDetail extends AppCompatActivity {
         WifiManager wifiManager = (WifiManager)getApplicationContext().getSystemService(WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
         successScanWifi = wifiManager.startScan();
-//        if (successScanWifi) {
-//            runOnUiThread(
-//                    new Runnable() {
-//                        @Override
-//                        public void run() {
-//                           // Toast.makeText(AreaDetail.this, "扫描成功", Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                    }
-//            );
-//        } else {
-//            runOnUiThread(
-//                    new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Toast.makeText(AreaDetail.this, "扫描失败", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//            );
-//        }
+
         // 获取扫描结果
         List<Integer> strengthList = new ArrayList<>();  //记录最终要上传的strength
         List<Integer> apIdList = new ArrayList<>();   // 最终要上传的ap；总是(1,2,3,...,ap_num)，但我还是写上了
@@ -493,19 +516,29 @@ public class AreaDetail extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    //2、获取到请求的对象
-                    Request request = new Request.Builder().url("http://114.116.234.63:8080/ap/listApByAreaId?areaId="+areaObj.getId()).get().build();
-                    //3、获取到回调的对象
-                    Call call = okHttpClient.newCall(request);
-                    //4、执行同步请求,获取到响应对象
-                    Response response = call.execute();
-                    //获取json字符串
-                    String json = response.body().string();
-                    System.out.println(json);
-                    JSONObject jsonObject = JSONObject.parseObject(json);
-                    String arrayStr = jsonObject.getString("data");
-                    apList = JSONObject.parseArray(arrayStr, Ap.class);  //该area的所有ap
-                    Log.i("apList1", apList.toString());
+                    while (true)
+                    {
+                        //2、获取到请求的对象
+                        Request request = new Request.Builder().url("http://114.116.234.63:8080/ap/listApByAreaId?areaId="+areaObj.getId()).get().build();
+                        //3、获取到回调的对象
+                        Call call = okHttpClient.newCall(request);
+                        //4、执行同步请求,获取到响应对象
+                        Response response = call.execute();
+                        //获取json字符串
+                        String json = response.body().string();
+                        System.out.println(json);
+                        JSONObject jsonObject = JSONObject.parseObject(json);
+                        if (jsonObject == null)
+                        {
+                            continue;
+                        } else {
+                            String arrayStr = jsonObject.getString("data");
+                            apList = JSONObject.parseArray(arrayStr, Ap.class);  //该area的所有ap
+                            break;
+                        }
+
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -569,45 +602,50 @@ public class AreaDetail extends AppCompatActivity {
                         .add("ifShare", user.getIfShare()? "1" : "0")
                         .build();
 
-                Request request = new Request.Builder().url("http://114.116.234.63:8080/wifiRecord/getLocationAndAliveUser").post(formBody).build();
+                while (true){
+                    Request request = new Request.Builder().url("http://114.116.234.63:8080/wifiRecord/getLocationAndAliveUser").post(formBody).build();
 
-                //3、获取到回调的对象
-                Call call = okHttpClient.newCall(request);
-                //4、执行同步请求,获取到响应对象
-                Response response = null;
-                try {
-                    response = call.execute();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    //3、获取到回调的对象
+                    Call call = okHttpClient.newCall(request);
+                    //4、执行同步请求,获取到响应对象
+                    Response response = null;
+                    try {
+                        response = call.execute();
+                    } catch (IOException e) {
+                        e.printStackTrace();
 
+                    }
+
+                    // 获取json字符串
+                    String json = null;
+                    try {
+                        json = response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+
+                    }
+                    JSONObject jsonObject = JSONObject.parseObject(json);
+                    if (jsonObject == null)
+                        continue;
+                    Integer code = jsonObject.getInteger("code");
+                    Looper.prepare();
+                    if(code == null){
+                        xPosition = 0;
+                        yPosition = 0;
+                    }else if(code == 200){
+                        userList = JSONObject.parseArray(jsonObject.getString("data"), User.class);
+                        xPosition = userList.get(0).getX().intValue();
+                        yPosition = userList.get(0).getY().intValue();
+                        succeedRenewLocation = true;
+                    }else{
+                        Toast.makeText(AreaDetail.this, "wifi指纹上传失败！", Toast.LENGTH_SHORT).show();
+
+                    }
+                    Looper.loop();
+                    break;
                 }
 
-                // 获取json字符串
-                String json = null;
-                try {
-                    json = response.body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
 
-                }
-                JSONObject jsonObject = JSONObject.parseObject(json);
-                Log.v("JSONCODE", jsonObject.toString());
-                Integer code = jsonObject.getInteger("code");
-                Looper.prepare();
-                if(code == null){
-                    xPosition = 0;
-                    yPosition = 0;
-                }else if(code == 200){
-                    userList = JSONObject.parseArray(jsonObject.getString("data"), User.class);
-//                    xPosition = dataObject.getInteger("x");
-//                    yPosition = dataObject.getInteger("y");
-//                    Toast.makeText(AreaDetail.this, "X: " + String.valueOf(xPosition) + ", Y: " + String.valueOf(yPosition), Toast.LENGTH_SHORT).show();
-                    succeedRenewLocation = true;
-                }else{
-                    Toast.makeText(AreaDetail.this, "wifi指纹上传失败！", Toast.LENGTH_SHORT).show();
-
-                }
-                Looper.loop();
 
             }
         }).start();

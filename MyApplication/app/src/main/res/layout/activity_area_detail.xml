@@ -40,6 +40,21 @@
         android:textColor="?android:attr/statusBarColor"
         tools:ignore="HardcodedText,RtlHardcoded" />
 
+    <TextView
+        android:id="@+id/chat_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/area_map"
+        android:layout_marginLeft="46dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/clickText"
+        android:autoLink="all"
+        android:clickable="true"
+        android:text="进入聊天室"
+        android:textColor="?android:attr/statusBarColor"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView1"
         android:layout_width="match_parent"

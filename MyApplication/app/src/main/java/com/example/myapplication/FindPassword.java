@@ -56,21 +56,27 @@ public class FindPassword extends AppCompatActivity {
                         @Override
                         public void run() {
                             try {
-                                //2、获取到请求的对象
-                                Request request = new Request.Builder().url("http://114.116.234.63:8080/code/sendCode?email="+email+"&type=0").get().build();
-                                //3、获取到回调的对象
-                                OkHttpClient okHttpClient = new OkHttpClient();
-                                Call call = okHttpClient.newCall(request);
-                                //4、执行同步请求,获取到响应对象
-                                Response response = call.execute();
-                                //获取json字符串
-                                String json = response.body().string();
-                                JSONObject jsonObject = JSONObject.parseObject(json);
-                                Integer code = jsonObject.getInteger("code");
-                                String hit = jsonObject.getString("data");
-                                Looper.prepare();
-                                Toast.makeText(FindPassword.this, hit, Toast.LENGTH_SHORT).show();
-                                Looper.loop();
+                                while (true){
+                                    //2、获取到请求的对象
+                                    Request request = new Request.Builder().url("http://114.116.234.63:8080/code/sendCode?email="+email+"&type=0").get().build();
+                                    //3、获取到回调的对象
+                                    OkHttpClient okHttpClient = new OkHttpClient();
+                                    Call call = okHttpClient.newCall(request);
+                                    //4、执行同步请求,获取到响应对象
+                                    Response response = call.execute();
+                                    //获取json字符串
+                                    String json = response.body().string();
+                                    JSONObject jsonObject = JSONObject.parseObject(json);
+                                    if (jsonObject == null)
+                                        continue;
+                                    Integer code = jsonObject.getInteger("code");
+                                    String hit = jsonObject.getString("data");
+                                    Looper.prepare();
+                                    Toast.makeText(FindPassword.this, hit, Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                    break;
+                                }
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -108,28 +114,34 @@ public class FindPassword extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            //1、封装请求体数据
-                            FormBody formBody = new FormBody.Builder().add("email",email).add("codeValue",codeValue).add("newPassword",newPassword).build();
-                            //2、获取到请求的对象
-                            Request request = new Request.Builder().url("http://114.116.234.63:8080/user/updatePassword").post(formBody).build();
-                            //3、获取到回调的对象
-                            OkHttpClient okHttpClient = new OkHttpClient();
-                            Call call = okHttpClient.newCall(request);
-                            //4、执行同步请求,获取到响应对象
-                            Response response = call.execute();
-                            //获取json字符串
-                            String json = response.body().string();
-                            JSONObject jsonObject = JSONObject.parseObject(json);
-                            Integer code = jsonObject.getInteger("code");
-                            if (code == 200){
-                                Looper.prepare();
-                                Toast.makeText(FindPassword.this, "修改密码成功！", Toast.LENGTH_SHORT).show();
-                                Looper.loop();
-                            }else{
-                                Looper.prepare();
-                                Toast.makeText(FindPassword.this, "验证码不正确！", Toast.LENGTH_SHORT).show();
-                                Looper.loop();
+                            while (true){
+                                //1、封装请求体数据
+                                FormBody formBody = new FormBody.Builder().add("email",email).add("codeValue",codeValue).add("newPassword",newPassword).build();
+                                //2、获取到请求的对象
+                                Request request = new Request.Builder().url("http://114.116.234.63:8080/user/updatePassword").post(formBody).build();
+                                //3、获取到回调的对象
+                                OkHttpClient okHttpClient = new OkHttpClient();
+                                Call call = okHttpClient.newCall(request);
+                                //4、执行同步请求,获取到响应对象
+                                Response response = call.execute();
+                                //获取json字符串
+                                String json = response.body().string();
+                                JSONObject jsonObject = JSONObject.parseObject(json);
+                                if (jsonObject == null)
+                                    continue;
+                                Integer code = jsonObject.getInteger("code");
+                                if (code == 200){
+                                    Looper.prepare();
+                                    Toast.makeText(FindPassword.this, "修改密码成功！", Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                }else{
+                                    Looper.prepare();
+                                    Toast.makeText(FindPassword.this, "验证码不正确！", Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                }
+                                break;
                             }
+
 
                         } catch (IOException e) {
                             e.printStackTrace();

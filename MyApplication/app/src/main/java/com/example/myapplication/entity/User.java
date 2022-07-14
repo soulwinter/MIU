@@ -2,6 +2,8 @@ package com.example.myapplication.entity;
 
 
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -28,6 +30,7 @@ public class User implements Serializable {
     private Float x;
     private Float y;
     private Date date = new Date();
+    private Bitmap bitmap = null;
 
 //    public Date getDate() {
 //        return date;
@@ -123,5 +126,13 @@ public class User implements Serializable {
 
     public void setIfShare(Boolean ifShare) {
         this.ifShare = ifShare;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 }

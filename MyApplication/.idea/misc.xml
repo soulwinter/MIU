@@ -19,16 +19,21 @@
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/drawable-v24/select_elevation.xml" value="0.1" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/drawable-v24/shape_bg_white_corner_top_lr_dp12.xml" value="0.1" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/drawable-v24/shape_edit_cursor.xml" value="0.1" />
+        <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/activity_add_trace.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/activity_add_wifi_record.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/activity_area_detail.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/activity_comment_multi.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/activity_find_password.xml" value="0.19947916666666668" />
+        <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/activity_launcher.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/activity_login_pwd.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/activity_register.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/activity_test.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/activity_welcome.xml" value="0.1" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/dialog_bottomsheet.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/dialog_input_text_msg.xml" value="0.19947916666666668" />
+        <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/fragment_edit.xml" value="0.19947916666666668" />
+        <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/fragment_home.xml" value="0.19947916666666668" />
+        <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/fragment_user.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/fragment_view.xml" value="0.1" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/item_area_tags.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/item_comment_child_new.xml" value="0.2329683698296837" />
@@ -38,6 +43,9 @@
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/item_comment_single_child_new.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/item_tags.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/item_trace.xml" value="0.19947916666666668" />
+        <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/message_item.xml" value="0.19947916666666668" />
+        <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/message_item_other.xml" value="0.19947916666666668" />
+        <entry key="..\:/schoolFile/androidProject/group_file/MIU/MyApplication/app/src/main/res/layout/tags_list.xml" value="0.19947916666666668" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/drawable/border_input_box.xml" value="0.1" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/schoolFile/androidProject/group_file/front/MIU/MyApplication/app/src/main/res/layout/activity_add_ap.xml" value="0.19947916666666668" />
@@ -60,6 +68,7 @@
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
