@@ -67,6 +67,7 @@ public class CommentMultiActivity extends AppCompatActivity {
     private User currentUser;
     private Integer recommentWho;  // 被回复的评论的id
     private final Integer MAX_SHOW_COMMENTS = 5;
+    private Integer totalComents = 1;
     private OkHttpClient okHttpClient = new OkHttpClient();
     private OkHttpClient okHttpClient2 = new OkHttpClient();
     private OkHttpClient okHttpClient3 = new OkHttpClient();
@@ -162,7 +163,7 @@ public class CommentMultiActivity extends AppCompatActivity {
                 commentOfTagList = JSONObject.parseArray(initialCommentString, CommentOfTag.class);  //该area的所有ap
 //                    printCommentList(commentOfTagList);
 //                    copyToMoreCommentList(commentOfTagList);
-                Log.i("commentOfTagList-size",String.valueOf(commentOfTagList.size()));
+//                Log.i("commentOfTagList-size",String.valueOf(commentOfTagList.size()));
 
 //                    initData();
 //                    dataSort(0);
@@ -175,7 +176,7 @@ public class CommentMultiActivity extends AppCompatActivity {
         }
     }
 
-    // todo 从服务器获取已有的评论(获取了commentOfTagList）
+    // 从服务器获取已有的评论(获取了commentOfTagList）
     private void getInitialData(){
 
 
@@ -261,7 +262,7 @@ public class CommentMultiActivity extends AppCompatActivity {
     private void initData() {
 
         int size = commentOfTagList.size();
-        Log.i("first:commentoftag", String.valueOf(size));
+//        Log.i("first:commentoftag", String.valueOf(size));
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
         for (int i = 0; i < size; i++) {
@@ -277,10 +278,14 @@ public class CommentMultiActivity extends AppCompatActivity {
             firstLevelBean.setIsLike(0); // 默认未点赞
             firstLevelBean.setTotalCount(i + size);
 
+            Log.i("first:get-comment:", commentOfTag.getComment());
+            Log.i("first:get-comentId:", String.valueOf(commentOfTag.getId()));
+
+
             secondComentList = commentOfTag.getChildList();
             int secondSize = secondComentList.size();
+            List<SecondLevelBean> beans = new ArrayList<>();
             if (secondSize!=0) {
-                List<SecondLevelBean> beans = new ArrayList<>();
                 for (int j = 0; j < secondSize; j++) {
                     CommentOfTag secondComent = secondComentList.get(j);
                     SecondLevelBean secondLevelBean = new SecondLevelBean();
@@ -296,15 +301,20 @@ public class CommentMultiActivity extends AppCompatActivity {
                     secondLevelBean.setReplyUserName(secondComent.getReplyUsername());
                     //                secondLevelBean.setTotalCount(firstLevelBean.getTotalCount());
                     beans.add(secondLevelBean);
+
+                    Log.i("second:get-comment:", secondComent.getComment());
+                    Log.i("second:get-comentId:", String.valueOf(secondComent.getId()));
                 }
+                firstLevelBean.setSecondLevelBeans(beans);
+            }else {
                 firstLevelBean.setSecondLevelBeans(beans);
             }
             datas.add(firstLevelBean);
-            Log.i("first0:datas.size=", String.valueOf(datas.size()));
+//            Log.i("first0:datas.size=", String.valueOf(datas.size()));
 
         }
 
-        Log.i("first:datas.size=", String.valueOf(datas.size()));
+//        Log.i("first:datas.size=", String.valueOf(datas.size()));
     }
 
     /**
@@ -316,7 +326,7 @@ public class CommentMultiActivity extends AppCompatActivity {
      */
     private void dataSort(int position) {
         if (datas.isEmpty()) {
-            Log.i("datas.size=", String.valueOf(datas.size()));
+//            Log.i("datas.size=", String.valueOf(datas.size()));
             data.add(new MultiItemEntity() {
                 @Override
                 public int getItemType() {
@@ -369,7 +379,7 @@ public class CommentMultiActivity extends AppCompatActivity {
 //            }
 
         }
-        Log.i("here-datasize:", String.valueOf(data.size()));
+//        Log.i("here-datasize:", String.valueOf(data.size()));
     }
 
     public void show(View view) {
@@ -512,7 +522,7 @@ public class CommentMultiActivity extends AppCompatActivity {
 
                         break;
                     case CommentEntity.TYPE_COMMENT_MORE:
-                        //todo 在项目中是从服务器获取数据，其实就是二级评论分页获取【这里有个setId】
+                        // 在项目中是从服务器获取数据，其实就是二级评论分页获取【这里有个setId】
                         CommentMoreBean moreBean = (CommentMoreBean) bottomSheetAdapter.getData().get(position);
                         SecondLevelBean secondLevelBean = new SecondLevelBean();
 
@@ -584,12 +594,22 @@ public class CommentMultiActivity extends AppCompatActivity {
                 pos = (int) firstLevelBean.getPosition();
                 replyUserName = firstLevelBean.getUserName();
                 recommentWho = firstLevelBean.getId();
+
+                System.out.println("--------recommendWho-----------");
+                System.out.println("firstLevelBean="+firstLevelBean.getContent());
+                System.out.println("firstLevelBean="+firstLevelBean.getId());
+
+
             } else if (item instanceof SecondLevelBean) {
                 SecondLevelBean secondLevelBean = (SecondLevelBean) item;
                 positionCount = (int) (secondLevelBean.getPositionCount() + 1);
                 pos = (int) secondLevelBean.getPosition();
                 replyUserName = secondLevelBean.getUserName();
                 recommentWho = secondLevelBean.getId();
+
+                System.out.println("--------recommendWho-----------");
+                System.out.println("secondLevelBean="+secondLevelBean.getContent());
+                System.out.println("secondLevelBean="+secondLevelBean.getId());
             }
 
             //todo 添加二级评论
@@ -625,15 +645,15 @@ public class CommentMultiActivity extends AppCompatActivity {
                         String json = response.body().string();
                         JSONObject jsonObject = JSONObject.parseObject(json);
                         Integer code = jsonObject.getInteger("code");
-                        if (code == 200){
-                            Looper.prepare();
-                            Toast.makeText(CommentMultiActivity.this, "回复成功！", Toast.LENGTH_SHORT).show();
-                            Looper.loop();
-                        }else{
-                            Looper.prepare();
-                            Toast.makeText(CommentMultiActivity.this, "回复失败！", Toast.LENGTH_SHORT).show();
-                            Looper.loop();
-                        }
+//                        if (code == 200){
+//                            Looper.prepare();
+//                            Toast.makeText(CommentMultiActivity.this, "回复成功！", Toast.LENGTH_SHORT).show();
+//                            Looper.loop();
+//                        }else{
+//                            Looper.prepare();
+//                            Toast.makeText(CommentMultiActivity.this, "回复失败！", Toast.LENGTH_SHORT).show();
+//                            Looper.loop();
+//                        }
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -656,8 +676,9 @@ public class CommentMultiActivity extends AppCompatActivity {
         } else {
             //todo 添加一级评论
             FirstLevelBean firstLevelBean = new FirstLevelBean();
-            firstLevelBean.setUserName(userName);
-            firstLevelBean.setId(bottomSheetAdapter.getItemCount() + 1);
+            firstLevelBean.setUserName(currentUser.getUsername());
+//            firstLevelBean.setId(bottomSheetAdapter.getItemCount() + 1);
+            firstLevelBean.setId(totalComents++);
             firstLevelBean.setHeadImg("https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1918451189,3095768332&fm=26&gp=0.jpg");
             firstLevelBean.setCreateTime(System.currentTimeMillis());
             firstLevelBean.setContent(msg);
@@ -689,15 +710,15 @@ public class CommentMultiActivity extends AppCompatActivity {
                         String json = response.body().string();
                         JSONObject jsonObject = JSONObject.parseObject(json);
                         Integer code = jsonObject.getInteger("code");
-                        if (code == 200){
-                            Looper.prepare();
-                            Toast.makeText(CommentMultiActivity.this, "评论成功！", Toast.LENGTH_SHORT).show();
-                            Looper.loop();
-                        }else{
-                            Looper.prepare();
-                            Toast.makeText(CommentMultiActivity.this, "评论失败！", Toast.LENGTH_SHORT).show();
-                            Looper.loop();
-                        }
+//                        if (code == 200){
+//                            Looper.prepare();
+//                            Toast.makeText(CommentMultiActivity.this, "评论成功！", Toast.LENGTH_SHORT).show();
+//                            Looper.loop();
+//                        }else{
+//                            Looper.prepare();
+//                            Toast.makeText(CommentMultiActivity.this, "评论失败！", Toast.LENGTH_SHORT).show();
+//                            Looper.loop();
+//                        }
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -725,7 +746,6 @@ public class CommentMultiActivity extends AppCompatActivity {
         return displayMetrics.heightPixels;
     }
 
-//    // todo  【这里有添加id】
 //    @Override
 //    public void onLoadMoreRequested() {
 //        if (datas.size() >= totalCount) {
@@ -734,7 +754,7 @@ public class CommentMultiActivity extends AppCompatActivity {
 //        }
 //        FirstLevelBean firstLevelBean = new FirstLevelBean();
 //
-//        // todo here
+//
 //        firstLevelBean = moreFirstLevelBean.get(0);
 //        datas.add(firstLevelBean);
 //        dataSort(datas.size() - 1);
