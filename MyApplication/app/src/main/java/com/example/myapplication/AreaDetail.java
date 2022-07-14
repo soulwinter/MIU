@@ -428,7 +428,7 @@ public class AreaDetail extends AppCompatActivity {
     }
 
     private void getTraceList(){
-        //获取区域所有tag
+        //获取区域所有 Trace
         Thread thread1 = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -466,6 +466,12 @@ public class AreaDetail extends AppCompatActivity {
                                         @Override
                                         public void onClick(View view) {
                                             //开启一个Activity并把trace传进去
+                                            Intent intent1 = new Intent();
+                                            intent1.putExtra("trace", trace);
+                                            intent1.putExtra("area", areaObj);
+                                            intent1.putExtra("user", user);
+                                            intent1.setClass(AreaDetail.this, TraceDetail.class);
+                                            startActivity(intent1);
                                         }
                                     });
                                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.trace);

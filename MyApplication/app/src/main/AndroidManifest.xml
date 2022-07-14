@@ -33,6 +33,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".TraceDetail"
+            android:exported="false" />
+        <activity
             android:name=".AddTrace"
             android:exported="false" />
         <activity
