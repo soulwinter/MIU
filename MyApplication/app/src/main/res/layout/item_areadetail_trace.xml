@@ -50,7 +50,13 @@
             android:maxLines="1"
             android:text="名字"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:shadowColor="#BCBCBC"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="4"
+
+            />
 
 
     </RelativeLayout>

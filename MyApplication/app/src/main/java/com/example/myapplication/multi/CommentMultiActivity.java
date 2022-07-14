@@ -86,6 +86,8 @@ public class CommentMultiActivity extends AppCompatActivity {
     private List<FirstLevelBean> moreFirstLevelBean = new ArrayList<>();
     private List<Tag> tagList = new ArrayList<>();
 
+    private User user;
+
     ImageView tagImage;
     TextView text_tag_name, text_description;
     String tagImagePath, tagName, tagDescription;
@@ -94,15 +96,15 @@ public class CommentMultiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         // todo 临时测试用数据，还需从上一个界面获取当前user
-        userId = 15;
-        tagId = 5;
-        areaId = 14;
-        tagName = "333_tag";
-        tagDescription = "333测试tag";
-        tagImagePath = "res/drawable/user_0.jpeg";
-        currentUser = new User();
-        currentUser.setId(15);
-        currentUser.setUsername("333");
+//        userId = 15;
+//        tagId = 5;
+//        areaId = 14;
+//        tagName = "333_tag";
+//        tagDescription = "333测试tag";
+//        tagImagePath = "res/drawable/user_0.jpeg";
+//        currentUser = new User();
+//        currentUser.setId(15);
+//        currentUser.setUsername("333");
 
         //获取传入的参数
         Intent intent =  getIntent();
@@ -111,6 +113,13 @@ public class CommentMultiActivity extends AppCompatActivity {
         tagImagePath = (String) intent.getSerializableExtra("tagPhotoPath");
         userId = intent.getIntExtra("userID", userId);
         areaId = intent.getIntExtra("areaID", areaId);
+        user = (User)intent.getSerializableExtra("user");
+        currentUser = new User();
+        currentUser.setId(userId);
+        currentUser.setUsername(user.getUsername());
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_multi);
 
@@ -869,7 +878,16 @@ public class CommentMultiActivity extends AppCompatActivity {
         try {
             thread.join();
 //            设置tag图片
-            Glide.with(this).load(tagImagePath).into(tagImage);
+            boolean flag = true;
+            while (flag){
+                try{
+                    Glide.with(this).load("http://114.116.234.63:8080/image/" + tagImagePath).into(tagImage);                    flag = false;
+                }catch (Exception e){
+                    flag = true;
+                }
+            }
+
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

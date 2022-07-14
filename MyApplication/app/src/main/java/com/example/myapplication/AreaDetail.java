@@ -93,7 +93,7 @@ public class AreaDetail extends AppCompatActivity {
     private areadetail_trace_adapter traceAdapter;
     private Context context;
 
-    private RecyclerView areaDetailTraceRc;
+//    private RecyclerView areaDetailTraceRc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -391,14 +391,13 @@ public class AreaDetail extends AppCompatActivity {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public void run() {
-                LinearLayout linearLayoutTag = (LinearLayout) findViewById(R.id.id_small_area_tags);                ImageView imageView = new ImageView(AreaDetail.this);
-
+                LinearLayout linearLayoutTag = (LinearLayout) findViewById(R.id.id_small_area_tags);
                //获取cardview 的viewhold，进行初始化
                 areadetail_tags_adapter.ViewHolder holder = tagAdapter.onCreateViewHolder(linearLayoutTag,0);
 
 
                 //给每个ImageView绑定事件请写在此处
-                imageView.setOnTouchListener(new View.OnTouchListener() {
+                holder.cardView.setOnTouchListener(new View.OnTouchListener() {
                     private long firstClickTime;
                     private long secondClickTime;
                     private long stillTime;
@@ -433,6 +432,7 @@ public class AreaDetail extends AppCompatActivity {
                                                     intent.putExtra("tagPhotoPath",tag.getPicturePath());
                                                     intent.putExtra("userID",user.getId());
                                                     intent.putExtra("areaID",areaObj.getId());
+                                                    intent.putExtra("user", user);
                                                     startActivity(intent);
 
 
@@ -502,13 +502,13 @@ public class AreaDetail extends AppCompatActivity {
                             public void run() {
 
 //                                布局定义
-                                areaDetailTraceRc = findViewById(R.id.id_areadetai_trace);
+                                LinearLayout areaDetailTraceRc = findViewById(R.id.id_areadetai_trace);
 
                                 //使用RecyclerView要进行初始化配置，设置LayoutManter,否则会报错，不显示数据
 
-                                LinearLayoutManager lm2 = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
+//                                LinearLayoutManager lm2 = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
 
-                                areaDetailTraceRc.setLayoutManager(lm2);
+//                               areaDetailTraceRc.setLayoutManager(lm2);
 
 //                                areaDetailTraceRc.setAdapter(traceAdapter);
 

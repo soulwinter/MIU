@@ -13,10 +13,11 @@
         android:layout_below="@id/top_view"
         android:layout_alignRight="@id/top_view"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="137dp"
+        android:layout_marginRight="130dp"
         android:padding="10dp"
         android:text="退出登录"
-        android:textSize="18dp">
+        android:textSize="18dp"
+        tools:ignore="RtlHardcoded">
 
     </Button>
 

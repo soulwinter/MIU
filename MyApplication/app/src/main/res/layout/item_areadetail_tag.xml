@@ -55,13 +55,13 @@
 
             android:maxLines="1"
             android:shadowColor="#BCBCBC"
-
+            android:textSize="18sp"
 
             android:shadowDx="0"
 
             android:shadowDy="0"
 
-            android:shadowRadius="2"
+            android:shadowRadius="4"
 
             android:textColor="@color/white"
 
