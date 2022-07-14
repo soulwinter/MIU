@@ -269,7 +269,12 @@ public class ChatActivity extends AppCompatActivity {
                                 if (user.getBitmap() != null)
                                     continue;
                                 try {
-                                    String path = "http://114.116.234.63:8080/image" + user.getPhotoPath();
+                                    String path = "";
+                                    if (user.getPhotoPath() == null){
+                                        path = "http://114.116.234.63:8080/image/home/project/miu/images/user/default/deafultTouxiang.png";
+                                    }else {
+                                        path = "http://114.116.234.63:8080/image" + user.getPhotoPath();
+                                    }
                                     //2:把网址封装为一个URL对象
                                     URL url = new URL(path);
                                     //3:获取客户端和服务器的连接对象，此时还没有建立连接
