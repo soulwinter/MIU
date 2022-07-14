@@ -68,7 +68,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
-        android:textSize="20dp"></EditText>
+        android:textSize="20dp"
+        android:inputType="textPassword"></EditText>
 
     <TextView
         android:id="@+id/text_pwd2"
@@ -93,7 +94,8 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
-        android:textSize="20dp"></EditText>
+        android:textSize="20dp"
+        android:inputType="textPassword"></EditText>
 
 
     <Button
