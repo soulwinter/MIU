@@ -2,7 +2,10 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -32,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.myapplication.adapter.areadetail_tags_adapter;
+import com.example.myapplication.adapter.areadetail_trace_adapter;
 import com.example.myapplication.entity.Ap;
 import com.example.myapplication.entity.Area;
 import com.example.myapplication.entity.Tag;
@@ -39,6 +44,8 @@ import com.example.myapplication.entity.Trace;
 import com.example.myapplication.entity.TracingPoint;
 import com.example.myapplication.entity.User;
 import com.example.myapplication.mapDrawing.MapView;
+import com.example.myapplication.multi.CommentMultiActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -82,6 +89,12 @@ public class AreaDetail extends AppCompatActivity {
 
     private List<TracingPoint> tracingPointList = new ArrayList<>();//用来记录用户的轨迹
 
+    private areadetail_tags_adapter tagAdapter ;
+    private areadetail_trace_adapter traceAdapter;
+    private Context context;
+
+    private RecyclerView areaDetailTraceRc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -94,45 +107,49 @@ public class AreaDetail extends AppCompatActivity {
 
 
 
+        context  = AreaDetail.this;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area_detail);
 
         mapView = (MapView) findViewById(R.id.area_map);
-        ImageView addtagView = (ImageView) findViewById(R.id.add_tag_image);
-        ImageView addtraceView = (ImageView) findViewById(R.id.add_trace_image);
-        TextView textClick = findViewById(R.id.clickText);
-        TextView chat_room = findViewById(R.id.chat_room);
+//        ImageView addtagView = (ImageView) findViewById(R.id.add_tag_image);
+//        ImageView addtraceView = (ImageView) findViewById(R.id.add_trace_image);
+        CardView addTagCard = (CardView)findViewById(R.id.add_tag_card);
+        CardView addTraceCard = (CardView)findViewById(R.id.add_trace_card);
+        TextView textClick_forTag = findViewById(R.id.biaojigailan);//标记概览 标签
+        TextView textClick_forTrace = findViewById(R.id.luxianfenxiang); //路线分享 标签
+        FloatingActionButton flbt = findViewById(R.id.floatingActionButton);
 
-//      点击文本跳转到标记列表的方法
-        textClick.setOnClickListener(new View.OnClickListener(){
+
+//        点击浮动按钮，跳转到聊天页面
+        flbt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent =new Intent();
                 intent.putExtra("areaId", areaObj.getId());
+                intent.putExtra("userId", user.getEmail());//
+                intent.putExtra("areaName", areaObj.getName());
+                intent.setClass(AreaDetail.this,ChatActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        //      点击文本跳转到标记列表的方法
+        textClick_forTag.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent =new Intent();
+                intent.putExtra("areaId1", areaObj.getId());
+                intent.putExtra("userId1", user.getId());
                 intent.setClass(AreaDetail.this,tags_list.class);
                 startActivity(intent);
             }
 
         });
 
-        //      点击文本跳转到标记列表的方法
-        chat_room.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent =new Intent();
-                intent.putExtra("areaId", areaObj.getId());
-                intent.putExtra("userId", user.getEmail());
-                intent.putExtra("areaName", areaObj.getName());
-                intent.setClass(AreaDetail.this,ChatActivity.class);
-                startActivity(intent);
-            }
-
-        });
-
-
-
-        addtagView.setOnClickListener(new View.OnClickListener() {
+        addTagCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //添加标记方法请写在此处
@@ -146,7 +163,7 @@ public class AreaDetail extends AppCompatActivity {
             }
         });
 
-        addtraceView.setOnClickListener(new View.OnClickListener() {
+        addTraceCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                // Log.i("IF_NIL", String.valueOf(tracingPointList.size()));
@@ -312,6 +329,10 @@ public class AreaDetail extends AppCompatActivity {
                             String arrayStr = jsonObject.getString("data");
                             tagList = JSONObject.parseArray(arrayStr, Tag.class);  //该area的所有tag
 
+
+                            //用数据初始化adapter
+                            tagAdapter = new areadetail_tags_adapter(tagList);
+
                             //把tag传给mapView用于显示
                             mapView.setTagList(tagList);
                             //请求tag对应的图片
@@ -340,8 +361,10 @@ public class AreaDetail extends AppCompatActivity {
                                         //读取流里的数据，构建成bitmap位图
                                         Bitmap bitmap = BitmapFactory.decodeStream(is);
                                         bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
-                                        bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,tag.getTagName());
+//
                                         tag.setBitmap(bitmap);
+
+                                        //UI线程显示
                                         showTag(tag);
                                     }
                                 } catch (IOException e) {
@@ -368,8 +391,12 @@ public class AreaDetail extends AppCompatActivity {
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public void run() {
-                LinearLayout linearLayoutTag = (LinearLayout) findViewById(R.id.linearlayout1);
-                ImageView imageView = new ImageView(AreaDetail.this);
+                LinearLayout linearLayoutTag = (LinearLayout) findViewById(R.id.id_small_area_tags);                ImageView imageView = new ImageView(AreaDetail.this);
+
+               //获取cardview 的viewhold，进行初始化
+                areadetail_tags_adapter.ViewHolder holder = tagAdapter.onCreateViewHolder(linearLayoutTag,0);
+
+
                 //给每个ImageView绑定事件请写在此处
                 imageView.setOnTouchListener(new View.OnTouchListener() {
                     private long firstClickTime;
@@ -397,7 +424,18 @@ public class AreaDetail extends AppCompatActivity {
                                                 mapView.setNowTag(tag);
                                             }else {
                                                 if(!isDoubleClick){
-                                                    //点击
+                                                    //点击，跳转到tag详情页
+
+                                                    Intent intent = new Intent(context, CommentMultiActivity.class);
+
+                                                    intent.putExtra("tagName",tag.getTagName());
+                                                    intent.putExtra("tagDescribe",tag.getTagDescription());
+                                                    intent.putExtra("tagPhotoPath",tag.getPicturePath());
+                                                    intent.putExtra("userID",user.getId());
+                                                    intent.putExtra("areaID",areaObj.getId());
+                                                    startActivity(intent);
+
+
                                                 }
                                                 isDoubleClick=false;
                                                 firstClickTime=0;
@@ -418,10 +456,12 @@ public class AreaDetail extends AppCompatActivity {
                         return true;
                     }
                 });
-                imageView.setPadding(30,50,0,0);
-                imageView.setImageBitmap(tag.getBitmap());
-                linearLayoutTag.addView(imageView);
-                tagViews.add(imageView);
+//
+                tagAdapter.initCardview(holder,tag);
+//
+                linearLayoutTag.addView(holder.cardView);
+                tagViews.add(holder.cardView);
+
 
             }
         });
@@ -449,6 +489,10 @@ public class AreaDetail extends AppCompatActivity {
                         String arrayStr = jsonObject.getString("data");
                         traceList = JSONObject.parseArray(arrayStr, Trace.class);  //该area的所有tag
 
+//                        适配器初始化
+                        traceAdapter = new areadetail_trace_adapter(traceList);
+
+
                         //把trace传给mapView用于显示
                         mapView.setTraceList(traceList);
 
@@ -456,16 +500,33 @@ public class AreaDetail extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                LinearLayout linearLayoutTrace = (LinearLayout) findViewById(R.id.linearlayout2);
+
+//                                布局定义
+                                areaDetailTraceRc = findViewById(R.id.id_areadetai_trace);
+
+                                //使用RecyclerView要进行初始化配置，设置LayoutManter,否则会报错，不显示数据
+
+                                LinearLayoutManager lm2 = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
+
+                                areaDetailTraceRc.setLayoutManager(lm2);
+
+//                                areaDetailTraceRc.setAdapter(traceAdapter);
+
+                                //获得viewholder,定义trace卡片
+                                areadetail_trace_adapter.ViewHolder holder2 = traceAdapter.onCreateViewHolder(areaDetailTraceRc,0);
+
+
+
 
                                 ImageUtil imageUtil = new ImageUtil();
                                 for (Trace trace : traceList) {
-                                    ImageView imageView = new ImageView(AreaDetail.this);
-                                    //给每个ImageView绑定事件请写在此处
-                                    imageView.setOnClickListener(new View.OnClickListener() {
+
+                                    holder2.cardView.setOnClickListener(new View.OnClickListener() {
+
+                                    //给每个cardView绑定事件写在此处
                                         @Override
                                         public void onClick(View view) {
-                                            //开启一个Activity并把trace传进去
+//                                            //开启一个Activity并把trace传进去
                                             Intent intent1 = new Intent();
                                             intent1.putExtra("trace", trace);
                                             intent1.putExtra("area", areaObj);
@@ -474,12 +535,10 @@ public class AreaDetail extends AppCompatActivity {
                                             startActivity(intent1);
                                         }
                                     });
-                                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.trace);
-                                    bitmap = Bitmap.createScaledBitmap(bitmap, 350, 200, true);
-                                    bitmap = imageUtil.drawTextToBitmap(AreaDetail.this,bitmap,trace.getTraceName());
-                                    imageView.setPadding(30,50,0,0);
-                                    imageView.setImageBitmap(bitmap);
-                                    linearLayoutTrace.addView(imageView);
+
+                                    //设置卡片布局
+                                    traceAdapter.initTraceCardview(holder2,trace);
+                                    areaDetailTraceRc.addView(holder2.cardView);
                                 }
                             }
                         });

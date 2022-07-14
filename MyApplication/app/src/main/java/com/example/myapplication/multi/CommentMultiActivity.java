@@ -1,5 +1,6 @@
 package com.example.myapplication.multi;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -103,6 +104,13 @@ public class CommentMultiActivity extends AppCompatActivity {
         currentUser.setId(15);
         currentUser.setUsername("333");
 
+        //获取传入的参数
+        Intent intent =  getIntent();
+        tagName = intent.getStringExtra("tagName");
+        tagDescription = intent.getStringExtra("tagDescribe");
+        tagImagePath = (String) intent.getSerializableExtra("tagPhotoPath");
+        userId = intent.getIntExtra("userID", userId);
+        areaId = intent.getIntExtra("areaID", areaId);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_multi);
 

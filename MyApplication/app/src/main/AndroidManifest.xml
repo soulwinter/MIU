@@ -83,6 +83,10 @@
         <activity android:name=".AddTag" />
         <activity android:name=".tags_list" />
         <activity android:name=".multi.CommentMultiActivity" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.myapplication.adapter.tags_list_adapter;
 import com.example.myapplication.entity.Area;
 import com.example.myapplication.entity.Tag;
+import com.example.myapplication.entity.User;
 
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -36,7 +37,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 public class tags_list  extends AppCompatActivity  {
 
-    private int  areaid;//区域id
+    private int  areaid,userid;//区域id
+    private User user = null;
 
     private List<Tag> tagsL = new ArrayList<>();
 
@@ -61,7 +63,8 @@ public class tags_list  extends AppCompatActivity  {
         actionBar.hide();
 
         Intent get_intent = getIntent();
-        areaid = get_intent.getIntExtra("areaId", areaid);
+        areaid = get_intent.getIntExtra("areaId1", areaid);
+        userid = get_intent.getIntExtra("userId1", userid);
 
         handler1 = new tagHandler();
 

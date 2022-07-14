@@ -1,6 +1,7 @@
 package com.example.myapplication.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.entity.Tag;
+import com.example.myapplication.multi.CommentMultiActivity;
 
 
 import java.util.List;
@@ -47,16 +49,25 @@ public class tags_list_adapter extends RecyclerView.Adapter<tags_list_adapter.Vi
         }
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_area_tags,parent, false);
         final ViewHolder holder = new ViewHolder(view);
-//        //为每一个子项的cardView设置点击事件
-//        holder.cardView.setOnClickListener(new View.OnClickListener() {
-//       // 传一个Tag对象进tag详情页面
-//            @Override
-//            public void onClick(View v) {
-//                int position = holder.getAdapterPosition();
-//                Tag fruit = tagList.get(position);
-//                Toast.makeText(v.getContext(), "you clicked image " + fruit.getTagName(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        //为每一个子项的cardView设置点击事件
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+       // 传一个Tag对象进tag详情页面
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                Tag tag = tagList.get(position);
+
+                //点击，跳转到tag详情页
+
+                Intent intent = new Intent(mContext, CommentMultiActivity.class);
+
+                intent.putExtra("tagName",tag.getTagName());
+                intent.putExtra("tagDescribe",tag.getTagDescription());
+                intent.putExtra("tagPhotoPath",tag.getPicturePath());
+                mContext.startActivity(intent);
+
+            }
+        });
         return holder;
     }
     @Override

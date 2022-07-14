@@ -9,11 +9,13 @@
     android:layout_marginTop="12dp"
     android:layout_marginRight="20dp"
     android:layout_marginBottom="12dp"
+    android:clickable="true"
     app:cardElevation="1dp"
     android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="4dp"
     app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    android:focusable="true">
 
 
     <LinearLayout
@@ -21,32 +23,38 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@color/white">
-       <TextView
-           android:id="@+id/tv_name"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="轨迹名称："
-           android:textSize="18sp"
-           android:layout_margin="5dp"
-           android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginLeft="5dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/sonsie_one1"
+            android:maxLines="1"
+            android:text="hhh"
+
+
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="轨迹描述："
-            android:textSize="18sp"
             android:layout_margin="5dp"
-            android:textColor="@color/black"/>
+            android:ellipsize="end"
+            android:fontFamily="@font/akaya_telivigala"
+            android:maxEms="8"
+            android:maxLines="1"
+            android:text="轨迹描述mm"
 
-        <TextView
-            android:id="@+id/tv_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="轨迹点位："
-            android:textSize="18sp"
-            android:layout_margin="5dp"
-            android:textColor="@color/black"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/black"
+            android:textSize="13sp" />
 
     </LinearLayout>
 

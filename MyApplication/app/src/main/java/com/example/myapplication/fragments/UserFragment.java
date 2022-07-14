@@ -215,7 +215,7 @@ public class UserFragment extends Fragment {
                             clvTags.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    clvTags.setAdapter(new UserTagsAdapter(tagList));
+                                    clvTags.setAdapter(new UserTagsAdapter(tagList, user));
                                 }
                             });
                         }
@@ -258,7 +258,7 @@ public class UserFragment extends Fragment {
                             clvTrace.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    clvTrace.setAdapter(new UserTracesAdapter(traceList));
+                                    clvTrace.setAdapter(new UserTracesAdapter(traceList,user));
                                 }
                             });
                         }
