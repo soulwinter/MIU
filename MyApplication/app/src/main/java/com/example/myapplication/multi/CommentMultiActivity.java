@@ -101,8 +101,6 @@ public class CommentMultiActivity extends AppCompatActivity {
         currentUser = new User();
         currentUser.setId(15);
         currentUser.setUsername("333");
-        end = false;
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_multi);
