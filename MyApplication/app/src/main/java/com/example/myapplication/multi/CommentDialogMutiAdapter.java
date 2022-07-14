@@ -81,7 +81,7 @@ public class CommentDialogMutiAdapter extends BaseMultiItemQuickAdapter<MultiIte
         String contents = TextUtils.isEmpty(item.getContent()) ? " " : item.getContent();
         tv_content.setText(contents);
 
-        Glide.with(mContext).load(item.getHeadImg()).into(iv_header);
+        Glide.with(mContext).load("res/drawable/comment_user_1.jpg").into(iv_header);
 
     }
 
