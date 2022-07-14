@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.example.myapplication.AddWifiRecord;
@@ -70,7 +71,6 @@ public class CommentMultiActivity extends AppCompatActivity {
     private SoftKeyBoardListener mKeyBoardListener;
 
     private int userId, tagId, areaId;
-    private boolean end;
     private User currentUser;
     private Integer recommentWho;  // 被回复的评论的id
     private final Integer MAX_SHOW_COMMENTS = 5;
@@ -98,6 +98,7 @@ public class CommentMultiActivity extends AppCompatActivity {
         areaId = 14;
         tagName = "333_tag";
         tagDescription = "333测试tag";
+        tagImagePath = "res/drawable/user_0.jpeg";
         currentUser = new User();
         currentUser.setId(15);
         currentUser.setUsername("333");
@@ -507,7 +508,7 @@ public class CommentMultiActivity extends AppCompatActivity {
                             FirstLevelBean bean = (FirstLevelBean) bottomSheetAdapter.getData().get(position);
                             bean.setLikeCount(bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
                             // 上传到服务器
-                            modifyLikeCount(bean.getId(), bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
+                            modifyLikeCount(bean.getId(), bean.getLikeCount() + (bean.getIsLike() == 0 ? 0 : 1));
                             bean.setIsLike(bean.getIsLike() == 0 ? 1 : 0);
                             datas.set(bean.getPosition(), bean);
                             CommentMultiActivity.this.dataSort(0);
@@ -522,7 +523,7 @@ public class CommentMultiActivity extends AppCompatActivity {
                         } else if (view1.getId() == R.id.ll_like) {
                             //todo 二级评论点赞 项目中还得通知服务器 成功才可以修改
                             SecondLevelBean bean = (SecondLevelBean) bottomSheetAdapter.getData().get(position);
-                            bean.setLikeCount(bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
+                            bean.setLikeCount(bean.getLikeCount() + (bean.getIsLike() == 0 ? 0 : 1));
                             // 上传到服务器
                             modifyLikeCount(bean.getId(), bean.getLikeCount() + (bean.getIsLike() == 0 ? 1 : -1));
 
@@ -820,7 +821,7 @@ public class CommentMultiActivity extends AppCompatActivity {
         text_tag_name.setText(tagName);
         text_description.setText(tagDescription);
 
-//        setImage();
+        setImage();
 
     }
 
@@ -860,6 +861,7 @@ public class CommentMultiActivity extends AppCompatActivity {
         try {
             thread.join();
 //            设置tag图片
+            Glide.with(this).load(tagImagePath).into(tagImage);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

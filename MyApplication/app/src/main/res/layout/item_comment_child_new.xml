@@ -8,7 +8,7 @@
     android:clickable="true"
     android:paddingTop="6dp"
     android:paddingRight="15dp"
-    android:paddingLeft="57dp"
+    android:paddingLeft="30dp"
     android:paddingBottom="6dp">
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -17,10 +17,9 @@
         android:layout_height="20dp"
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher"
-        app:riv_corner_radius="12dp"
-        app:riv_border_width="0.8dp"
         app:riv_border_color="@color/gray_d8"
-        />
+        app:riv_border_width="0.8dp"
+        app:riv_corner_radius="12dp" />
 
     <LinearLayout
         android:id="@+id/ll_like"
@@ -55,12 +54,11 @@
 
     <TextView
         android:id="@+id/tv_user_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@+id/ll_like"
-        android:layout_toRightOf="@+id/iv_header"
         android:ellipsize="end"
         android:maxLines="1"
         android:text=" "
