@@ -181,7 +181,7 @@ public class MapView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 //处理离开事件
-
+                Log.i("POSI", event.getX() + ", " + event.getY());
                 yRealOffset = yOffset;
                 break;
             // originY = yOffset;

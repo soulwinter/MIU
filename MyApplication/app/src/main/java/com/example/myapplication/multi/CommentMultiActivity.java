@@ -47,7 +47,9 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -91,6 +93,7 @@ public class CommentMultiActivity extends AppCompatActivity {
     ImageView tagImage;
     TextView text_tag_name, text_description;
     String tagImagePath, tagName, tagDescription;
+    static Map TagIdMap = new HashMap();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +112,7 @@ public class CommentMultiActivity extends AppCompatActivity {
         //获取传入的参数
         Intent intent =  getIntent();
         tagName = intent.getStringExtra("tagName");
+        tagId = generateTagId(tagName);
         tagDescription = intent.getStringExtra("tagDescribe");
         tagImagePath = (String) intent.getSerializableExtra("tagPhotoPath");
         userId = intent.getIntExtra("userID", userId);
@@ -246,6 +250,16 @@ public class CommentMultiActivity extends AppCompatActivity {
         t.start();
 
 
+    }
+
+    private Integer generateTagId(String tagName){
+        if(!TagIdMap.containsKey(tagName)) {
+            int id = TagIdMap.size();
+            TagIdMap.put(tagName, id);
+            return id;
+        }else{
+            return (Integer) TagIdMap.get(tagName);
+        }
     }
 
     private void copyToMoreCommentList(List<CommentOfTag> commentOfTagList){
