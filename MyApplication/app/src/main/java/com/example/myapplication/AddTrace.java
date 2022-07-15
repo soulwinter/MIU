@@ -52,6 +52,7 @@ public class AddTrace extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         Intent intent = getIntent();
         areaObj = (Area)intent.getSerializableExtra("area");
         user = (User)intent.getSerializableExtra("user");

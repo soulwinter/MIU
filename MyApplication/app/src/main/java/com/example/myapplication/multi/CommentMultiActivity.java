@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -122,7 +123,8 @@ public class CommentMultiActivity extends AppCompatActivity {
         currentUser.setId(userId);
         currentUser.setUsername(user.getUsername());
 
-
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("标记详情");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment_multi);
