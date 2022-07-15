@@ -110,8 +110,8 @@ public class MapView extends View {
             canvas.drawBitmap(bitmap,tag.getX(),tag.getY() + yOffset,null);
         }
 
-        paint.setARGB(255, 0, 0, 255);
-        paint.setStrokeWidth(10);
+        paint.setARGB(255, 30, 144, 255);
+        paint.setStrokeWidth(7);
         for (int tracingPointNo = 0; tracingPointNo < tracingPointList.size(); tracingPointNo++)
         {
             if (tracingPointNo < tracingPointList.size() - 1) {

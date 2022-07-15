@@ -28,6 +28,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -538,6 +539,9 @@ public class AreaDetail extends AppCompatActivity {
 
                                     //设置卡片布局
                                     traceAdapter.initTraceCardview(holder2,trace);
+                                    if (holder2.cardView.getParent() != null) {
+                                        ((ViewGroup)holder2.cardView.getParent()).removeView(holder2.cardView);
+                                    }
                                     areaDetailTraceRc.addView(holder2.cardView);
                                 }
                             }

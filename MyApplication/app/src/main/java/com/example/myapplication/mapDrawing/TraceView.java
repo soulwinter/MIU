@@ -97,7 +97,8 @@ public class TraceView extends View {
 
 
 
-        paint.setARGB(255, 0, 0, 255);
+        paint.setARGB(255, 30, 144, 255);
+        paint.setStrokeWidth(7);
         for (int tracingPointNo = 0; tracingPointNo < tracingPointList.size(); tracingPointNo++)
         {
             if (tracingPointNo < tracingPointList.size() - 1) {
