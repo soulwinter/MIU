@@ -51,15 +51,15 @@ public class Welcome extends AppCompatActivity {
 //                R.id.navigation_home,R.id.navigation_edit,R.id.navigation_view,R.id.navigation_user)
 //                .build();
 
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home,R.id.navigation_view,R.id.navigation_user)
-                .build();
+//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+//                R.id.navigation_home,R.id.navigation_view,R.id.navigation_user)
+//                .build();
 
         // 建立fragment容器的控制器，这个容器就是页面的上的fragment容器
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
         // 启动
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+       // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
 

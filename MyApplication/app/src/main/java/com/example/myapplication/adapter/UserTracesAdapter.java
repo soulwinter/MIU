@@ -2,6 +2,7 @@ package com.example.myapplication.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,6 @@ public class UserTracesAdapter extends RecyclerView.Adapter<UserTracesAdapter.Vi
     public UserTracesAdapter(List<Trace> traces, User user) {
         this.traces = traces;
         this.currentUser = user;
-
     }
 
     @NonNull
@@ -55,14 +55,17 @@ public class UserTracesAdapter extends RecyclerView.Adapter<UserTracesAdapter.Vi
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 Trace  trace = traces.get(position);
-
-                //开启一个Activity并把trace传进去
-                Intent intent1 = new Intent();
-                intent1.putExtra("trace", trace);
-                intent1.putExtra("area", areaObj);
-                intent1.putExtra("user", currentUser);
-                intent1.setClass(mcontext, TraceDetail.class);
-                mcontext.startActivity(intent1);
+                // areaObj = trace.getAreaId();
+//                Log.v("TEST_USER","hello");
+//                //开启一个Activity并把trace传进去
+//                Intent intent1 = new Intent();
+//                intent1.putExtra("trace", trace);
+//
+//                intent1.putExtra("area", areaObj);
+//
+//                intent1.putExtra("user", currentUser);
+//                intent1.setClass(mcontext, TraceDetail.class);
+//                mcontext.startActivity(intent1);
 
 
             }

@@ -50,10 +50,12 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="show"
-            android:onClick="show"
-            android:layout_margin="10dp"
             android:layout_alignParentBottom="true"
-            />
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:onClick="show"
+            android:text="查看评论" />
 
 </RelativeLayout>

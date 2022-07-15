@@ -10,10 +10,10 @@
         android:name="com.example.myapplication.fragments.HomeFragment"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
-        android:id="@+id/navigation_view"
-        android:name="com.example.myapplication.fragments.ViewFragment"
-        tools:layout="@layout/fragment_view" />
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_view"-->
+<!--        android:name="com.example.myapplication.fragments.ViewFragment"-->
+<!--        tools:layout="@layout/fragment_view" />-->
 
 <!--    <fragment-->
 <!--        android:id="@+id/navigation_edit"-->

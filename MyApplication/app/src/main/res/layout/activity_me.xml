@@ -14,7 +14,7 @@
         android:paddingLeft="10dp"
         android:paddingTop="20dp"
         android:paddingBottom="30dp"
-        android:text="用户名"
+        android:text="我的"
         android:textColor="@color/white"
         android:textSize="25dp"
         android:textStyle="bold"></TextView>

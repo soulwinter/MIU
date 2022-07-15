@@ -2,6 +2,7 @@ package com.example.myapplication.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,16 +53,16 @@ public class UserTagsAdapter extends RecyclerView.Adapter<UserTagsAdapter.ViewHo
                 int position = holder.getAdapterPosition();
                 Tag tag = tags.get(position);
 
-                //点击，跳转到tag详情页
-
-                Intent intent = new Intent(mContext, CommentMultiActivity.class);
-
-                intent.putExtra("tagName",tag.getTagName());
-                intent.putExtra("tagDescribe",tag.getTagDescription());
-                intent.putExtra("tagPhotoPath",tag.getPicturePath());
-                intent.putExtra("userID",currentUser.getId());
-                intent.putExtra("areaID",tag.getAreaId());//在用户界面没有“当前区域”的概念
-                mContext.startActivity(intent);
+//                //点击，跳转到tag详情页
+//                Log.v("TEST_USER", tag.getTagName() + " " + currentUser.getId());
+//                Intent intent = new Intent(mContext, CommentMultiActivity.class);
+//
+//                intent.putExtra("tagName",tag.getTagName());
+//                intent.putExtra("tagDescribe",tag.getTagDescription());
+//                intent.putExtra("tagPhotoPath",tag.getPicturePath());
+//                intent.putExtra("userID",currentUser.getId());
+//                intent.putExtra("areaID",tag.getAreaId());//在用户界面没有“当前区域”的概念
+//                mContext.startActivity(intent);
 
             }
         });

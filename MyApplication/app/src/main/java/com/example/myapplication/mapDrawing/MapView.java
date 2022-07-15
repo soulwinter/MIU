@@ -124,25 +124,37 @@ public class MapView extends View {
 
         for (int i = 0; i < userList.size(); i++) {
             User user = userList.get(i);
+
             if (i == 0){
+                directionX = user.getX().intValue();
+                directionY = user.getY().intValue();
+                if (nowX == -eachStep || nowY == -eachStep) {
+                    nowX = directionX;
+                    nowY = directionY;
+                }
                 //画用户自己
+                paint.setStyle(Paint.Style.FILL);
                 paint.setARGB(255, 0, 188, 255);
+
+                canvas.drawCircle(nowX, nowY + yOffset, 30, paint);
+                paint.setARGB(255, 240, 240, 240);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(10);
+               //  paint.setShadowLayer(5, 0, 0, Color.GRAY);
+                canvas.drawCircle(nowX, nowY + yOffset, 30, paint);
+                continue;
+            } else {
+                paint.setStyle(Paint.Style.FILL);
+                paint.setARGB(255, 224, 64, 64);
                 canvas.drawCircle(user.getX(), user.getY() + yOffset, 30, paint);
                 paint.setARGB(255, 240, 240, 240);
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setStrokeWidth(10);
                 paint.setShadowLayer(5, 0, 0, Color.GRAY);
                 canvas.drawCircle(user.getX(), user.getY() + yOffset, 30, paint);
-                continue;
             }
 
-            paint.setARGB(255, 224, 64, 64);
-            canvas.drawCircle(user.getX(), user.getY() + yOffset, 30, paint);
-            paint.setARGB(255, 240, 240, 240);
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(10);
-            paint.setShadowLayer(5, 0, 0, Color.GRAY);
-            canvas.drawCircle(user.getX(), user.getY() + yOffset, 30, paint);
+
         }
 
         eachMove();
